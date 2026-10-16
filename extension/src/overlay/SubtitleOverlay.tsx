@@ -31,11 +31,15 @@ function useActiveCue(video: HTMLVideoElement, provider: CueProvider): Cue | nul
     let lastKey: string | null = cueKey(cue);
 
     const evaluate = () => {
-      const next = provider.getActiveCue(video.currentTime);
+      const currentTime = video.currentTime;
+      const next = provider.getActiveCue(currentTime);
       const key = cueKey(next);
       if (key !== lastKey) {
         lastKey = key;
         setCue(next);
+        if (next && next.first_shown_at == null && (next.is_final ?? true)) {
+          provider.recordFirstShown?.(next.id, currentTime);
+        }
       }
     };
 

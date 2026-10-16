@@ -82,6 +82,7 @@ export function parseYouTubeJson3(data: unknown, lang = 'en'): Cue[] {
       text,
       source: 'captions',
       is_final: true,
+      first_shown_at: null,
       revisions: [{ at: Number(start.toFixed(3)), text }],
     });
   }

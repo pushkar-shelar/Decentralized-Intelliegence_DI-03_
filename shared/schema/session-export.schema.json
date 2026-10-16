@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://livesub.dev/schema/session-export.schema.json",
+  "title": "SessionExport",
+  "description": "Exported LiveSub session cue log for judges and evaluation.",
+  "type": "object",
+  "required": ["session_id", "video_id", "exported_at", "total_cues", "cues"],
+  "additionalProperties": true,
+  "properties": {
+    "session_id": { "type": "string", "description": "Unique session identifier for the video playback." },
+    "video_id": { "type": "string", "description": "YouTube video identifier." },
+    "video_url": { "type": "string", "description": "Full URL to the YouTube video." },
+    "exported_at": { "type": "string", "description": "ISO 8601 timestamp when the log was exported." },
+    "generator": { "type": "string", "description": "Extension name and version." },
+    "playback_time": { "type": "number", "description": "Current video playback time (s) at time of export." },
+    "total_cues": { "type": "integer", "minimum": 0, "description": "Total number of subtitle cues logged in this session." },
+    "cues": {
+      "type": "array",
+      "items": { "$ref": "cue.schema.json" }
+    }
+  }
+}

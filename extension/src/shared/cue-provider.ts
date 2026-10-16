@@ -7,6 +7,8 @@ import type { Cue } from './cue';
 export interface CueProvider {
   /** Return the cue active at the given video time, or null. Must be cheap — called every frame. */
   getActiveCue(videoTime: number): Cue | null;
+  /** Optional: record when a finalized cue is first displayed on screen (video time s). */
+  recordFirstShown?(id: string, videoTime: number): void;
   /** Optional: subscribe to cue-set changes (new/revised cues) so the overlay can re-evaluate while paused. */
   subscribe?(listener: () => void): () => void;
 }

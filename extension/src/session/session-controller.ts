@@ -1,4 +1,5 @@
 import { createElement } from 'react';
+import type { Cue } from '../shared/cue';
 import type { Store } from '../shared/store';
 import type { LiveSubSettings } from '../settings/settings-core';
 import { CaptionManager } from '../captions/caption-manager';
@@ -13,6 +14,7 @@ import { TranslationCache } from '../translation/translation-cache';
 import { GoogleGtxTranslationService, type TranslationService } from '../translation/translation-service';
 import { waitForPlayer } from '../youtube/player-detector';
 import { PlayerStateTracker } from '../youtube/player-state';
+import { buildSessionExport, type LiveSubSessionExport } from '../export/session-export';
 
 const LOG = '[LiveSub Session]';
 
@@ -27,6 +29,7 @@ interface Session {
   translator?: ActiveCueTranslator;
   mode: SubtitleSourceMode;
   unmount: () => void;
+  video: HTMLVideoElement;
   dispose: () => void;
 }
 
@@ -133,6 +136,7 @@ export class SessionController {
         cueStore: demoProvider,
         mode: 'demo',
         unmount,
+        video: els.video,
         dispose: () => {},
       };
       document.documentElement.dataset.livesubSession = id;
@@ -216,12 +220,12 @@ export class SessionController {
       translator,
       mode: sessionMode,
       unmount,
+      video: els.video,
       dispose: () => {
         translator.dispose();
         disposers.forEach((d) => d());
       },
     };
-
     document.documentElement.dataset.livesubSession = id;
     document.documentElement.dataset.livesubSource = sessionMode;
     console.info(LOG, 'session started (caption path)', { id, videoId });
@@ -232,6 +236,27 @@ export class SessionController {
     this.teardown();
   }
 
+  /**
+   * Export the current session's cue log for judge evaluation.
+   */
+  exportSession(): LiveSubSessionExport | null {
+    if (!this.session) return null;
+    const currentTime = this.session.video?.currentTime ?? 0;
+    let cues: readonly Cue[] = [];
+
+    if (this.session.cueStore instanceof CueStore) {
+      cues = this.session.cueStore.getCues();
+    } else if (this.session.cueStore instanceof DemoCueProvider) {
+      cues = this.session.cueStore.generateSessionCues(currentTime);
+    }
+
+    return buildSessionExport({
+      sessionId: this.session.id,
+      videoId: this.session.videoId,
+      cues,
+      currentTime,
+    });
+  }
   private teardown(): void {
     this.pending?.abort();
     this.pending = null;

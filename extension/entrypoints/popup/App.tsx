@@ -1,5 +1,6 @@
 import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
 import { browser } from 'wxt/browser';
+import { downloadJsonFile } from '../../src/export/session-export';
 import {
   DEFAULT_SETTINGS,
   LANGUAGES,
@@ -24,20 +25,40 @@ const PREVIEW_TEXT: Record<string, string> = {
   hi: 'आज हम पनीर टिक्का बनाएंगे',
   mr: 'आज आपण पनीर टिक्का बनवूया',
   ta: 'இன்று நாம் பனீர் டிக்கா செய்வோம்',
-  te: 'ఈ రోజు మనం పనీర్ టిక్కా చేద్దాం',
+  te: 'ఈ రోజు మనం పనీர் టిక్కా చేద్దాం',
 };
 
 export default function App() {
   const [settings, setSettings] = useState<LiveSubSettings | null>(null);
   const [tab, setTab] = useState<TabStatus>({ kind: 'loading' });
+  const [activeTabId, setActiveTabId] = useState<number | null>(null);
+  const [sessionCueCount, setSessionCueCount] = useState<number | null>(null);
+  const [exporting, setExporting] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [exportMessage, setExportMessage] = useState<string | null>(null);
 
   useEffect(() => {
     // The popup is the only writer of settings, so it doesn't subscribe to its own storage echoes
     // (stale echoes during a slider drag would make the thumb jump back).
     void loadSettings().then(setSettings);
     void browser.tabs.query({ active: true, currentWindow: true }).then(([active]) => {
+      const tabId = active?.id ?? null;
+      setActiveTabId(tabId);
       const videoId = active?.url ? parseVideoId(active.url) : null;
       setTab(videoId ? { kind: 'video', videoId } : { kind: 'other' });
+
+      if (tabId && videoId) {
+        browser.tabs
+          .sendMessage(tabId, { type: 'LIVESUB_GET_STATUS' })
+          .then((res: any) => {
+            if (res && typeof res.cueCount === 'number') {
+              setSessionCueCount(res.cueCount);
+            }
+          })
+          .catch(() => {
+            // Content script not ready or inactive
+          });
+      }
     });
   }, []);
 
@@ -47,6 +68,48 @@ export default function App() {
     const next = { ...settings, ...patch };
     setSettings(next); // optimistic
     void saveSettings(next); // full snapshot → last write always wins with complete state
+  };
+
+  const handleExportDownload = async () => {
+    if (!activeTabId) return;
+    setExporting(true);
+    setExportMessage(null);
+    try {
+      const res: any = await browser.tabs.sendMessage(activeTabId, { type: 'LIVESUB_EXPORT_SESSION' });
+      if (res?.ok && res.data) {
+        const vid = res.data.video_id || 'youtube';
+        const filename = `livesub-session-${vid}-${Date.now()}.json`;
+        downloadJsonFile(filename, res.data);
+        setExportMessage(`Exported ${res.data.total_cues} cues to ${filename}`);
+      } else {
+        setExportMessage('No active session or cues to export.');
+      }
+    } catch {
+      setExportMessage('Failed to communicate with YouTube tab.');
+    } finally {
+      setExporting(false);
+    }
+  };
+
+  const handleCopyJson = async () => {
+    if (!activeTabId) return;
+    setExporting(true);
+    setExportMessage(null);
+    try {
+      const res: any = await browser.tabs.sendMessage(activeTabId, { type: 'LIVESUB_EXPORT_SESSION' });
+      if (res?.ok && res.data) {
+        await navigator.clipboard.writeText(JSON.stringify(res.data, null, 2));
+        setCopied(true);
+        setExportMessage(`Copied JSON (${res.data.total_cues} cues) to clipboard!`);
+        setTimeout(() => setCopied(false), 2500);
+      } else {
+        setExportMessage('No cues available to copy.');
+      }
+    } catch {
+      setExportMessage('Failed to copy session JSON.');
+    } finally {
+      setExporting(false);
+    }
   };
 
   return (
@@ -165,6 +228,56 @@ export default function App() {
           format={(v) => `${v}%`}
           onChange={(position) => update({ position })}
         />
+      </Section>
+
+      <Section title="Judge / Evaluation">
+        <div className="eval-card">
+          <div className="eval-card__info">
+            <div className="label-strong">Session Cue Log</div>
+            <div className="hint">
+              {tab.kind === 'video'
+                ? sessionCueCount != null && sessionCueCount > 0
+                  ? `${sessionCueCount} cue${sessionCueCount === 1 ? '' : 's'} recorded with timestamps & revisions`
+                  : settings.demoMode
+                    ? 'Demo cues ready for judge evaluation export'
+                    : 'Cues will record automatically as playback progresses'
+                : 'Open a YouTube video to record session cues'}
+            </div>
+          </div>
+          <div className="row row--actions">
+            <button
+              id="btn-export-json"
+              type="button"
+              className="btn btn--primary"
+              disabled={exporting || tab.kind !== 'video'}
+              onClick={handleExportDownload}
+            >
+              <svg className="btn__icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                <path d="M8.5 1.5a.5.5 0 0 0-1 0v7.793L5.354 7.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 9.293V1.5z" />
+                <path d="M2 13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V11a.5.5 0 0 0-1 0v2.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V11a.5.5 0 0 0-1 0v2.5z" />
+              </svg>
+              {exporting ? 'Exporting…' : 'Export JSON'}
+            </button>
+            <button
+              id="btn-copy-json"
+              type="button"
+              className="btn btn--secondary"
+              disabled={exporting || tab.kind !== 'video'}
+              onClick={handleCopyJson}
+            >
+              <svg className="btn__icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z" />
+                <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
+              </svg>
+              {copied ? '✓ Copied!' : 'Copy JSON'}
+            </button>
+          </div>
+          {exportMessage && (
+            <div className="eval-status" role="status">
+              {exportMessage}
+            </div>
+          )}
+        </div>
       </Section>
 
       <Section title="Developer">
