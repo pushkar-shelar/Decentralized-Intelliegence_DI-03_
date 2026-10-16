@@ -38,6 +38,24 @@ export default defineBackground(() => {
   browser.runtime.onMessage.addListener((msg: any, sender, sendResponse) => {
     if (!msg || typeof msg !== 'object') return;
 
+    if (msg.type === 'VIDEO_ANCHOR' && sender.tab) {
+      // Forward video timing anchor from YouTube tab to offscreen audio engine
+      browser.runtime.sendMessage(msg).catch(() => {});
+      return;
+    }
+
+    if (msg.type === 'LIVESUB_STT_CUE') {
+      // Forward live STT cue from offscreen audio engine to YouTube tabs
+      chrome.tabs.query({ url: '*://www.youtube.com/*' }, (tabs) => {
+        for (const tab of tabs) {
+          if (tab.id) {
+            chrome.tabs.sendMessage(tab.id, msg).catch(() => {});
+          }
+        }
+      });
+      return;
+    }
+
     if (msg.type === 'REQUEST_TAB_AUDIO_CAPTURE') {
       const tabId = sender.tab?.id ?? msg.tabId;
       if (!tabId) {

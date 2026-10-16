@@ -118,18 +118,21 @@ function flushBuffer(session: CaptureSession): void {
 
   // Stream binary PCM + header over WebSocket
   if (session.ws && session.ws.readyState === WebSocket.OPEN) {
-    // Send metadata header as JSON first if anchor exists
-    if (latestAnchor) {
-      session.ws.send(
-        JSON.stringify({
-          type: 'chunk_meta',
+    // Send metadata header as JSON
+    session.ws.send(
+      JSON.stringify({
+        type: 'chunk_meta',
+        perfNow: capturePerfNow,
+        durationMs: (total / 16000) * 1000,
+        rms: Number(rms.toFixed(4)),
+        anchor: latestAnchor ?? {
           perfNow: capturePerfNow,
-          durationMs: (total / 16000) * 1000,
-          rms: Number(rms.toFixed(4)),
-          anchor: latestAnchor,
-        }),
-      );
-    }
+          videoTime: 0,
+          rate: 1.0,
+          paused: false,
+        },
+      }),
+    );
     // Send binary audio payload
     session.ws.send(combined.buffer);
   }

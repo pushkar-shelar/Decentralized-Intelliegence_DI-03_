@@ -155,6 +155,7 @@ export class SessionController {
    */
   onSttCue(cue: Cue): void {
     if (!this.session) return;
+    console.info(LOG, `[STT Cue Received] [${cue.lang}] (${cue.start}s - ${cue.end}s): ${cue.text}`);
     this.session.cueStore.upsertCue(cue);
   }
 
@@ -182,7 +183,12 @@ export class SessionController {
     video.addEventListener('seeking', () => emitAnchor(true));
     video.addEventListener('seeked', () => emitAnchor(true));
     video.addEventListener('pause', () => emitAnchor());
-    video.addEventListener('play', () => emitAnchor());
+    video.addEventListener('play', () => {
+      emitAnchor();
+      if (this.session && this.session.cueStore.length === 0 && !this.session.audioCaptureActive) {
+        this.initiateAudioCapture(this.session);
+      }
+    });
     video.addEventListener('ratechange', () => emitAnchor());
 
     // Periodic anchor update every 250ms
