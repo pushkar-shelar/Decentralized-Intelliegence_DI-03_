@@ -43,32 +43,6 @@ export default function App() {
 
   if (!settings) return <div className="app app--loading" aria-busy="true" />;
 
-  const [capturing, setCapturing] = useState<boolean>(false);
-
-  const startAudioCaptureFromPopup = async () => {
-    try {
-      const [activeTab] = await browser.tabs.query({ active: true, currentWindow: true });
-      if (!activeTab?.id) return;
-
-      (chrome.tabCapture as any).getMediaStreamId({ targetTabId: activeTab.id }, async (streamId: string) => {
-        if (chrome.runtime.lastError || !streamId) {
-          console.error('[LiveSub Popup] tabCapture error:', chrome.runtime.lastError);
-          return;
-        }
-
-        console.info('[LiveSub Popup] Got streamId via direct user gesture:', streamId);
-        await browser.runtime.sendMessage({
-          type: 'START_TAB_CAPTURE_WITH_STREAM_ID',
-          streamId,
-          tabId: activeTab.id,
-        });
-        setCapturing(true);
-      });
-    } catch (err) {
-      console.error('[LiveSub Popup] Error initiating tab capture:', err);
-    }
-  };
-
   const update = (patch: Partial<LiveSubSettings>) => {
     const next = { ...settings, ...patch };
     setSettings(next); // optimistic
@@ -91,46 +65,12 @@ export default function App() {
         <Toggle
           id="toggle-enabled"
           checked={settings.enabled}
-          onChange={(enabled) => {
-            update({ enabled });
-            if (enabled && tab.kind === 'video') {
-              void startAudioCaptureFromPopup();
-            }
-          }}
+          onChange={(enabled) => update({ enabled })}
           label="Enable LiveSub"
         />
       </header>
 
       <StatusChip tab={tab} enabled={settings.enabled} />
-
-      {tab.kind === 'video' && (
-        <div style={{ padding: '0 16px 10px 16px' }}>
-          <button
-            id="btn-start-audio"
-            type="button"
-            onClick={startAudioCaptureFromPopup}
-            style={{
-              width: '100%',
-              padding: '9px 14px',
-              background: capturing ? '#059669' : '#4f46e5',
-              color: '#ffffff',
-              border: 'none',
-              borderRadius: '8px',
-              fontSize: '13px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              boxShadow: '0 2px 8px rgba(79, 70, 229, 0.25)',
-              transition: 'background 0.2s ease',
-            }}
-          >
-            {capturing ? '🟢 Live Audio Capture Active' : '🎙️ Start Live Audio Subtitles'}
-          </button>
-        </div>
-      )}
 
       <Preview settings={settings} />
 

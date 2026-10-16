@@ -56,27 +56,6 @@ export default defineBackground(() => {
       return;
     }
 
-    if (msg.type === 'START_TAB_CAPTURE_WITH_STREAM_ID') {
-      const { streamId, tabId } = msg;
-      (async () => {
-        try {
-          await setupOffscreenDocument();
-          await new Promise((r) => setTimeout(r, 150));
-          await browser.runtime.sendMessage({
-            type: 'START_TAB_CAPTURE',
-            streamId,
-            tabId,
-            wsUrl: msg.wsUrl ?? 'ws://localhost:8765/api/ws/audio',
-          });
-          sendResponse({ success: true, streamId });
-        } catch (err: any) {
-          console.error(LOG, 'Failed in START_TAB_CAPTURE_WITH_STREAM_ID:', err);
-          sendResponse({ success: false, error: err?.message ?? String(err) });
-        }
-      })();
-      return true;
-    }
-
     if (msg.type === 'REQUEST_TAB_AUDIO_CAPTURE') {
       const tabId = sender.tab?.id ?? msg.tabId;
       if (!tabId) {
