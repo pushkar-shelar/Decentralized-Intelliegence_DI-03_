@@ -26,11 +26,19 @@ export default defineContentScript({
 
     window.addEventListener('message', onWindowMessage);
 
+    const onRuntimeMessage = (msg: any) => {
+      if (msg && msg.type === 'LIVESUB_STT_CUE' && msg.cue) {
+        controller.onSttCue(msg.cue);
+      }
+    };
+    browser.runtime.onMessage.addListener(onRuntimeMessage);
+
     const unsubscribeSettings = subscribeSettings((next) => settings.set(next));
     const stopNavigation = watchNavigation((videoId) => void controller.onVideoChange(videoId));
 
     ctx.onInvalidated(() => {
       window.removeEventListener('message', onWindowMessage);
+      browser.runtime.onMessage.removeListener(onRuntimeMessage);
       stopNavigation();
       unsubscribeSettings();
       controller.dispose();

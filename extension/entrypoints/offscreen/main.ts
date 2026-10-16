@@ -45,6 +45,18 @@ async function startCapture(streamId: string, wsUrl = 'ws://localhost:8000/api/w
     ws.onopen = () => console.info(LOG, 'WebSocket audio stream connected:', wsUrl);
     ws.onerror = (e) => console.warn(LOG, 'WebSocket connection warning:', e);
     ws.onclose = () => console.info(LOG, 'WebSocket connection closed');
+    ws.onmessage = (event) => {
+      try {
+        if (typeof event.data === 'string') {
+          const data = JSON.parse(event.data);
+          if (data.type === 'cue_update' && data.cue) {
+            browser.runtime.sendMessage({ type: 'LIVESUB_STT_CUE', cue: data.cue }).catch(() => {});
+          }
+        }
+      } catch {
+        // Ignored
+      }
+    };
   } catch (err) {
     console.warn(LOG, 'Could not open WebSocket', err);
   }

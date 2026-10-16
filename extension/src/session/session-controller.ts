@@ -150,6 +150,14 @@ export class SessionController {
     }
   }
 
+  /**
+   * Handle live speech recognition cue updates (partials or finals) from backend.
+   */
+  onSttCue(cue: Cue): void {
+    if (!this.session) return;
+    this.session.cueStore.upsertCue(cue);
+  }
+
   dispose(): void {
     this.generation++;
     this.teardown();
