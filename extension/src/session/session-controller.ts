@@ -251,6 +251,9 @@ export class SessionController {
     // Start video anchor streaming to offscreen audio engine
     this.startAnchorStreaming(session);
 
+    // Fast Look-Ahead Pre-Buffering: Request backend to download & pre-process first 120s of audio
+    this.requestLookAheadPreprocess(session);
+
     // If after 1.5 seconds no captions are found and settings are enabled, activate audio path
     setTimeout(() => {
       if (
@@ -334,6 +337,38 @@ export class SessionController {
       })
       .catch((err) => {
         console.warn(LOG, 'Audio capture request notice:', err);
+      });
+  }
+
+  private requestLookAheadPreprocess(session: Session): void {
+    if (!this.settings.get().enabled) return;
+    const settings = this.settings.get();
+
+    fetch('http://127.0.0.1:8765/api/video/pre-process', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        video_id: session.videoId,
+        target_lang: settings.targetLang,
+        source_lang: settings.sourceLang,
+        start_sec: 0.0,
+        duration_sec: 120.0,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.ok && Array.isArray(data.cues) && data.cues.length > 0) {
+          if (this.session === session && session.cueStore instanceof CueStore) {
+            console.info(LOG, `Loaded ${data.cues.length} lookahead pre-processed cues from backend`);
+            session.cueStore.loadCues(data.cues);
+            session.mode = 'audio';
+            document.documentElement.dataset.livesubSource = 'pre-process';
+            session.translator?.onTime(session.video.currentTime);
+          }
+        }
+      })
+      .catch(() => {
+        // Backend not active or pre-process error; fallback to captions / live audio
       });
   }
 

@@ -67,6 +67,7 @@ class WhisperEngine(BaseASREngine):
                 audio_16k_mono,
                 language=lang,
                 beam_size=beam_size,
+                word_timestamps=True,
                 vad_filter=False, # We already do VAD with Silero
             )
 
@@ -75,8 +76,15 @@ class WhisperEngine(BaseASREngine):
             for s in segments:
                 text_part = s.text.strip()
                 if text_part:
+                    # Precise word-level start & end alignment
+                    seg_start = s.start
+                    seg_end = s.end
+                    if hasattr(s, "words") and s.words and len(s.words) > 0:
+                        seg_start = s.words[0].start
+                        seg_end = s.words[-1].end
+
                     full_text_parts.append(text_part)
-                    seg_list.append(TranscriptionSegment(start=s.start, end=s.end, text=text_part))
+                    seg_list.append(TranscriptionSegment(start=round(seg_start, 3), end=round(seg_end, 3), text=text_part))
 
             full_text = " ".join(full_text_parts).strip()
             detected_lang = info.language or (language or "en")

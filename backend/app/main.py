@@ -16,19 +16,29 @@ from backend.app.models.shrutam_engine import ShrutamEngine
 from backend.app.models.whisper_engine import WhisperEngine
 from backend.app.audio.vad import SileroVAD
 from backend.app.services.streaming_processor import StreamingSpeechProcessor
+from backend.app.services.stream_resolver import StreamResolver
+from backend.app.translation.sarvam_translator import SarvamTranslator
 
 # Global model references
 shrutam_engine = None
 whisper_engine = None
 silero_vad = None
+stream_resolver = None
+sarvam_translator = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global shrutam_engine, whisper_engine, silero_vad
+    global shrutam_engine, whisper_engine, silero_vad, stream_resolver, sarvam_translator
     print("[LiveSub Backend] Initializing models and VAD...")
 
     # Load Silero VAD
     silero_vad = SileroVAD()
+
+    # Load StreamResolver
+    stream_resolver = StreamResolver()
+
+    # Load SarvamTranslator
+    sarvam_translator = SarvamTranslator()
 
     # Load Shrutam-2 from local project folder
     try:
@@ -91,7 +101,91 @@ def health_check():
         "shrutam_model_dir": MODEL_DIR if has_shrutam else None,
         "shrutam_loaded": shrutam_engine.is_ready() if shrutam_engine else False,
         "whisper_loaded": whisper_engine.is_ready() if whisper_engine else False,
+        "sarvam_configured": sarvam_translator.is_configured() if sarvam_translator else False,
     }
+
+from pydantic import BaseModel
+
+class PreProcessRequest(BaseModel):
+    video_id: str
+    target_lang: Optional[str] = "en"
+    source_lang: Optional[str] = "auto"
+    start_sec: Optional[float] = 0.0
+    duration_sec: Optional[float] = 120.0
+
+@app.post("/api/video/pre-process")
+async def preprocess_video(req: PreProcessRequest):
+    """
+    Downloads the video's audio track in background via yt-dlp,
+    rapidly transcribes with word-level timestamps via Whisper,
+    and translates idioms via Sarvam Mayura.
+    Returns array of pre-buffered cues for 0ms subtitle playback.
+    """
+    if not stream_resolver:
+        return {"ok": False, "error": "StreamResolver not initialized"}
+
+    print(f"[PreProcess] Request received for video {req.video_id} (from {req.start_sec}s for {req.duration_sec}s)")
+    try:
+        # 1. Fetch audio stream file
+        wav_path = stream_resolver.fetch_video_audio(req.video_id)
+
+        # 2. Load audio segment
+        audio_chunk = stream_resolver.load_audio_segment(
+            wav_path,
+            start_sec=req.start_sec or 0.0,
+            duration_sec=req.duration_sec or 120.0,
+        )
+
+        if len(audio_chunk) == 0:
+            return {"ok": True, "cues": []}
+
+        # 3. Fast transcription with word-level boundaries
+        cues = []
+        if whisper_engine and whisper_engine.is_ready():
+            res = whisper_engine.transcribe(
+                audio_chunk,
+                language=req.source_lang if req.source_lang != "auto" else None,
+                is_final=True,
+            )
+
+            # 4. Translate segments via Sarvam Mayura for idiom preservation
+            base_offset = req.start_sec or 0.0
+            for idx, seg in enumerate(res.segments):
+                text = seg.text.strip()
+                if not text:
+                    continue
+
+                abs_start = round(base_offset + seg.start, 3)
+                abs_end = round(base_offset + seg.end, 3)
+
+                translation = None
+                if sarvam_translator and req.target_lang:
+                    translation = await sarvam_translator.translate(
+                        text=text,
+                        source_lang=res.language or "hi",
+                        target_lang=req.target_lang,
+                        mode="modern-colloquial",
+                    )
+
+                cues.append({
+                    "id": f"pre-{req.video_id}-{idx}-{abs_start}",
+                    "start": abs_start,
+                    "end": abs_end,
+                    "text": text,
+                    "translation": translation,
+                    "lang": res.language or "en",
+                    "translation_lang": req.target_lang or "en",
+                    "source": "pre-process",
+                    "is_final": True,
+                    "first_shown_at": None,
+                    "revisions": [{"at": abs_start, "text": text}],
+                })
+
+        return {"ok": True, "video_id": req.video_id, "cues": cues}
+    except Exception as e:
+        print(f"[PreProcess] Error: {e}")
+        return {"ok": False, "error": str(e)}
+
 
 @app.websocket("/api/ws/audio")
 async def audio_websocket_endpoint(websocket: WebSocket):
