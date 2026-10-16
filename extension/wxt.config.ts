@@ -6,7 +6,7 @@ export default defineConfig({
   manifest: {
     name: 'LiveSub',
     description: 'Real-time multilingual subtitles for YouTube — even when the video has no captions.',
-    permissions: ['storage'],
+    permissions: ['storage', 'tabCapture', 'offscreen'],
     host_permissions: ['*://www.youtube.com/*'],
   },
 });

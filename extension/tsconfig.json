@@ -4,6 +4,7 @@
     "allowImportingTsExtensions": true,
     "jsx": "react-jsx",
     "strict": true,
+    "types": ["chrome"],
     "noUnusedLocals": true,
     "noUnusedParameters": true
   }

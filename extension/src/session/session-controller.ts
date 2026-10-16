@@ -1,15 +1,17 @@
 import { createElement } from 'react';
+import { browser } from 'wxt/browser';
 import type { Cue } from '../shared/cue';
 import type { CueProvider } from '../shared/cue-provider';
 import type { Store } from '../shared/store';
 import type { LiveSubSettings } from '../settings/settings-core';
+import type { VideoAnchor } from '../audio/anchor-log';
 import { DemoCueProvider } from '../overlay/demo-cue-provider';
 import { mountOverlay } from '../overlay/mount';
 import { SubtitleOverlay } from '../overlay/SubtitleOverlay';
 import { CueStore } from '../timeline/cue-store';
 import { parseYouTubeJson3 } from '../captions/caption-parser';
 import { findBestTrack, parseCaptionTracks, type CaptionTrack } from '../captions/track-detector';
-import { waitForPlayer } from '../youtube/player-detector';
+import { waitForPlayer, type PlayerElements } from '../youtube/player-detector';
 import { PlayerStateTracker } from '../youtube/player-state';
 
 const LOG = '[LiveSub Session]';
@@ -18,15 +20,19 @@ const LOG = '[LiveSub Session]';
 interface Session {
   id: string;
   videoId: string;
+  els: PlayerElements;
   cueStore: CueStore;
   tracker: PlayerStateTracker;
   unmount: () => void;
   availableTracks: CaptionTrack[];
+  anchorTimer: number | null;
+  audioCaptureActive: boolean;
 }
 
 /**
  * Owns the lifecycle "one session per video".
- * Ties together the PlayerStateTracker, CueStore timeline, and SubtitleOverlay.
+ * Ties together the PlayerStateTracker, CueStore timeline, SubtitleOverlay,
+ * and audio capture pipeline.
  */
 export class SessionController {
   private session: Session | null = null;
@@ -69,12 +75,33 @@ export class SessionController {
       createElement(SubtitleOverlay, { video: els.video, tracker, provider, settings: this.settings }),
     );
 
-    this.session = { id, videoId, cueStore, tracker, unmount, availableTracks: [] };
+    const session: Session = {
+      id,
+      videoId,
+      els,
+      cueStore,
+      tracker,
+      unmount,
+      availableTracks: [],
+      anchorTimer: null,
+      audioCaptureActive: false,
+    };
+    this.session = session;
     document.documentElement.dataset.livesubSession = id;
     console.info(LOG, 'session started', { id, videoId });
 
+    // Start video anchor streaming to offscreen audio engine
+    this.startAnchorStreaming(session);
+
     // Request available tracks from the main-world script
     window.postMessage({ type: 'LIVESUB_REQUEST_TRACKS' }, '*');
+
+    // If after 1.5 seconds no captions are found and settings are enabled, activate audio path
+    window.setTimeout(() => {
+      if (this.session === session && session.cueStore.length === 0 && !session.audioCaptureActive) {
+        this.initiateAudioCapture(session);
+      }
+    }, 1500);
   }
 
   /**
@@ -128,6 +155,41 @@ export class SessionController {
     this.teardown();
   }
 
+  private startAnchorStreaming(session: Session): void {
+    const { video } = session.els;
+
+    const emitAnchor = (isSeek = false) => {
+      if (this.session !== session) return;
+      const anchor: VideoAnchor = {
+        perfNow: performance.now(),
+        videoTime: video.currentTime,
+        rate: video.playbackRate,
+        paused: video.paused,
+        isSeek,
+      };
+      browser.runtime.sendMessage({ type: 'VIDEO_ANCHOR', anchor }).catch(() => {});
+    };
+
+    // Emit anchors on video state changes
+    video.addEventListener('seeking', () => emitAnchor(true));
+    video.addEventListener('seeked', () => emitAnchor(true));
+    video.addEventListener('pause', () => emitAnchor());
+    video.addEventListener('play', () => emitAnchor());
+    video.addEventListener('ratechange', () => emitAnchor());
+
+    // Periodic anchor update every 250ms
+    session.anchorTimer = window.setInterval(() => emitAnchor(), 250);
+  }
+
+  private initiateAudioCapture(session: Session): void {
+    if (!this.settings.get().enabled) return;
+    session.audioCaptureActive = true;
+    console.info(LOG, 'Activating tab audio capture for session', session.id);
+    browser.runtime.sendMessage({ type: 'REQUEST_TAB_AUDIO_CAPTURE' }).catch((err) => {
+      console.warn(LOG, 'Audio capture request notice:', err);
+    });
+  }
+
   /**
    * Provider with priority:
    * 1. If CueStore has cues (from native captions or STT) -> serve them.
@@ -160,7 +222,16 @@ export class SessionController {
     this.pending?.abort();
     this.pending = null;
     if (!this.session) return;
-    const { id, cueStore, tracker, unmount } = this.session;
+    const { id, cueStore, tracker, unmount, anchorTimer, audioCaptureActive } = this.session;
+
+    if (anchorTimer !== null) {
+      window.clearInterval(anchorTimer);
+    }
+
+    if (audioCaptureActive) {
+      browser.runtime.sendMessage({ type: 'STOP_TAB_AUDIO_CAPTURE' }).catch(() => {});
+    }
+
     unmount();
     tracker.stop();
     cueStore.clear();
