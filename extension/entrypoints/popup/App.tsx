@@ -29,7 +29,8 @@ const PREVIEW_TEXT: Record<string, string> = {
 };
 
 export default function App() {
-  const [settings, setSettings] = useState<LiveSubSettings | null>(null);
+  const [settings, setSettings] = useState<LiveSubSettings>(DEFAULT_SETTINGS);
+  const [capturing, setCapturing] = useState<boolean>(false);
   const [tab, setTab] = useState<TabStatus>({ kind: 'loading' });
   const [activeTabId, setActiveTabId] = useState<number | null>(null);
   const [sessionCueCount, setSessionCueCount] = useState<number | null>(null);
@@ -61,10 +62,6 @@ export default function App() {
       }
     });
   }, []);
-
-  if (!settings) return <div className="app app--loading" aria-busy="true" />;
-
-  const [capturing, setCapturing] = useState<boolean>(false);
 
   const startAudioCaptureFromPopup = async () => {
     try {
