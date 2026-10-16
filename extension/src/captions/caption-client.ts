@@ -48,7 +48,25 @@ export async function fetchCaptionCues(
       return [];
     }
 
-    const raw = await res.text();
+    let raw = await res.text();
+    if (!raw || !raw.trim()) {
+      // Fallback: Try fetching default XML without fmt=json3 parameter
+      if (url.includes('fmt=json3')) {
+        const xmlUrl = track.baseUrl.replace(/&fmt=json3|fmt=json3&?/g, '');
+        try {
+          const xmlRes = await fetch(xmlUrl, {
+            signal: controller.signal,
+            credentials: 'include',
+          });
+          if (xmlRes.ok) {
+            raw = await xmlRes.text();
+          }
+        } catch {
+          // Ignore fallback error
+        }
+      }
+    }
+
     if (!raw || !raw.trim()) {
       console.warn(LOG, 'Empty caption response', { url: track.baseUrl });
       return [];
