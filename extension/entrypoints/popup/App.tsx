@@ -280,6 +280,18 @@ export default function App() {
           format={(v) => `${v}%`}
           onChange={(position) => update({ position })}
         />
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '8px' }}>
+          <div>
+            <div style={{ fontWeight: 600, fontSize: '12px' }}>Simulation Demo Mode</div>
+            <div style={{ fontSize: '11px', color: 'var(--muted)' }}>Shows generated cues following video clock</div>
+          </div>
+          <Toggle
+            id="toggle-demo"
+            checked={settings.demoMode}
+            onChange={(demoMode) => update({ demoMode })}
+            label="Toggle Simulation Demo"
+          />
+        </div>
       </Section>
 
       <Section title="Judge / Evaluation">

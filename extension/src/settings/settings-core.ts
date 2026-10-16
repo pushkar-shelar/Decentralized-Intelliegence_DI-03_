@@ -49,7 +49,7 @@ export const DEFAULT_SETTINGS: Readonly<LiveSubSettings> = Object.freeze({
   fontSize: 24,
   bgOpacity: 0.6,
   position: 8,
-  demoMode: true,
+  demoMode: false,
 });
 
 const LANG_CODES = new Set<string>(LANGUAGES.map((l) => l.code));
