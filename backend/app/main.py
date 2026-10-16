@@ -63,6 +63,23 @@ app.add_middleware(
 
 MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "models", "shrutam-2")
 
+@app.get("/")
+def root():
+    return {
+        "status": "ok",
+        "backend": "LiveSub",
+        "health": "/api/health",
+        "docs": "/docs",
+    }
+
+@app.get("/api/ws/audio")
+def ws_audio_info():
+    return {
+        "endpoint": "/api/ws/audio",
+        "protocol": "WebSocket",
+        "message": "This endpoint requires a WebSocket connection (ws://localhost:8765/api/ws/audio), used automatically by the LiveSub Chrome extension.",
+    }
+
 @app.get("/api/health")
 def health_check():
     has_shrutam = os.path.isdir(MODEL_DIR) and os.path.exists(os.path.join(MODEL_DIR, "config.json"))
