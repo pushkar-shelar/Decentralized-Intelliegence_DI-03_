@@ -48,10 +48,12 @@ class StreamingSpeechProcessor:
         if speech_audio is None or len(speech_audio) == 0:
             return None
 
-        # Determine target language
-        target_lang = preferred_lang
-        if target_lang == "auto":
-            # Use detected language or fallback
+        # Language handling: detect language if not already detected
+        if target_lang == "auto" or not target_lang:
+            if self.whisper and self.detected_lang == "en" and len(speech_audio) >= 16000:
+                lid_lang, prob = self.whisper.detect_language(speech_audio[:32000])
+                if prob > 0.4:
+                    self.detected_lang = lid_lang
             target_lang = self.detected_lang
 
         # Assign or track active cue ID
@@ -67,15 +69,11 @@ class StreamingSpeechProcessor:
         rate = anchor.get("rate", 1.0)
         end_time = round(start_time + speech_duration_sec * rate, 2)
 
-        # Route between Shrutam-2 and Whisper
-        engine_used = "shrutam" if target_lang in INDIC_LANGS and self.shrutam and self.shrutam.is_ready() else "whisper"
-
-        if engine_used == "shrutam" and self.shrutam:
-            res = self.shrutam.transcribe(speech_audio, language=target_lang, is_final=should_finalize)
-        elif self.whisper:
-            res = self.whisper.transcribe(speech_audio, language=target_lang, is_final=should_finalize)
-        else:
+        # Exclusively transcribe with Whisper (configured with language="hi" for Hindi)
+        if not self.whisper or not self.whisper.is_ready():
             return None
+
+        res = self.whisper.transcribe(speech_audio, language=target_lang, is_final=should_finalize)
 
         if not res.text:
             return None

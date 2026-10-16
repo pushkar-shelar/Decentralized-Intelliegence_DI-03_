@@ -68,6 +68,10 @@ class WhisperEngine(BaseASREngine):
                 language=lang,
                 beam_size=beam_size,
                 word_timestamps=True,
+                no_speech_threshold=0.6,
+                compression_ratio_threshold=2.4,
+                log_prob_threshold=-1.0,
+                condition_on_previous_text=False, # Prevents hallucinations across short phrases/silence
                 vad_filter=False, # We already do VAD with Silero
             )
 
