@@ -9,26 +9,30 @@ import time
 import math
 from contextlib import asynccontextmanager
 import numpy as np
+from typing import Optional
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
+
+from dotenv import load_dotenv
+load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), ".env"))
 
 from backend.app.models.shrutam_engine import ShrutamEngine
 from backend.app.models.whisper_engine import WhisperEngine
 from backend.app.audio.vad import SileroVAD
 from backend.app.services.streaming_processor import StreamingSpeechProcessor
 from backend.app.services.stream_resolver import StreamResolver
-from backend.app.translation.sarvam_translator import SarvamTranslator
+from backend.app.translation.unified_translator import UnifiedTranslator
 
 # Global model references
 shrutam_engine = None
 whisper_engine = None
 silero_vad = None
 stream_resolver = None
-sarvam_translator = None
+unified_translator = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global shrutam_engine, whisper_engine, silero_vad, stream_resolver, sarvam_translator
+    global shrutam_engine, whisper_engine, silero_vad, stream_resolver, unified_translator
     print("[LiveSub Backend] Initializing models and VAD...")
 
     # Load Silero VAD
@@ -37,8 +41,8 @@ async def lifespan(app: FastAPI):
     # Load StreamResolver
     stream_resolver = StreamResolver()
 
-    # Load SarvamTranslator
-    sarvam_translator = SarvamTranslator()
+    # Load UnifiedTranslator (Grok primary -> Sarvam fallback)
+    unified_translator = UnifiedTranslator()
 
     # Load Shrutam-2 from local project folder
     try:
@@ -101,7 +105,8 @@ def health_check():
         "shrutam_model_dir": MODEL_DIR if has_shrutam else None,
         "shrutam_loaded": shrutam_engine.is_ready() if shrutam_engine else False,
         "whisper_loaded": whisper_engine.is_ready() if whisper_engine else False,
-        "sarvam_configured": sarvam_translator.is_configured() if sarvam_translator else False,
+        "grok_configured": bool(unified_translator and unified_translator.grok_api_key),
+        "sarvam_configured": bool(unified_translator and unified_translator.sarvam_api_key),
     }
 
 from pydantic import BaseModel
@@ -159,12 +164,11 @@ async def preprocess_video(req: PreProcessRequest):
                 abs_end = round(base_offset + seg.end, 3)
 
                 translation = None
-                if sarvam_translator and req.target_lang:
-                    translation = await sarvam_translator.translate(
+                if unified_translator and req.target_lang:
+                    translation = await unified_translator.translate(
                         text=text,
                         source_lang=res.language or "hi",
                         target_lang=req.target_lang,
-                        mode="modern-colloquial",
                     )
 
                 cues.append({

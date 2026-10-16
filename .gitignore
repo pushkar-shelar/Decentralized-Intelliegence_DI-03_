@@ -30,3 +30,6 @@ Thumbs.db
 # Coverage & testing
 coverage/
 .vitest/
+
+# Environment secrets
+.env
