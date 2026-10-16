@@ -1,4 +1,5 @@
 import type { Cue, CueSource } from '../shared/cue';
+import type { DisplayMode } from '../settings/settings-core';
 
 /**
  * Normalized cue entry matching judge evaluation specification:
@@ -39,7 +40,6 @@ export function formatCueForExport(cue: Cue): ExportedCueEntry {
   const end = Number(cue.end.toFixed(3));
 
   // Determine first_shown_at:
-  // If explicitly recorded, format it; if source is captions and was shown, keep it; else null.
   const firstShown =
     cue.first_shown_at != null && Number.isFinite(cue.first_shown_at)
       ? Number(cue.first_shown_at.toFixed(3))
@@ -97,11 +97,100 @@ export function buildSessionExport(params: {
 }
 
 /**
- * Helper to download session export as a formatted .json file in the browser.
+ * Converts seconds into subtitle timestamp format:
+ * - SRT: HH:MM:SS,mmm
+ * - VTT: HH:MM:SS.mmm
  */
-export function downloadJsonFile(filename: string, data: unknown): void {
-  const json = JSON.stringify(data, null, 2);
-  const blob = new Blob([json], { type: 'application/json;charset=utf-8' });
+export function formatTimestamp(seconds: number, separator: ',' | '.'): string {
+  const total = Math.max(0, Number.isFinite(seconds) ? seconds : 0);
+  const hours = Math.floor(total / 3600);
+  const minutes = Math.floor((total % 3600) / 60);
+  const secs = Math.floor(total % 60);
+  const ms = Math.floor(((total % 1) + 1e-9) * 1000);
+
+  const hh = String(hours).padStart(2, '0');
+  const mm = String(minutes).padStart(2, '0');
+  const ss = String(secs).padStart(2, '0');
+  const mmm = String(Math.min(999, ms)).padStart(3, '0');
+
+  return `${hh}:${mm}:${ss}${separator}${mmm}`;
+}
+
+/**
+ * Resolves the lines of text to display for a cue based on the viewer's DisplayMode.
+ */
+export function getCueDisplayLines(
+  cue: { text: string; translation?: string | null },
+  mode: DisplayMode = 'dual',
+): string[] {
+  const original = (cue.text ?? '').trim();
+  const translation = cue.translation?.trim() || null;
+
+  if (mode === 'original' || !translation) {
+    return original ? [original] : [];
+  }
+  if (mode === 'translated') {
+    return [translation];
+  }
+  // mode === 'dual'
+  if (translation === original) {
+    return [original];
+  }
+  return [original, translation];
+}
+
+/**
+ * Converts a list of cues into SubRip (.srt) subtitle format.
+ */
+export function cuesToSrt(
+  cues: ReadonlyArray<Cue | ExportedCueEntry>,
+  mode: DisplayMode = 'dual',
+): string {
+  const sorted = [...cues].sort((a, b) => a.start - b.start || a.end - b.end);
+  const blocks: string[] = [];
+
+  let index = 1;
+  for (const cue of sorted) {
+    const lines = getCueDisplayLines(cue, mode);
+    if (lines.length === 0) continue;
+
+    const start = formatTimestamp(cue.start, ',');
+    const end = formatTimestamp(cue.end, ',');
+    blocks.push(`${index++}\n${start} --> ${end}\n${lines.join('\n')}`);
+  }
+
+  return blocks.length > 0 ? `${blocks.join('\n\n')}\n` : '';
+}
+
+/**
+ * Converts a list of cues into WebVTT (.vtt) subtitle format.
+ */
+export function cuesToVtt(
+  cues: ReadonlyArray<Cue | ExportedCueEntry>,
+  mode: DisplayMode = 'dual',
+  title = 'LiveSub Export',
+): string {
+  const sorted = [...cues].sort((a, b) => a.start - b.start || a.end - b.end);
+  const blocks: string[] = [`WEBVTT - ${title}\n`];
+
+  let index = 1;
+  for (const cue of sorted) {
+    const lines = getCueDisplayLines(cue, mode);
+    if (lines.length === 0) continue;
+
+    const start = formatTimestamp(cue.start, '.');
+    const end = formatTimestamp(cue.end, '.');
+    blocks.push(`${index++}\n${start} --> ${end}\n${lines.join('\n')}`);
+  }
+
+  return `${blocks.join('\n')}\n`;
+}
+
+/**
+ * Generic browser file download helper.
+ */
+export function downloadTextFile(filename: string, content: string, mimeType: string): void {
+  const blob = new Blob([content], { type: `${mimeType};charset=utf-8` });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
@@ -110,4 +199,17 @@ export function downloadJsonFile(filename: string, data: unknown): void {
   a.click();
   document.body.removeChild(a);
   setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+export function downloadJsonFile(filename: string, data: unknown): void {
+  const json = JSON.stringify(data, null, 2);
+  downloadTextFile(filename, json, 'application/json');
+}
+
+export function downloadSrtFile(filename: string, content: string): void {
+  downloadTextFile(filename, content, 'text/plain');
+}
+
+export function downloadVttFile(filename: string, content: string): void {
+  downloadTextFile(filename, content, 'text/vtt');
 }

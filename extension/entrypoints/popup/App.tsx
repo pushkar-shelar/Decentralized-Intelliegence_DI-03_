@@ -1,6 +1,12 @@
 import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
 import { browser } from 'wxt/browser';
-import { downloadJsonFile } from '../../src/export/session-export';
+import {
+  downloadJsonFile,
+  downloadSrtFile,
+  downloadVttFile,
+  cuesToSrt,
+  cuesToVtt,
+} from '../../src/export/session-export';
 import {
   DEFAULT_SETTINGS,
   LANGUAGES,
@@ -13,6 +19,7 @@ import {
 import { parseVideoId } from '../../src/youtube/video-id';
 
 type TabStatus = { kind: 'loading' } | { kind: 'video'; videoId: string } | { kind: 'other' };
+type ExportFormat = 'json' | 'srt' | 'vtt';
 
 const DISPLAY_MODES: Array<{ value: DisplayMode; label: string }> = [
   { value: 'original', label: 'Original' },
@@ -34,6 +41,7 @@ export default function App() {
   const [tab, setTab] = useState<TabStatus>({ kind: 'loading' });
   const [activeTabId, setActiveTabId] = useState<number | null>(null);
   const [sessionCueCount, setSessionCueCount] = useState<number | null>(null);
+  const [exportFormat, setExportFormat] = useState<ExportFormat>('json');
   const [exporting, setExporting] = useState(false);
   const [copied, setCopied] = useState(false);
   const [exportMessage, setExportMessage] = useState<string | null>(null);
@@ -101,9 +109,24 @@ export default function App() {
       const res: any = await browser.tabs.sendMessage(activeTabId, { type: 'LIVESUB_EXPORT_SESSION' });
       if (res?.ok && res.data) {
         const vid = res.data.video_id || 'youtube';
-        const filename = `livesub-session-${vid}-${Date.now()}.json`;
-        downloadJsonFile(filename, res.data);
-        setExportMessage(`Exported ${res.data.total_cues} cues to ${filename}`);
+        const timestamp = Date.now();
+        const cues = res.data.cues || [];
+
+        if (exportFormat === 'json') {
+          const filename = `livesub-session-${vid}-${timestamp}.json`;
+          downloadJsonFile(filename, res.data);
+          setExportMessage(`Exported ${res.data.total_cues} cues as JSON (${filename})`);
+        } else if (exportFormat === 'srt') {
+          const filename = `livesub-${vid}-${timestamp}.srt`;
+          const srt = cuesToSrt(cues, settings.displayMode);
+          downloadSrtFile(filename, srt);
+          setExportMessage(`Exported ${cues.length} cues as SRT (${settings.displayMode} mode)`);
+        } else {
+          const filename = `livesub-${vid}-${timestamp}.vtt`;
+          const vtt = cuesToVtt(cues, settings.displayMode, `LiveSub ${vid}`);
+          downloadVttFile(filename, vtt);
+          setExportMessage(`Exported ${cues.length} cues as WebVTT (${settings.displayMode} mode)`);
+        }
       } else {
         setExportMessage('No active session or cues to export.');
       }
@@ -114,22 +137,32 @@ export default function App() {
     }
   };
 
-  const handleCopyJson = async () => {
+  const handleCopySubtitles = async () => {
     if (!activeTabId) return;
     setExporting(true);
     setExportMessage(null);
     try {
       const res: any = await browser.tabs.sendMessage(activeTabId, { type: 'LIVESUB_EXPORT_SESSION' });
       if (res?.ok && res.data) {
-        await navigator.clipboard.writeText(JSON.stringify(res.data, null, 2));
+        const cues = res.data.cues || [];
+        let textToCopy = '';
+        if (exportFormat === 'json') {
+          textToCopy = JSON.stringify(res.data, null, 2);
+        } else if (exportFormat === 'srt') {
+          textToCopy = cuesToSrt(cues, settings.displayMode);
+        } else {
+          textToCopy = cuesToVtt(cues, settings.displayMode, `LiveSub ${res.data.video_id}`);
+        }
+
+        await navigator.clipboard.writeText(textToCopy);
         setCopied(true);
-        setExportMessage(`Copied JSON (${res.data.total_cues} cues) to clipboard!`);
+        setExportMessage(`Copied ${exportFormat.toUpperCase()} (${cues.length} cues) to clipboard!`);
         setTimeout(() => setCopied(false), 2500);
       } else {
         setExportMessage('No cues available to copy.');
       }
     } catch {
-      setExportMessage('Failed to copy session JSON.');
+      setExportMessage('Failed to copy session subtitles.');
     } finally {
       setExporting(false);
     }
@@ -297,20 +330,37 @@ export default function App() {
       <Section title="Judge / Evaluation">
         <div className="eval-card">
           <div className="eval-card__info">
-            <div className="label-strong">Session Cue Log</div>
+            <div className="label-strong">Session Subtitle Export</div>
             <div className="hint">
               {tab.kind === 'video'
                 ? sessionCueCount != null && sessionCueCount > 0
-                  ? `${sessionCueCount} cue${sessionCueCount === 1 ? '' : 's'} recorded with timestamps & revisions`
+                  ? `${sessionCueCount} cue${sessionCueCount === 1 ? '' : 's'} recorded · ${settings.displayMode} mode`
                   : settings.demoMode
-                    ? 'Demo cues ready for judge evaluation export'
+                    ? `Demo cues ready for export (${settings.displayMode} mode)`
                     : 'Cues will record automatically as playback progresses'
                 : 'Open a YouTube video to record session cues'}
             </div>
           </div>
+
+          <div className="eval-format">
+            <label htmlFor="select-export-format" className="field__label">
+              Format
+            </label>
+            <select
+              id="select-export-format"
+              className="select"
+              value={exportFormat}
+              onChange={(e) => setExportFormat(e.target.value as ExportFormat)}
+            >
+              <option value="json">JSON (Full Cue Log & Revisions)</option>
+              <option value="srt">SubRip (.srt) — {settings.displayMode} text</option>
+              <option value="vtt">WebVTT (.vtt) — {settings.displayMode} text</option>
+            </select>
+          </div>
+
           <div className="row row--actions">
             <button
-              id="btn-export-json"
+              id="btn-export-sub"
               type="button"
               className="btn btn--primary"
               disabled={exporting || tab.kind !== 'video'}
@@ -320,20 +370,20 @@ export default function App() {
                 <path d="M8.5 1.5a.5.5 0 0 0-1 0v7.793L5.354 7.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 9.293V1.5z" />
                 <path d="M2 13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V11a.5.5 0 0 0-1 0v2.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V11a.5.5 0 0 0-1 0v2.5z" />
               </svg>
-              {exporting ? 'Exporting…' : 'Export JSON'}
+              {exporting ? 'Exporting…' : `Export ${exportFormat.toUpperCase()}`}
             </button>
             <button
-              id="btn-copy-json"
+              id="btn-copy-sub"
               type="button"
               className="btn btn--secondary"
               disabled={exporting || tab.kind !== 'video'}
-              onClick={handleCopyJson}
+              onClick={handleCopySubtitles}
             >
               <svg className="btn__icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
                 <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z" />
                 <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
               </svg>
-              {copied ? '✓ Copied!' : 'Copy JSON'}
+              {copied ? '✓ Copied!' : `Copy ${exportFormat.toUpperCase()}`}
             </button>
           </div>
           {exportMessage && (

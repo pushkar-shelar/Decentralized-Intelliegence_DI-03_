@@ -166,4 +166,65 @@ describe('Session Cue Log Export for Judges', () => {
     expect(cues[0]?.translation).toBeDefined();
     expect(cues[0]?.revisions).toHaveLength(1);
   });
+
+  describe('SRT & WebVTT conversion', () => {
+    const testCues: Cue[] = [
+      {
+        id: 'cue-1',
+        start: 12.4,
+        end: 14.15,
+        lang: 'hi',
+        text: 'आज हम पनीर टिक्का बनाएंगे',
+        translation: 'Today we will make paneer tikka',
+        source: 'captions',
+        revisions: [{ at: 12.4, text: 'आज हम पनीर टिक्का बनाएंगे' }],
+      },
+      {
+        id: 'cue-2',
+        start: 65.0,
+        end: 68.25,
+        lang: 'en',
+        text: 'Next, cut into cubes.',
+        translation: 'इसके बाद, टुकड़ों में काट लें।',
+        source: 'stt',
+        revisions: [{ at: 65.0, text: 'Next, cut into cubes.' }],
+      },
+    ];
+
+    it('formats timestamps accurately for SRT (comma) and VTT (period)', async () => {
+      const { formatTimestamp } = await import('../src/export/session-export');
+      expect(formatTimestamp(0, ',')).toBe('00:00:00,000');
+      expect(formatTimestamp(12.4, ',')).toBe('00:00:12,400');
+      expect(formatTimestamp(65.125, ',')).toBe('00:01:05,125');
+      expect(formatTimestamp(3661.05, '.')).toBe('01:01:01.050');
+    });
+
+    it('converts cues to valid SubRip (.srt) in dual mode', async () => {
+      const { cuesToSrt } = await import('../src/export/session-export');
+      const srt = cuesToSrt(testCues, 'dual');
+
+      expect(srt).toContain('1\n00:00:12,400 --> 00:00:14,150\nआज हम पनीर टिक्का बनाएंगे\nToday we will make paneer tikka');
+      expect(srt).toContain('2\n00:01:05,000 --> 00:01:08,250\nNext, cut into cubes.\nइसके बाद, टुकड़ों में काट लें।');
+    });
+
+    it('converts cues to valid SubRip (.srt) in original and translated modes', async () => {
+      const { cuesToSrt } = await import('../src/export/session-export');
+      const srtOrig = cuesToSrt(testCues, 'original');
+      expect(srtOrig).toContain('आज हम पनीर टिक्का बनाएंगे');
+      expect(srtOrig).not.toContain('Today we will make paneer tikka');
+
+      const srtTrans = cuesToSrt(testCues, 'translated');
+      expect(srtTrans).toContain('Today we will make paneer tikka');
+      expect(srtTrans).not.toContain('आज हम पनीर टिक्का बनाएंगे');
+    });
+
+    it('converts cues to valid WebVTT (.vtt) with header and period timestamps', async () => {
+      const { cuesToVtt } = await import('../src/export/session-export');
+      const vtt = cuesToVtt(testCues, 'dual', 'Recipe Video');
+
+      expect(vtt).toMatch(/^WEBVTT - Recipe Video\n/);
+      expect(vtt).toContain('1\n00:00:12.400 --> 00:00:14.150\nआज हम पनीर टिक्का बनाएंगे\nToday we will make paneer tikka');
+      expect(vtt).toContain('2\n00:01:05.000 --> 00:01:08.250\nNext, cut into cubes.\nइसके बाद, टुकड़ों में काट लें।');
+    });
+  });
 });
