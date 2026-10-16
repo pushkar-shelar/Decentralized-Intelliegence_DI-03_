@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://livesub.dev/schema/cue.schema.json",
+  "title": "Cue",
+  "description": "Normalized LiveSub subtitle cue. Every module (caption path, STT path, translation, overlay, export) speaks this format. All times are VIDEO seconds, never audio-chunk seconds.",
+  "type": "object",
+  "required": ["id", "start", "end", "lang", "text", "source", "revisions"],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "description": "Stable id, unique within a session (e.g. cue-001)." },
+    "start": { "type": "number", "minimum": 0, "description": "Video time (s) when the cue becomes active." },
+    "end": { "type": "number", "minimum": 0, "description": "Video time (s) when the cue stops being active." },
+    "lang": { "type": "string", "description": "BCP-47-ish language code of `text` (en, hi, mr, ta, te, ...)." },
+    "text": { "type": "string", "description": "Original-language text (latest revision)." },
+    "translation": { "type": ["string", "null"], "description": "Translated text in the viewer's target language." },
+    "translation_lang": { "type": ["string", "null"], "description": "Language code of `translation`." },
+    "source": { "enum": ["captions", "stt", "demo"], "description": "Where the original text came from." },
+    "speaker": { "type": ["string", "null"], "description": "Speaker label from diarization (Phase 6.5), e.g. S1." },
+    "is_final": { "type": "boolean", "description": "False while the STT hypothesis may still change." },
+    "first_shown_at": { "type": ["number", "null"], "description": "Video time (s) at which the final text first appeared in full." },
+    "revisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["at", "text"],
+        "additionalProperties": false,
+        "properties": {
+          "at": { "type": "number", "description": "Video time (s) when this revision was received." },
+          "text": { "type": "string" }
+        }
+      }
+    }
+  }
+}
