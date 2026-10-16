@@ -18,6 +18,7 @@ load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file_
 
 from backend.app.models.shrutam_engine import ShrutamEngine
 from backend.app.models.whisper_engine import WhisperEngine
+from backend.app.models.whisperx_engine import WhisperXEngine
 from backend.app.audio.vad import SileroVAD
 from backend.app.services.streaming_processor import StreamingSpeechProcessor
 from backend.app.services.stream_resolver import StreamResolver
@@ -26,6 +27,7 @@ from backend.app.translation.unified_translator import UnifiedTranslator
 # Global model references
 shrutam_engine = None
 whisper_engine = None
+whisperx_engine = None
 silero_vad = None
 stream_resolver = None
 unified_translator = None
@@ -55,6 +57,12 @@ async def lifespan(app: FastAPI):
         whisper_engine = WhisperEngine(model_size="large-v3-turbo")
     except Exception as e:
         print(f"[LiveSub Backend] Warning: WhisperEngine init deferred ({e})")
+
+    # Load WhisperX Engine
+    try:
+        whisperx_engine = WhisperXEngine(model_size="large-v3-turbo")
+    except Exception as e:
+        print(f"[LiveSub Backend] Warning: WhisperXEngine init deferred ({e})")
 
     yield
 
@@ -144,46 +152,72 @@ async def preprocess_video(req: PreProcessRequest):
         if len(audio_chunk) == 0:
             return {"ok": True, "cues": []}
 
-        # 3. Fast transcription with word-level boundaries
+        # 3. Fast transcription with word-level boundaries and optional diarization
         cues = []
-        if whisper_engine and whisper_engine.is_ready():
+        segments = []
+        detected_lang = req.source_lang or "en"
+
+        if whisperx_engine and whisperx_engine.is_ready():
+            try:
+                wx_segs = whisperx_engine.process_audio(
+                    audio_chunk,
+                    language=req.source_lang if req.source_lang != "auto" else None,
+                    enable_diarization=True,
+                )
+                if wx_segs and len(wx_segs) > 0:
+                    segments = wx_segs
+                    detected_lang = wx_segs[0].get("language", detected_lang)
+            except Exception as e:
+                print(f"[PreProcess] WhisperX failed, falling back to WhisperEngine: {e}")
+
+        # Fallback to standard WhisperEngine with word_timestamps
+        if len(segments) == 0 and whisper_engine and whisper_engine.is_ready():
             res = whisper_engine.transcribe(
                 audio_chunk,
                 language=req.source_lang if req.source_lang != "auto" else None,
                 is_final=True,
             )
-
-            # 4. Translate segments via Sarvam Mayura for idiom preservation
-            base_offset = req.start_sec or 0.0
-            for idx, seg in enumerate(res.segments):
-                text = seg.text.strip()
-                if not text:
-                    continue
-
-                abs_start = round(base_offset + seg.start, 3)
-                abs_end = round(base_offset + seg.end, 3)
-
-                translation = None
-                if unified_translator and req.target_lang:
-                    translation = await unified_translator.translate(
-                        text=text,
-                        source_lang=res.language or "hi",
-                        target_lang=req.target_lang,
-                    )
-
-                cues.append({
-                    "id": f"pre-{req.video_id}-{idx}-{abs_start}",
-                    "start": abs_start,
-                    "end": abs_end,
-                    "text": text,
-                    "translation": translation,
-                    "lang": res.language or "en",
-                    "translation_lang": req.target_lang or "en",
-                    "source": "pre-process",
-                    "is_final": True,
-                    "first_shown_at": None,
-                    "revisions": [{"at": abs_start, "text": text}],
+            detected_lang = res.language or detected_lang
+            for s in res.segments:
+                segments.append({
+                    "start": s.start,
+                    "end": s.end,
+                    "text": s.text,
+                    "speaker": None,
                 })
+
+        # 4. Translate segments via UnifiedTranslator (Grok -> Sarvam)
+        base_offset = req.start_sec or 0.0
+        for idx, seg in enumerate(segments):
+            text = seg["text"].strip()
+            if not text:
+                continue
+
+            abs_start = round(base_offset + seg["start"], 3)
+            abs_end = round(base_offset + seg["end"], 3)
+
+            translation = None
+            if unified_translator and req.target_lang:
+                translation = await unified_translator.translate(
+                    text=text,
+                    source_lang=detected_lang or "hi",
+                    target_lang=req.target_lang,
+                )
+
+            cues.append({
+                "id": f"pre-{req.video_id}-{idx}-{abs_start}",
+                "start": abs_start,
+                "end": abs_end,
+                "text": text,
+                "translation": translation,
+                "speaker": seg.get("speaker"),
+                "lang": detected_lang or "en",
+                "translation_lang": req.target_lang or "en",
+                "source": "pre-process",
+                "is_final": True,
+                "first_shown_at": None,
+                "revisions": [{"at": abs_start, "text": text}],
+            })
 
         return {"ok": True, "video_id": req.video_id, "cues": cues}
     except Exception as e:

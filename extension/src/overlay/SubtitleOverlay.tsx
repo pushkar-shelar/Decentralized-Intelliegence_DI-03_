@@ -101,6 +101,11 @@ export function SubtitleOverlay({ video, tracker, provider, settings: settingsSt
   return (
     <div className="ls-stage" style={style} data-view-mode={ui.viewMode}>
       <div className="ls-cue" key={cue.id} lang={cue.lang} data-source={cue.source}>
+        {cue.speaker && (
+          <span className="ls-speaker-badge" data-speaker={cue.speaker}>
+            {cue.speaker.replace('_', ' ')}
+          </span>
+        )}
         {lines.map((line) => (
           <span
             key={line.kind}
