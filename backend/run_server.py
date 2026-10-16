@@ -1,5 +1,11 @@
 import os
 import sys
+
+# Suppress TensorFlow conflicts & symlink warnings
+os.environ["USE_TF"] = "0"
+os.environ["TRANSFORMERS_NO_TF"] = "1"
+os.environ["HF_HUB_DISABLE_SYMLINKS_WARNING"] = "1"
+
 import uvicorn
 
 # Ensure project root is in sys.path

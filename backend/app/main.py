@@ -1,4 +1,9 @@
 import os
+# Force PyTorch-only backend in transformers and avoid protobuf conflicts with tensorflow
+os.environ["USE_TF"] = "0"
+os.environ["TRANSFORMERS_NO_TF"] = "1"
+os.environ["HF_HUB_DISABLE_SYMLINKS_WARNING"] = "1"
+
 import json
 import time
 import math
