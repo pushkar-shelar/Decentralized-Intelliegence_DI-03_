@@ -27,8 +27,16 @@ export default defineContentScript({
             .then((data) => {
               window.postMessage({ type: 'LIVESUB_TIMEDTEXT', url, payload: data }, '*');
             })
-            .catch(() => {
-              // Not JSON (e.g. XML format or empty)
+            .catch(async () => {
+              // Might be XML or text
+              try {
+                const text = await response.clone().text();
+                if (text && text.includes('<text')) {
+                  window.postMessage({ type: 'LIVESUB_TIMEDTEXT', url, payload: text }, '*');
+                }
+              } catch {
+                // Ignore
+              }
             });
         }
       } catch (err) {
@@ -52,11 +60,17 @@ export default defineContentScript({
         this.addEventListener('load', () => {
           try {
             if (this.responseText) {
-              const data = JSON.parse(this.responseText);
-              window.postMessage({ type: 'LIVESUB_TIMEDTEXT', url, payload: data }, '*');
+              try {
+                const data = JSON.parse(this.responseText);
+                window.postMessage({ type: 'LIVESUB_TIMEDTEXT', url, payload: data }, '*');
+              } catch {
+                if (this.responseText.includes('<text')) {
+                  window.postMessage({ type: 'LIVESUB_TIMEDTEXT', url, payload: this.responseText }, '*');
+                }
+              }
             }
           } catch {
-            // Not JSON
+            // Ignore
           }
         });
       }
@@ -67,7 +81,16 @@ export default defineContentScript({
     function broadcastTracks() {
       try {
         const ytData = (window as any).ytInitialPlayerResponse;
-        const tracks = ytData?.captions?.playerCaptionsTracklistRenderer?.captionTracks;
+        let tracks = ytData?.captions?.playerCaptionsTracklistRenderer?.captionTracks;
+
+        if (!Array.isArray(tracks) || tracks.length === 0) {
+          const player = document.getElementById('movie_player') as any;
+          const playerTracks = player?.getOption?.('captions', 'tracklist');
+          if (Array.isArray(playerTracks) && playerTracks.length > 0) {
+            tracks = playerTracks;
+          }
+        }
+
         if (Array.isArray(tracks) && tracks.length > 0) {
           window.postMessage({ type: 'LIVESUB_CAPTIONS_METADATA', tracks }, '*');
         }
@@ -86,8 +109,13 @@ export default defineContentScript({
         try {
           const res = await originalFetch(url, { credentials: 'include' });
           if (res.ok) {
-            const data = await res.json();
-            window.postMessage({ type: 'LIVESUB_TIMEDTEXT', url, payload: data, lang: ev.data.lang }, '*');
+            const raw = await res.text();
+            try {
+              const data = JSON.parse(raw);
+              window.postMessage({ type: 'LIVESUB_TIMEDTEXT', url, payload: data, lang: ev.data.lang }, '*');
+            } catch {
+              window.postMessage({ type: 'LIVESUB_TIMEDTEXT', url, payload: raw, lang: ev.data.lang }, '*');
+            }
           }
         } catch (err) {
           console.warn(LOG, 'failed to fetch track in main world', err);

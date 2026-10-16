@@ -50,7 +50,49 @@ export function demoCueAt(videoTime: number): Cue | null {
 }
 
 export class DemoCueProvider implements CueProvider {
+  private firstShownMap = new Map<string, number>();
+
   getActiveCue(videoTime: number): Cue | null {
-    return demoCueAt(videoTime);
+    const cue = demoCueAt(videoTime);
+    if (cue && this.firstShownMap.has(cue.id)) {
+      cue.first_shown_at = this.firstShownMap.get(cue.id)!;
+    }
+    return cue;
+  }
+
+  recordFirstShown(id: string, videoTime: number): void {
+    if (!this.firstShownMap.has(id)) {
+      this.firstShownMap.set(id, Number(videoTime.toFixed(3)));
+    }
+  }
+
+  /**
+   * Generates a sequence of demo cues up to currentTime (or default 10 cues) for export.
+   */
+  generateSessionCues(currentTime = 40): Cue[] {
+    const count = Math.max(5, Math.ceil(Math.min(currentTime, 300) / DEMO_INTERVAL));
+    const cues: Cue[] = [];
+    for (let i = 0; i < count; i++) {
+      const start = i * DEMO_INTERVAL;
+      const end = Number((start + DEMO_VISIBLE).toFixed(3));
+      const sample = SAMPLE_LINES[i % SAMPLE_LINES.length] ?? DEFAULT_SAMPLE;
+      const [en, hi] = sample;
+      const text = `#${i + 1} · ${formatClock(start)} — ${en}`;
+      const id = `demo-${i}`;
+      cues.push({
+        id,
+        start,
+        end,
+        lang: 'en',
+        text,
+        translation: hi,
+        translation_lang: 'hi',
+        source: 'demo',
+        is_final: true,
+        first_shown_at: this.firstShownMap.get(id) ?? (start <= currentTime ? start : null),
+        revisions: [{ at: start, text }],
+      });
+    }
+    return cues;
   }
 }

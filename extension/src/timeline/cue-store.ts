@@ -113,11 +113,20 @@ export class CueStore implements CueProvider {
 
     for (const cue of incoming) {
       const existing = this.idMap.get(cue.id);
+      const normalized: Cue = {
+        ...cue,
+        revisions:
+          cue.revisions && cue.revisions.length > 0
+            ? [...cue.revisions]
+            : [{ at: cue.start, text: cue.text }],
+        first_shown_at: cue.first_shown_at ?? null,
+      };
+
       if (existing) {
-        Object.assign(existing, cue);
+        Object.assign(existing, normalized);
       } else {
-        this.cues.push(cue);
-        this.idMap.set(cue.id, cue);
+        this.cues.push(normalized);
+        this.idMap.set(normalized.id, normalized);
       }
     }
 
@@ -133,13 +142,16 @@ export class CueStore implements CueProvider {
   upsertCue(cue: Cue): void {
     const existing = this.idMap.get(cue.id);
     if (existing) {
+      const textChanged = existing.text !== cue.text;
       existing.text = cue.text;
       existing.end = cue.end;
       if (cue.translation !== undefined) existing.translation = cue.translation;
       if (cue.translation_lang !== undefined) existing.translation_lang = cue.translation_lang;
       if (cue.speaker !== undefined) existing.speaker = cue.speaker;
       if (cue.is_final !== undefined) existing.is_final = cue.is_final;
-      if (cue.first_shown_at !== undefined) existing.first_shown_at = cue.first_shown_at;
+      if (cue.first_shown_at !== undefined && cue.first_shown_at !== null) {
+        existing.first_shown_at = cue.first_shown_at;
+      }
 
       // Merge new revisions
       if (cue.revisions && cue.revisions.length > 0) {
@@ -148,6 +160,9 @@ export class CueStore implements CueProvider {
             existing.revisions.push(rev);
           }
         }
+      } else if (textChanged) {
+        // Record automatic revision if text changed without explicit revisions array
+        existing.revisions.push({ at: cue.start, text: cue.text });
       }
 
       // If start changed, re-sort
@@ -156,12 +171,44 @@ export class CueStore implements CueProvider {
         this.sort();
       }
     } else {
-      this.cues.push(cue);
-      this.idMap.set(cue.id, cue);
+      const toInsert: Cue = {
+        ...cue,
+        first_shown_at: cue.first_shown_at ?? null,
+        revisions:
+          cue.revisions && cue.revisions.length > 0
+            ? [...cue.revisions]
+            : [{ at: cue.start, text: cue.text }],
+      };
+      this.cues.push(toInsert);
+      this.idMap.set(toInsert.id, toInsert);
       this.sort();
     }
 
     this.notify();
+  }
+
+  /**
+   * Explicitly record a text change revision for a cue.
+   */
+  recordRevision(id: string, at: number, text: string): void {
+    const cue = this.idMap.get(id);
+    if (!cue) return;
+    if (cue.text !== text) {
+      cue.text = text;
+      cue.revisions.push({ at: Number(at.toFixed(3)), text });
+      this.notify();
+    }
+  }
+
+  /**
+   * Record the video time (s) when a cue's final text was first displayed on screen.
+   * Only records once (subsequent renders preserve original first_shown_at).
+   */
+  recordFirstShown(id: string, videoTime: number): void {
+    const cue = this.idMap.get(id);
+    if (cue && cue.first_shown_at == null) {
+      cue.first_shown_at = Number(videoTime.toFixed(3));
+    }
   }
 
   /**

@@ -482,6 +482,105 @@ body {
   box-shadow: 0 0 0 6px hsla(190, 90%, 56%, 0.45);
 }
 
+/* ---------- Judge / Evaluation ---------- */
+.eval-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.eval-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.row--actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 120ms ease, opacity 140ms ease, background 140ms ease, border-color 140ms ease, filter 140ms ease;
+  user-select: none;
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+  filter: grayscale(0.5);
+}
+
+.btn__icon {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+
+.btn--primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 4px 14px hsla(262, 90%, 60%, 0.35);
+}
+
+.btn--primary:hover:not(:disabled) {
+  filter: brightness(1.1);
+  box-shadow: 0 6px 18px hsla(262, 90%, 60%, 0.48);
+}
+
+.btn--secondary {
+  background: var(--surface-hi);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.btn--secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.eval-status {
+  font-size: 11px;
+  color: var(--live);
+  background: rgba(50, 220, 140, 0.1);
+  border: 1px solid rgba(50, 220, 140, 0.2);
+  padding: 6px 10px;
+  border-radius: 8px;
+  animation: fadeIn 200ms ease;
+  word-break: break-all;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ---------- Footer ---------- */
 .footer {
   display: flex;
