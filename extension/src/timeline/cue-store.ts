@@ -1,0 +1,199 @@
+import type { Cue } from '../shared/cue';
+import type { CueProvider } from '../shared/cue-provider';
+
+/**
+ * High-performance indexed Cue timeline.
+ * Stores cues sorted by `start` time and executes O(log N) binary search
+ * to determine the active cue at any given video timestamp.
+ *
+ * Implements CueProvider so it directly plugs into SubtitleOverlay.
+ */
+export class CueStore implements CueProvider {
+  private cues: Cue[] = [];
+  private idMap = new Map<string, Cue>();
+  private listeners = new Set<() => void>();
+
+  get length(): number {
+    return this.cues.length;
+  }
+
+  /**
+   * Return the cue active at the specified video time (s), or null if none.
+   * If multiple cues overlap, returns the one that started most recently.
+   * O(log N) complexity.
+   */
+  getActiveCue(videoTime: number): Cue | null {
+    const list = this.cues;
+    const n = list.length;
+    if (n === 0 || !Number.isFinite(videoTime) || videoTime < 0) return null;
+
+    // Fast boundary check
+    const first = list[0];
+    if (first && videoTime < first.start) return null;
+
+    // Binary search for the rightmost cue with start <= videoTime
+    let low = 0;
+    let high = n - 1;
+    let candidateIndex = -1;
+
+    while (low <= high) {
+      const mid = (low + high) >>> 1;
+      const c = list[mid];
+      if (!c) break;
+
+      if (c.start <= videoTime) {
+        candidateIndex = mid;
+        low = mid + 1; // look for later matching starts
+      } else {
+        high = mid - 1;
+      }
+    }
+
+    if (candidateIndex === -1) return null;
+
+    // Check candidate and scan back for overlapping cues that extend into videoTime
+    for (let i = candidateIndex; i >= 0; i--) {
+      const c = list[i];
+      if (!c) continue;
+      // If this cue's start is already too far back and max typical cue length is exceeded, break early
+      if (videoTime - c.start > 60) break;
+      if (videoTime >= c.start && videoTime < c.end) {
+        return c;
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Return all cues active at videoTime (useful if dual lines or multiple tracks overlap).
+   */
+  getActiveCues(videoTime: number): Cue[] {
+    const active: Cue[] = [];
+    const list = this.cues;
+    const n = list.length;
+    if (n === 0 || !Number.isFinite(videoTime) || videoTime < 0) return active;
+
+    let low = 0;
+    let high = n - 1;
+    let candidateIndex = -1;
+
+    while (low <= high) {
+      const mid = (low + high) >>> 1;
+      const c = list[mid];
+      if (!c) break;
+      if (c.start <= videoTime) {
+        candidateIndex = mid;
+        low = mid + 1;
+      } else {
+        high = mid - 1;
+      }
+    }
+
+    if (candidateIndex === -1) return active;
+
+    for (let i = candidateIndex; i >= 0; i--) {
+      const c = list[i];
+      if (!c) continue;
+      if (videoTime - c.start > 60) break;
+      if (videoTime >= c.start && videoTime < c.end) {
+        active.unshift(c);
+      }
+    }
+
+    return active;
+  }
+
+  /**
+   * Load multiple cues at once (e.g., from YouTube timedtext or an SRT file).
+   * Deduplicates by id, sorts chronologically, and notifies subscribers.
+   */
+  loadCues(incoming: Cue[]): void {
+    if (incoming.length === 0) return;
+
+    for (const cue of incoming) {
+      const existing = this.idMap.get(cue.id);
+      if (existing) {
+        Object.assign(existing, cue);
+      } else {
+        this.cues.push(cue);
+        this.idMap.set(cue.id, cue);
+      }
+    }
+
+    this.sort();
+    this.notify();
+  }
+
+  /**
+   * Insert or update an individual cue in place.
+   * Merges revisions and maintains chronological order.
+   * Essential for live STT hypotheses (Phase 4).
+   */
+  upsertCue(cue: Cue): void {
+    const existing = this.idMap.get(cue.id);
+    if (existing) {
+      existing.text = cue.text;
+      existing.end = cue.end;
+      if (cue.translation !== undefined) existing.translation = cue.translation;
+      if (cue.translation_lang !== undefined) existing.translation_lang = cue.translation_lang;
+      if (cue.speaker !== undefined) existing.speaker = cue.speaker;
+      if (cue.is_final !== undefined) existing.is_final = cue.is_final;
+      if (cue.first_shown_at !== undefined) existing.first_shown_at = cue.first_shown_at;
+
+      // Merge new revisions
+      if (cue.revisions && cue.revisions.length > 0) {
+        for (const rev of cue.revisions) {
+          if (!existing.revisions.some((r) => r.at === rev.at && r.text === rev.text)) {
+            existing.revisions.push(rev);
+          }
+        }
+      }
+
+      // If start changed, re-sort
+      if (existing.start !== cue.start) {
+        existing.start = cue.start;
+        this.sort();
+      }
+    } else {
+      this.cues.push(cue);
+      this.idMap.set(cue.id, cue);
+      this.sort();
+    }
+
+    this.notify();
+  }
+
+  /**
+   * Read-only snapshot of all currently stored cues.
+   */
+  getCues(): readonly Cue[] {
+    return this.cues;
+  }
+
+  /**
+   * Clear the timeline (invoked on navigation or session reset).
+   */
+  clear(): void {
+    if (this.cues.length === 0) return;
+    this.cues = [];
+    this.idMap.clear();
+    this.notify();
+  }
+
+  /**
+   * Subscribe to timeline updates (new cues loaded or revisions updated).
+   */
+  subscribe(listener: () => void): () => void {
+    this.listeners.add(listener);
+    return () => this.listeners.delete(listener);
+  }
+
+  private sort(): void {
+    this.cues.sort((a, b) => a.start - b.start || a.end - b.end);
+  }
+
+  private notify(): void {
+    this.listeners.forEach((l) => l());
+  }
+}

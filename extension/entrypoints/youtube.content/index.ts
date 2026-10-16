@@ -7,18 +7,30 @@ import { watchNavigation } from '../../src/youtube/navigation';
 export default defineContentScript({
   matches: ['*://www.youtube.com/*'],
   runAt: 'document_idle',
-  // Overlay CSS is injected into its own Shadow DOM by mountOverlay — never into the page.
   cssInjectionMode: 'manual',
 
   async main(ctx) {
     const settings = createStore(await loadSettings());
     const controller = new SessionController(settings);
 
+    // Listen to messages from the main-world timedtext hook
+    const onWindowMessage = (event: MessageEvent) => {
+      if (event.source !== window || !event.data || typeof event.data !== 'object') return;
+
+      if (event.data.type === 'LIVESUB_TIMEDTEXT') {
+        controller.onTimedText(event.data.payload, event.data.url, event.data.lang);
+      } else if (event.data.type === 'LIVESUB_CAPTIONS_METADATA') {
+        controller.onCaptionTracks(event.data.tracks);
+      }
+    };
+
+    window.addEventListener('message', onWindowMessage);
+
     const unsubscribeSettings = subscribeSettings((next) => settings.set(next));
     const stopNavigation = watchNavigation((videoId) => void controller.onVideoChange(videoId));
 
-    // Extension reloaded/updated: clean up so the old content script doesn't leave a ghost overlay.
     ctx.onInvalidated(() => {
+      window.removeEventListener('message', onWindowMessage);
       stopNavigation();
       unsubscribeSettings();
       controller.dispose();
