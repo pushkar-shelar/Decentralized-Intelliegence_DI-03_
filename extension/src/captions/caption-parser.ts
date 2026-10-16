@@ -88,3 +88,74 @@ export function parseYouTubeJson3(data: unknown, lang = 'en'): Cue[] {
 
   return cues;
 }
+
+/**
+ * Parse YouTube XML format (<transcript><text start="1.2" dur="3.4">Hello &amp; welcome</text></transcript>).
+ * Works reliably in both browser (DOMParser) and headless/Node environments (regex fallback).
+ */
+export function parseYouTubeXml(xml: string, lang = 'en'): Cue[] {
+  if (!xml || typeof xml !== 'string' || !xml.includes('<text')) return [];
+
+  const cues: Cue[] = [];
+  const textTagRegex = /<text\b([^>]*?)>([\s\S]*?)<\/text>/gi;
+  let match: RegExpExecArray | null;
+  let index = 0;
+
+  while ((match = textTagRegex.exec(xml)) !== null) {
+    const rawAttrs = match[1] ?? '';
+    const rawBody = match[2] ?? '';
+
+    const startMatch = rawAttrs.match(/\bstart="([\d.]+)"/i);
+    const durMatch = rawAttrs.match(/\bdur="([\d.]+)"/i);
+
+    if (!startMatch || !startMatch[1]) continue;
+
+    const startSec = parseFloat(startMatch[1]);
+    if (!Number.isFinite(startSec)) continue;
+
+    const durSec = durMatch && durMatch[1] ? parseFloat(durMatch[1]) : 2.5;
+    const duration = Number.isFinite(durSec) && durSec > 0 ? durSec : 2.5;
+    const endSec = Number((startSec + duration).toFixed(3));
+
+    const text = cleanText(rawBody);
+    if (!text) continue;
+
+    const id = `yt-xml-${index++}-${startSec.toFixed(1)}`;
+
+    cues.push({
+      id,
+      start: Number(startSec.toFixed(3)),
+      end: endSec,
+      lang,
+      text,
+      source: 'captions',
+      is_final: true,
+      revisions: [{ at: Number(startSec.toFixed(3)), text }],
+    });
+  }
+
+  return cues;
+}
+
+/**
+ * Universal caption parser: automatically detects whether the input is JSON3 or XML string.
+ */
+export function parseCaptionData(data: unknown, lang = 'en'): Cue[] {
+  if (!data) return [];
+  if (typeof data === 'object') {
+    return parseYouTubeJson3(data, lang);
+  }
+  if (typeof data === 'string') {
+    const trimmed = data.trim();
+    if (trimmed.startsWith('{')) {
+      try {
+        const json = JSON.parse(trimmed);
+        return parseYouTubeJson3(json, lang);
+      } catch {
+        // Fall back to XML
+      }
+    }
+    return parseYouTubeXml(trimmed, lang);
+  }
+  return [];
+}

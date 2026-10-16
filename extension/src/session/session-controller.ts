@@ -1,43 +1,92 @@
 import { createElement } from 'react';
-import type { Cue } from '../shared/cue';
-import type { CueProvider } from '../shared/cue-provider';
 import type { Store } from '../shared/store';
 import type { LiveSubSettings } from '../settings/settings-core';
+import { CaptionManager } from '../captions/caption-manager';
+import { parseCaptionData } from '../captions/caption-parser';
+import { parseCaptionTracks } from '../captions/track-detector';
 import { DemoCueProvider } from '../overlay/demo-cue-provider';
 import { mountOverlay } from '../overlay/mount';
 import { SubtitleOverlay } from '../overlay/SubtitleOverlay';
 import { CueStore } from '../timeline/cue-store';
-import { parseYouTubeJson3 } from '../captions/caption-parser';
-import { findBestTrack, parseCaptionTracks, type CaptionTrack } from '../captions/track-detector';
+import { ActiveCueTranslator } from '../translation/active-cue-translator';
+import { TranslationCache } from '../translation/translation-cache';
+import { GoogleGtxTranslationService, type TranslationService } from '../translation/translation-service';
 import { waitForPlayer } from '../youtube/player-detector';
 import { PlayerStateTracker } from '../youtube/player-state';
 
 const LOG = '[LiveSub Session]';
 
-/** Everything that belongs to ONE video. Destroyed wholesale on navigation — nothing leaks across videos. */
+export type SubtitleSourceMode = 'checking' | 'captions' | 'audio' | 'unavailable' | 'demo';
+
+/** Everything that belongs to ONE active video session. Destroyed wholesale on navigation. */
 interface Session {
   id: string;
   videoId: string;
-  cueStore: CueStore;
   tracker: PlayerStateTracker;
+  cueStore: CueStore | DemoCueProvider;
+  translator?: ActiveCueTranslator;
+  mode: SubtitleSourceMode;
   unmount: () => void;
-  availableTracks: CaptionTrack[];
+  dispose: () => void;
 }
 
 /**
  * Owns the lifecycle "one session per video".
- * Ties together the PlayerStateTracker, CueStore timeline, and SubtitleOverlay.
+ * A generation counter guarantees that slow async work from a previous navigation
+ * can never attach to or modify the current video's state.
  */
 export class SessionController {
   private session: Session | null = null;
   private generation = 0;
   private pending: AbortController | null = null;
-  private demoProvider = new DemoCueProvider();
+  private readonly translationCache = new TranslationCache(500);
+  private readonly translationService: TranslationService;
 
-  constructor(private readonly settings: Store<LiveSubSettings>) {}
+  constructor(
+    private readonly settings: Store<LiveSubSettings>,
+    translationService?: TranslationService,
+  ) {
+    this.translationService = translationService ?? new GoogleGtxTranslationService();
+  }
 
   get current(): Readonly<Session> | null {
     return this.session;
+  }
+
+  get mode(): SubtitleSourceMode {
+    return this.session?.mode ?? 'unavailable';
+  }
+
+  /**
+   * Strictly prevents audio capture whenever captions are active or currently being checked.
+   */
+  get isAudioCaptureBlocked(): boolean {
+    return this.mode === 'captions' || this.mode === 'checking';
+  }
+
+  /**
+   * Called when timedtext payload is intercepted from YouTube network traffic.
+   */
+  onTimedText(payload: unknown, _url?: string, lang?: string): void {
+    if (!this.session || this.session.mode === 'demo') return;
+    const cues = parseCaptionData(payload, lang || 'en');
+    if (cues.length > 0 && this.session.cueStore instanceof CueStore) {
+      this.session.cueStore.loadCues(cues);
+      this.session.mode = 'captions';
+      document.documentElement.dataset.livesubSource = 'captions';
+      console.info(LOG, 'Loaded intercepted timedtext cues into store', { count: cues.length });
+    }
+  }
+
+  /**
+   * Called when player caption metadata is broadcasted.
+   */
+  onCaptionTracks(rawTracks: unknown): void {
+    if (!this.session || this.session.mode === 'demo') return;
+    const tracks = parseCaptionTracks(rawTracks);
+    if (tracks.length > 0) {
+      console.info(LOG, 'Received caption tracks broadcast', { count: tracks.length });
+    }
   }
 
   async onVideoChange(videoId: string | null): Promise<void> {
@@ -59,68 +108,123 @@ export class SessionController {
     this.pending = null;
 
     const id = `${videoId}-${Date.now().toString(36)}`;
-    const cueStore = new CueStore();
     const tracker = new PlayerStateTracker(els);
     tracker.start();
 
-    const provider = this.createProvider(cueStore);
+    const currentSettings = this.settings.get();
+
+    // Developer demo mode branch
+    if (currentSettings.demoMode) {
+      const demoProvider = new DemoCueProvider();
+      const unmount = mountOverlay(
+        els.player,
+        createElement(SubtitleOverlay, {
+          video: els.video,
+          tracker,
+          provider: demoProvider,
+          settings: this.settings,
+        }),
+      );
+
+      this.session = {
+        id,
+        videoId,
+        tracker,
+        cueStore: demoProvider,
+        mode: 'demo',
+        unmount,
+        dispose: () => {},
+      };
+      document.documentElement.dataset.livesubSession = id;
+      document.documentElement.dataset.livesubSource = 'demo';
+      console.info(LOG, 'session started (demo mode)', { id, videoId });
+      return;
+    }
+
+    // Real Caption Path
+    const cueStore = new CueStore();
+    const translator = new ActiveCueTranslator({
+      videoId,
+      sessionId: id,
+      cueStore,
+      translationService: this.translationService,
+      settings: this.settings,
+      cache: this.translationCache,
+    });
+
+    const disposers: Array<() => void> = [];
+
+    // Trigger translation when active cue changes
+    const onVideoTime = () => translator.onTime(els.video.currentTime);
+    for (const ev of ['timeupdate', 'seeked', 'playing'] as const) {
+      els.video.addEventListener(ev, onVideoTime);
+      disposers.push(() => els.video.removeEventListener(ev, onVideoTime));
+    }
+
+    // Refresh translation when user changes target language in settings
+    const unsubSettings = this.settings.subscribe(() => {
+      translator.refresh();
+    });
+    disposers.push(unsubSettings);
+
+    let sessionMode: SubtitleSourceMode = 'checking';
+
+    const captionManager = new CaptionManager({
+      videoId,
+      sourceLang: currentSettings.sourceLang,
+      signal: abort.signal,
+      onCuesLoaded: (cues, track) => {
+        if (gen !== this.generation || !this.session) return;
+        cueStore.loadCues(cues);
+        sessionMode = 'captions';
+        if (this.session) this.session.mode = 'captions';
+        document.documentElement.dataset.livesubSource = 'captions';
+        console.info(LOG, 'Captions loaded into cue store', {
+          count: cues.length,
+          lang: track.languageCode,
+          isAsr: track.isAsr,
+        });
+        translator.onTime(els.video.currentTime);
+      },
+      onUnavailable: () => {
+        if (gen !== this.generation || !this.session) return;
+        sessionMode = 'unavailable';
+        if (this.session) this.session.mode = 'unavailable';
+        document.documentElement.dataset.livesubSource = 'unavailable';
+        console.info(LOG, 'Captions unavailable for video', videoId);
+      },
+    });
+
+    const stopCaptionManager = captionManager.start();
+    disposers.push(stopCaptionManager);
+
     const unmount = mountOverlay(
       els.player,
-      createElement(SubtitleOverlay, { video: els.video, tracker, provider, settings: this.settings }),
+      createElement(SubtitleOverlay, {
+        video: els.video,
+        tracker,
+        provider: cueStore,
+        settings: this.settings,
+      }),
     );
 
-    this.session = { id, videoId, cueStore, tracker, unmount, availableTracks: [] };
+    this.session = {
+      id,
+      videoId,
+      tracker,
+      cueStore,
+      translator,
+      mode: sessionMode,
+      unmount,
+      dispose: () => {
+        translator.dispose();
+        disposers.forEach((d) => d());
+      },
+    };
+
     document.documentElement.dataset.livesubSession = id;
-    console.info(LOG, 'session started', { id, videoId });
-
-    // Request available tracks from the main-world script
-    window.postMessage({ type: 'LIVESUB_REQUEST_TRACKS' }, '*');
-  }
-
-  /**
-   * Handle intercepted or fetched timedtext JSON3 data for the active session.
-   */
-  onTimedText(payload: unknown, url?: string, explicitLang?: string): void {
-    if (!this.session) return;
-
-    // Detect language code from URL if possible
-    let lang = explicitLang;
-    if (!lang && url) {
-      try {
-        const u = new URL(url, location.origin);
-        lang = u.searchParams.get('lang') ?? undefined;
-      } catch {
-        // Fallback
-      }
-    }
-    lang = lang || (this.settings.get().sourceLang === 'auto' ? 'en' : this.settings.get().sourceLang);
-
-    const cues = parseYouTubeJson3(payload, lang);
-    if (cues.length > 0) {
-      this.session.cueStore.loadCues(cues);
-      console.info(LOG, `Loaded ${cues.length} native caption cues for video ${this.session.videoId}`);
-    }
-  }
-
-  /**
-   * Handle discovered caption tracks from YouTube player metadata.
-   */
-  onCaptionTracks(rawTracks: unknown): void {
-    if (!this.session) return;
-    const tracks = parseCaptionTracks(rawTracks);
-    this.session.availableTracks = tracks;
-    console.info(LOG, `Discovered ${tracks.length} caption tracks:`, tracks.map((t) => t.languageCode));
-
-    // If we haven't loaded any cues yet, auto-fetch the best matching track
-    if (this.session.cueStore.length === 0 && tracks.length > 0) {
-      const preferred = this.settings.get().sourceLang;
-      const targetPref = preferred === 'auto' ? 'en' : preferred;
-      const best = findBestTrack(tracks, targetPref);
-      if (best?.baseUrl) {
-        console.info(LOG, `Auto-requesting caption track: ${best.languageCode} (${best.name})`);
-        window.postMessage({ type: 'LIVESUB_FETCH_TRACK', baseUrl: best.baseUrl, lang: best.languageCode }, '*');
-      }
-    }
+    document.documentElement.dataset.livesubSource = sessionMode;
+    console.info(LOG, 'session started (caption path)', { id, videoId });
   }
 
   dispose(): void {
@@ -128,44 +232,17 @@ export class SessionController {
     this.teardown();
   }
 
-  /**
-   * Provider with priority:
-   * 1. If CueStore has cues (from native captions or STT) -> serve them.
-   * 2. Else if demoMode is ON -> fallback to DemoCueProvider.
-   * 3. Else -> null (silent).
-   */
-  private createProvider(cueStore: CueStore): CueProvider {
-    const demo = this.demoProvider;
-    const settings = this.settings;
-
-    return {
-      getActiveCue: (t: number): Cue | null => {
-        if (cueStore.length > 0) {
-          return cueStore.getActiveCue(t);
-        }
-        return settings.get().demoMode ? demo.getActiveCue(t) : null;
-      },
-      subscribe: (listener) => {
-        const unsubStore = cueStore.subscribe(listener);
-        const unsubSettings = settings.subscribe(listener);
-        return () => {
-          unsubStore();
-          unsubSettings();
-        };
-      },
-    };
-  }
-
   private teardown(): void {
     this.pending?.abort();
     this.pending = null;
     if (!this.session) return;
-    const { id, cueStore, tracker, unmount } = this.session;
+    const { id, tracker, unmount, dispose } = this.session;
+    dispose();
     unmount();
     tracker.stop();
-    cueStore.clear();
     this.session = null;
     delete document.documentElement.dataset.livesubSession;
+    delete document.documentElement.dataset.livesubSource;
     console.info(LOG, 'session ended', { id });
   }
 }

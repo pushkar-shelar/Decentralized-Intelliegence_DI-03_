@@ -24,31 +24,48 @@ interface RawPlayerCaptionsRenderer {
 export function parseCaptionTracks(raw: unknown): CaptionTrack[] {
   if (!raw || typeof raw !== 'object') return [];
 
-  const renderer = raw as RawPlayerCaptionsRenderer;
-  const list = renderer.captionTracks;
+  const list = Array.isArray(raw)
+    ? (raw as RawCaptionTrack[])
+    : ((raw as RawPlayerCaptionsRenderer).captionTracks ?? []);
   if (!Array.isArray(list)) return [];
 
   const result: CaptionTrack[] = [];
 
   for (const item of list) {
     if (!item || typeof item !== 'object') continue;
-    const lang = item.languageCode?.toLowerCase();
+    const anyItem = item as Record<string, unknown>;
+    const lang = (
+      (typeof anyItem.languageCode === 'string' ? anyItem.languageCode : '') ||
+      (typeof anyItem.lang === 'string' ? anyItem.lang : '')
+    ).toLowerCase();
     if (!lang) continue;
 
-    let trackName = item.name?.simpleText;
-    if (!trackName && item.name?.runs) {
+    let trackName: string | undefined;
+    if (typeof anyItem.displayName === 'string' && anyItem.displayName) {
+      trackName = anyItem.displayName;
+    } else if (typeof anyItem.languageName === 'string' && anyItem.languageName) {
+      trackName = anyItem.languageName;
+    } else if (typeof anyItem.name === 'string' && anyItem.name) {
+      trackName = anyItem.name;
+    } else if (item.name?.simpleText) {
+      trackName = item.name.simpleText;
+    } else if (item.name?.runs) {
       trackName = item.name.runs.map((r) => r.text ?? '').join('');
     }
     if (!trackName) {
       trackName = lang.toUpperCase();
     }
 
+    const isAsr = anyItem.kind === 'asr' || (typeof anyItem.vssId === 'string' && anyItem.vssId.startsWith('a.'));
+    const baseUrl = typeof anyItem.baseUrl === 'string' ? anyItem.baseUrl : undefined;
+    const vssId = typeof anyItem.vssId === 'string' ? anyItem.vssId : undefined;
+
     result.push({
       languageCode: lang,
       name: trackName,
-      isAsr: item.kind === 'asr',
-      baseUrl: item.baseUrl,
-      vssId: item.vssId,
+      isAsr,
+      baseUrl,
+      vssId,
     });
   }
 
