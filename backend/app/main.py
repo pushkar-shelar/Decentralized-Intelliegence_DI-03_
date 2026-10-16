@@ -56,7 +56,7 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -96,7 +96,7 @@ def health_check():
 @app.websocket("/api/ws/audio")
 async def audio_websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
-    print("[LiveSub WS] Audio client connected from extension")
+    print("[LiveSub WS] Audio client connected from extension", flush=True)
 
     processor = StreamingSpeechProcessor(
         shrutam=shrutam_engine,
@@ -136,7 +136,7 @@ async def audio_websocket_endpoint(websocket: WebSocket):
 
                 if cue:
                     status_str = "FINAL" if cue.get("is_final") else "PARTIAL"
-                    print(f"[LiveSub WS] {status_str} Cue [{cue['lang']}]: {cue['text']}")
+                    print(f"[LiveSub WS] {status_str} Cue [{cue['lang']}]: {cue['text']}", flush=True)
                     await websocket.send_text(
                         json.dumps({
                             "type": "cue_update",

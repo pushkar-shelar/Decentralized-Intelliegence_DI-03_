@@ -77,10 +77,14 @@ export default defineBackground(() => {
             });
           });
 
+          // Give offscreen document a moment to bind its message listener if just launched
+          await new Promise((r) => setTimeout(r, 150));
+
           // Forward to offscreen document
           await browser.runtime.sendMessage({
             type: 'START_TAB_CAPTURE',
             streamId,
+            tabId,
             wsUrl: msg.wsUrl ?? 'ws://localhost:8765/api/ws/audio',
           });
 

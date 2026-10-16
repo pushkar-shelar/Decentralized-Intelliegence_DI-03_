@@ -199,9 +199,18 @@ export class SessionController {
     if (!this.settings.get().enabled) return;
     session.audioCaptureActive = true;
     console.info(LOG, 'Activating tab audio capture for session', session.id);
-    browser.runtime.sendMessage({ type: 'REQUEST_TAB_AUDIO_CAPTURE' }).catch((err) => {
-      console.warn(LOG, 'Audio capture request notice:', err);
-    });
+    browser.runtime
+      .sendMessage({ type: 'REQUEST_TAB_AUDIO_CAPTURE' })
+      .then((res: any) => {
+        if (!res?.success) {
+          console.error(LOG, 'Audio capture initiation failed:', res?.error);
+        } else {
+          console.info(LOG, 'Audio capture successfully initiated, streamId:', res.streamId);
+        }
+      })
+      .catch((err) => {
+        console.warn(LOG, 'Audio capture request notice:', err);
+      });
   }
 
   /**

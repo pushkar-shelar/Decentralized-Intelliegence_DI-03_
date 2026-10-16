@@ -20,17 +20,23 @@ const TARGET_CHUNK_SAMPLES = 3200; // 200ms @ 16kHz
 async function startCapture(streamId: string, wsUrl = 'ws://localhost:8765/api/ws/audio'): Promise<void> {
   stopCapture();
 
-  console.info(LOG, 'Starting capture for streamId:', streamId);
+  console.info(LOG, 'Starting capture for streamId:', streamId, 'to', wsUrl);
 
-  // 1. Get tab audio media stream
-  const stream = await navigator.mediaDevices.getUserMedia({
-    audio: {
-      mandatory: {
-        chromeMediaSource: 'tab',
-        chromeMediaSourceId: streamId,
-      },
-    } as any,
-  });
+  let stream: MediaStream;
+  try {
+    // 1. Get tab audio media stream
+    stream = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        mandatory: {
+          chromeMediaSource: 'tab',
+          chromeMediaSourceId: streamId,
+        },
+      } as any,
+    });
+  } catch (err: any) {
+    console.error(LOG, 'getUserMedia failed for streamId:', streamId, err);
+    return;
+  }
 
   // 2. Setup AudioContext and passthrough (keeps audio audible)
   const audioCtx = new AudioContext();
@@ -50,6 +56,7 @@ async function startCapture(streamId: string, wsUrl = 'ws://localhost:8765/api/w
         if (typeof event.data === 'string') {
           const data = JSON.parse(event.data);
           if (data.type === 'cue_update' && data.cue) {
+            console.info(LOG, 'Received STT cue update from server:', data.cue);
             browser.runtime.sendMessage({ type: 'LIVESUB_STT_CUE', cue: data.cue }).catch(() => {});
           }
         }
