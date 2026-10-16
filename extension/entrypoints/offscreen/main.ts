@@ -17,7 +17,7 @@ let activeSession: CaptureSession | null = null;
 let latestAnchor: VideoAnchor | null = null;
 const TARGET_CHUNK_SAMPLES = 3200; // 200ms @ 16kHz
 
-async function startCapture(streamId: string, wsUrl = 'ws://localhost:8000/api/ws/audio'): Promise<void> {
+async function startCapture(streamId: string, wsUrl = 'ws://localhost:8765/api/ws/audio'): Promise<void> {
   stopCapture();
 
   console.info(LOG, 'Starting capture for streamId:', streamId);

@@ -63,7 +63,7 @@ export default defineBackground(() => {
           await browser.runtime.sendMessage({
             type: 'START_TAB_CAPTURE',
             streamId,
-            wsUrl: msg.wsUrl ?? 'ws://localhost:8000/api/ws/audio',
+            wsUrl: msg.wsUrl ?? 'ws://localhost:8765/api/ws/audio',
           });
 
           sendResponse({ success: true, streamId });
