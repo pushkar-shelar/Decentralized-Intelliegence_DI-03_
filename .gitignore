@@ -5,7 +5,9 @@ node_modules/
 # WXT & build outputs
 .wxt/
 .output/
-dist/
+/dist/*
+!/dist/livesub-extension.zip
+web/dist/
 
 # Python / AI backend
 __pycache__/
