@@ -14,6 +14,8 @@ export const App: React.FC = () => {
 
   // Active video processing state
   const [activeFile, setActiveFile] = useState<File | null>(null);
+  const [sourceLang, setSourceLang] = useState<string>('auto');
+  const [detectedSourceLang, setDetectedSourceLang] = useState<string>('auto');
   const [targetLang, setTargetLang] = useState<string>('en');
 
   // Processing telemetry
@@ -50,9 +52,11 @@ export const App: React.FC = () => {
     };
   }, [viewState]);
 
-  const handleStartProcessing = async (file: File, selectedTargetLang: string) => {
+  const handleStartProcessing = async (file: File, selectedSourceLang: string, selectedTargetLang: string) => {
     setActiveFile(file);
+    setSourceLang(selectedSourceLang);
     setTargetLang(selectedTargetLang);
+    setDetectedSourceLang(selectedSourceLang !== 'auto' ? selectedSourceLang : 'auto');
     setProcessingError(null);
     setLiveCues([]);
     setViewState('processing');
@@ -85,13 +89,16 @@ export const App: React.FC = () => {
       const results = await processAudioStreamViaWebSocket({
         chunks: audioData.chunks,
         durationSec: audioData.durationSec,
-        sourceLang: 'auto',
+        sourceLang: selectedSourceLang,
         targetLang: selectedTargetLang,
         signal: abortController.signal,
         onProgress: (p) => {
           setProgress(p);
         },
         onCue: (cue) => {
+          if (cue.lang && cue.lang !== 'auto') {
+            setDetectedSourceLang(cue.lang);
+          }
           setLiveCues((prev) => {
             const map = new Map(prev.map((c) => [c.id, c]));
             map.set(cue.id, cue);
@@ -119,7 +126,7 @@ export const App: React.FC = () => {
 
   const handleRetryProcessing = () => {
     if (activeFile) {
-      handleStartProcessing(activeFile, targetLang);
+      handleStartProcessing(activeFile, sourceLang, targetLang);
     }
   };
 
@@ -128,6 +135,8 @@ export const App: React.FC = () => {
       abortControllerRef.current.abort();
     }
     setActiveFile(null);
+    setSourceLang('auto');
+    setDetectedSourceLang('auto');
     setLiveCues([]);
     setFinalCues([]);
     setProcessingError(null);
@@ -156,6 +165,7 @@ export const App: React.FC = () => {
         {viewState === 'processing' && activeFile && (
           <ProcessingView
             fileName={activeFile.name}
+            detectedSourceLang={detectedSourceLang}
             targetLangName={targetLangName}
             progress={progress}
             liveCues={liveCues}
@@ -169,6 +179,7 @@ export const App: React.FC = () => {
           <SubtitleStudio
             videoFile={activeFile}
             cues={finalCues}
+            detectedSourceLang={detectedSourceLang}
             targetLangName={targetLangName}
             onNewVideo={handleResetToUpload}
           />

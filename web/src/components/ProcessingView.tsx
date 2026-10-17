@@ -1,10 +1,12 @@
 import React from 'react';
 import { Loader2, CheckCircle2, AlertCircle, RefreshCw, XCircle, Mic, Radio } from 'lucide-react';
 import type { SubtitleCue } from '../types/cue';
+import { getLanguageName } from '../types/cue';
 import type { StreamingProgress } from '../services/livesub-api';
 
 interface ProcessingViewProps {
   fileName: string;
+  detectedSourceLang?: string;
   targetLangName: string;
   progress: StreamingProgress;
   liveCues: SubtitleCue[];
@@ -15,6 +17,7 @@ interface ProcessingViewProps {
 
 export const ProcessingView: React.FC<ProcessingViewProps> = ({
   fileName,
+  detectedSourceLang,
   targetLangName,
   progress,
   liveCues,
@@ -44,14 +47,20 @@ export const ProcessingView: React.FC<ProcessingViewProps> = ({
   };
 
   const recentCues = liveCues.slice(-3);
+  const detectedLangLabel = detectedSourceLang && detectedSourceLang !== 'auto' ? getLanguageName(detectedSourceLang) : 'Detecting...';
 
   return (
     <div className="processing-container">
       <div style={{ textAlign: 'center' }}>
         <h1 className="page-title">Processing video</h1>
         <p className="page-subtitle">
-          Generating synchronized subtitles for <strong>{fileName}</strong> in <strong>{targetLangName}</strong>
+          Generating synchronized subtitles for <strong>{fileName}</strong>
         </p>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '4px 12px', background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: '20px', fontSize: '12px', marginTop: '6px' }}>
+          <span>Detected Audio: <strong style={{ color: 'var(--color-primary)' }}>{detectedLangLabel}</strong></span>
+          <span>&bull;</span>
+          <span>Target Subtitles: <strong>{targetLangName}</strong></span>
+        </div>
       </div>
 
       <div className="card">

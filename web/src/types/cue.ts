@@ -31,6 +31,37 @@ export const SUPPORTED_TARGET_LANGUAGES: LanguageOption[] = [
   { code: 'or', name: 'Odia', nativeName: 'ଓଡ଼ିଆ' },
 ];
 
+export const SUPPORTED_SOURCE_LANGUAGES: LanguageOption[] = [
+  { code: 'auto', name: 'Auto-Detect', nativeName: 'Automatic LID' },
+  { code: 'hi', name: 'Hindi', nativeName: 'हिन्दी' },
+  { code: 'en', name: 'English', nativeName: 'English' },
+  { code: 'mr', name: 'Marathi', nativeName: 'मराठी' },
+  { code: 'ta', name: 'Tamil', nativeName: 'தமிழ்' },
+  { code: 'te', name: 'Telugu', nativeName: 'తెలుగు' },
+  { code: 'gu', name: 'Gujarati', nativeName: 'ગુજરાતી' },
+  { code: 'kn', name: 'Kannada', nativeName: 'ಕನ್ನಡ' },
+  { code: 'ml', name: 'Malayalam', nativeName: 'മലയാളം' },
+  { code: 'bn', name: 'Bengali', nativeName: 'বাংলা' },
+  { code: 'pa', name: 'Punjabi', nativeName: 'ਪੰਜਾਬੀ' },
+  { code: 'or', name: 'Odia', nativeName: 'ଓଡ଼ିଆ' },
+  { code: 'es', name: 'Spanish', nativeName: 'Español' },
+  { code: 'fr', name: 'French', nativeName: 'Français' },
+  { code: 'de', name: 'German', nativeName: 'Deutsch' },
+  { code: 'ja', name: 'Japanese', nativeName: '日本語' },
+];
+
+export function getLanguageName(code?: string): string {
+  if (!code || code === 'auto') return 'Auto-Detected';
+  const clean = code.toLowerCase().split('-')[0];
+  const found =
+    SUPPORTED_TARGET_LANGUAGES.find((l) => l.code === clean) ||
+    SUPPORTED_SOURCE_LANGUAGES.find((l) => l.code === clean);
+  if (found) {
+    return found.nativeName && found.nativeName !== found.name ? `${found.name} (${found.nativeName})` : found.name;
+  }
+  return code.toUpperCase();
+}
+
 export interface SubtitleSettings {
   showOriginal: boolean;
   showTranslated: boolean;

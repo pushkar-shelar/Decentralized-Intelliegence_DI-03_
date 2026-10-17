@@ -138,9 +138,17 @@ class StreamingSpeechProcessor:
         if target_lang == "auto" or not target_lang:
             if self.whisper and len(speech_audio) >= 16000:
                 lid_lang, prob = self.whisper.detect_language(speech_audio[:32000])
-                if prob > 0.35:
+                if prob > 0.30:
+                    # Prevent Whisper from confusing Hindi with Urdu and outputting Arabic script
+                    if lid_lang == "ur":
+                        lid_lang = "hi"
                     self.detected_lang = lid_lang
             target_lang = self.detected_lang
+        elif target_lang == "ur":
+            target_lang = "hi"
+            self.detected_lang = "hi"
+        else:
+            self.detected_lang = target_lang
 
         # Assign or track active cue ID
         if self.active_cue_id is None:
@@ -169,11 +177,13 @@ class StreamingSpeechProcessor:
         if should_finalize:
             detected_speaker = self._detect_utterance_speaker(speech_audio)
 
+        cue_lang = res.language if res.language != "ur" else "hi"
+
         cue: Dict[str, Any] = {
             "id": self.active_cue_id,
             "start": start_time,
             "end": end_time,
-            "lang": res.language,
+            "lang": cue_lang,
             "text": res.text,
             "speaker": detected_speaker,
             "source": "stt",

@@ -16,6 +16,7 @@ import {
   RotateCcw,
 } from 'lucide-react';
 import type { SubtitleCue, SubtitleSettings } from '../types/cue';
+import { getLanguageName } from '../types/cue';
 import {
   exportToSrt,
   exportToVtt,
@@ -30,6 +31,7 @@ import {
 interface SubtitleStudioProps {
   videoFile: File;
   cues: SubtitleCue[];
+  detectedSourceLang?: string;
   targetLangName: string;
   onNewVideo: () => void;
 }
@@ -37,9 +39,14 @@ interface SubtitleStudioProps {
 export const SubtitleStudio: React.FC<SubtitleStudioProps> = ({
   videoFile,
   cues,
+  detectedSourceLang,
   targetLangName,
   onNewVideo,
 }) => {
+  const dominantLang =
+    detectedSourceLang && detectedSourceLang !== 'auto'
+      ? detectedSourceLang
+      : cues.find((c) => c.lang && c.lang !== 'auto')?.lang || 'hi';
   const [videoUrl, setVideoUrl] = useState<string>('');
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
@@ -241,8 +248,12 @@ export const SubtitleStudio: React.FC<SubtitleStudioProps> = ({
           <h1 className="page-title" style={{ fontSize: '24px', marginBottom: '2px' }}>
             {videoFile.name}
           </h1>
-          <p className="page-subtitle" style={{ fontSize: '13px', margin: 0 }}>
-            {cues.length} speech segments • Subtitles translated to <strong>{targetLangName}</strong>
+          <p className="page-subtitle" style={{ fontSize: '13px', margin: 0, display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+            <span>{cues.length} speech segments</span>
+            <span>&bull;</span>
+            <span>Audio Language: <strong style={{ color: 'var(--color-primary)' }}>{getLanguageName(dominantLang)}</strong></span>
+            <span>&bull;</span>
+            <span>Translated to: <strong>{targetLangName}</strong></span>
           </p>
         </div>
 
@@ -302,9 +313,14 @@ export const SubtitleStudio: React.FC<SubtitleStudioProps> = ({
                 } as React.CSSProperties}
               >
                 <div className="sub-cue-box">
-                  {activeCue.speaker && (
-                    <span className="sub-speaker-tag">{formatSpeaker(activeCue.speaker)}</span>
-                  )}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
+                    <span style={{ fontSize: '10px', fontWeight: 600, opacity: 0.85, background: 'rgba(255,255,255,0.18)', padding: '1px 6px', borderRadius: '3px', textTransform: 'uppercase' }}>
+                      {(activeCue.lang || dominantLang).toUpperCase()} &rarr; {targetLangName}
+                    </span>
+                    {activeCue.speaker && (
+                      <span className="sub-speaker-tag">{formatSpeaker(activeCue.speaker)}</span>
+                    )}
+                  </div>
                   {settings.showOriginal && activeCue.text && (
                     <span className="sub-text-orig">{activeCue.text}</span>
                   )}
@@ -587,9 +603,21 @@ export const SubtitleStudio: React.FC<SubtitleStudioProps> = ({
                       className={`transcript-item ${isActive ? 'active' : ''}`}
                       onClick={() => handleSeek(c.start)}
                     >
-                      <div className="transcript-meta">
+                      <div className="transcript-meta" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <span className="transcript-time">
                           {formatSrtTime(c.start).slice(3, 8)} - {formatSrtTime(c.end).slice(3, 8)}
+                        </span>
+                        <span style={{
+                          fontSize: '10px',
+                          fontWeight: 600,
+                          padding: '1px 6px',
+                          borderRadius: '4px',
+                          background: 'var(--color-surface-hover)',
+                          border: '1px solid var(--color-border)',
+                          textTransform: 'uppercase',
+                          color: 'var(--color-primary)',
+                        }}>
+                          {c.lang ? getLanguageName(c.lang) : getLanguageName(dominantLang)}
                         </span>
                         {c.speaker && (
                           <span style={{ color: 'var(--color-primary)', fontWeight: 600 }}>

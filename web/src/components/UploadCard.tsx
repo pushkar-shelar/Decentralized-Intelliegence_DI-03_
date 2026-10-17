@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { UploadCloud, Film, Languages, ArrowRight, X, AlertCircle } from 'lucide-react';
-import { SUPPORTED_TARGET_LANGUAGES } from '../types/cue';
+import { SUPPORTED_TARGET_LANGUAGES, SUPPORTED_SOURCE_LANGUAGES } from '../types/cue';
 
 interface UploadCardProps {
-  onStartProcessing: (file: File, targetLang: string) => void;
+  onStartProcessing: (file: File, sourceLang: string, targetLang: string) => void;
   isBackendOnline: boolean;
 }
 
@@ -11,6 +11,7 @@ export const UploadCard: React.FC<UploadCardProps> = ({ onStartProcessing, isBac
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [videoDuration, setVideoDuration] = useState<number | null>(null);
+  const [sourceLang, setSourceLang] = useState<string>('auto');
   const [targetLang, setTargetLang] = useState<string>('en');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -145,42 +146,83 @@ export const UploadCard: React.FC<UploadCardProps> = ({ onStartProcessing, isBac
             </div>
           )}
 
-          <div style={{ marginBottom: '20px' }}>
-            <label
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                fontSize: '13px',
-                fontWeight: 500,
-                marginBottom: '8px',
-              }}
-            >
-              <Languages size={16} color="var(--color-primary)" />
-              <span>Target Subtitle Language</span>
-            </label>
-            <select
-              value={targetLang}
-              onChange={(e) => setTargetLang(e.target.value)}
-              style={{
-                width: '100%',
-                height: '40px',
-                padding: '0 12px',
-                borderRadius: 'var(--radius-md)',
-                border: '1px solid var(--color-border)',
-                background: 'var(--color-surface)',
-                outline: 'none',
-                fontSize: '14px',
-              }}
-            >
-              {SUPPORTED_TARGET_LANGUAGES.map((lang) => (
-                <option key={lang.code} value={lang.code}>
-                  {lang.name} {lang.nativeName && `(${lang.nativeName})`}
-                </option>
-              ))}
-            </select>
-            <div style={{ fontSize: '12px', color: 'var(--color-text-secondary)', marginTop: '6px' }}>
-              Original language will be auto-detected by Whisper. Translated lines will render below the original text.
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '20px' }}>
+            <div>
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  fontSize: '13px',
+                  fontWeight: 500,
+                  marginBottom: '8px',
+                }}
+              >
+                <Languages size={16} color="var(--color-primary)" />
+                <span>Spoken Audio Language</span>
+              </label>
+              <select
+                value={sourceLang}
+                onChange={(e) => setSourceLang(e.target.value)}
+                style={{
+                  width: '100%',
+                  height: '40px',
+                  padding: '0 12px',
+                  borderRadius: 'var(--radius-md)',
+                  border: '1px solid var(--color-border)',
+                  background: 'var(--color-surface)',
+                  outline: 'none',
+                  fontSize: '14px',
+                }}
+              >
+                {SUPPORTED_SOURCE_LANGUAGES.map((lang) => (
+                  <option key={lang.code} value={lang.code}>
+                    {lang.name} {lang.nativeName && `(${lang.nativeName})`}
+                  </option>
+                ))}
+              </select>
+              <div style={{ fontSize: '11px', color: 'var(--color-text-secondary)', marginTop: '4px' }}>
+                Auto-detects spoken speech or select to force script.
+              </div>
+            </div>
+
+            <div>
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  fontSize: '13px',
+                  fontWeight: 500,
+                  marginBottom: '8px',
+                }}
+              >
+                <Languages size={16} color="var(--color-primary)" />
+                <span>Target Subtitle Language</span>
+              </label>
+              <select
+                value={targetLang}
+                onChange={(e) => setTargetLang(e.target.value)}
+                style={{
+                  width: '100%',
+                  height: '40px',
+                  padding: '0 12px',
+                  borderRadius: 'var(--radius-md)',
+                  border: '1px solid var(--color-border)',
+                  background: 'var(--color-surface)',
+                  outline: 'none',
+                  fontSize: '14px',
+                }}
+              >
+                {SUPPORTED_TARGET_LANGUAGES.map((lang) => (
+                  <option key={lang.code} value={lang.code}>
+                    {lang.name} {lang.nativeName && `(${lang.nativeName})`}
+                  </option>
+                ))}
+              </select>
+              <div style={{ fontSize: '11px', color: 'var(--color-text-secondary)', marginTop: '4px' }}>
+                Cultural idioms will be translated to this language.
+              </div>
             </div>
           </div>
 
@@ -207,7 +249,7 @@ export const UploadCard: React.FC<UploadCardProps> = ({ onStartProcessing, isBac
             className="btn btn-primary"
             style={{ width: '100%', height: '42px', fontSize: '14px' }}
             disabled={!isBackendOnline}
-            onClick={() => onStartProcessing(selectedFile, targetLang)}
+            onClick={() => onStartProcessing(selectedFile, sourceLang, targetLang)}
           >
             <span>Generate Subtitles</span>
             <ArrowRight size={16} />
