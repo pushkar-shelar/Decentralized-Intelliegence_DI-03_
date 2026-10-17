@@ -665,3 +665,152 @@
 --------------------------------------------------------------------------------
 === Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 09:53:32 ===
 --------------------------------------------------------------------------------
+[10:31:55] [FINAL] [WhisperX STT] [en] [0.00s -> 1.50s]: Resilient output
+[10:31:55] [FINAL] [WhisperX STT] [hi] [SPEAKER_00] [0.00s -> 1.80s]: अरे ओ, बंसी!
+[10:31:55] [FINAL] [WhisperX STT] [hi] [SPEAKER_01] [2.00s -> 3.80s]: हाँ, तो मैं क्या करूँ?
+[10:31:55] [FINAL] [WhisperX STT] [en] [SPEAKER_00] [0.00s -> 1.20s]: First sentence.
+[10:31:55] [FINAL] [WhisperX STT] [en] [SPEAKER_00] [1.30s -> 2.80s]: Second sentence.
+[10:31:55] [FINAL] [WhisperX STT] [hi] [0.00s -> 1.00s]: परीक्षण
+[10:31:55] [FINAL] [WhisperX STT] [mr] [SPEAKER_00] [0.20s -> 1.80s]: नमस्कार मित्रांनो
+[10:31:55] [FINAL] [WhisperX STT] [hi] [1.25s -> 3.75s]: परीक्षण वाक्य
+
+--------------------------------------------------------------------------------
+=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 10:31:55 ===
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 10:50:59 ===
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 11:12:50 ===
+--------------------------------------------------------------------------------
+[11:13:02] [PARTIAL] [Whisper STT] [en] [0.00s -> 0.66s]: And now, let's go!
+[11:13:02] [PARTIAL] [Whisper Live STT] [en] [1.00s -> 1.80s]: And now, let's go!
+[11:13:22] [PARTIAL] [Whisper STT] [hi] [0.00s -> 1.04s]: पेश करता है
+[11:13:22] [PARTIAL] [Whisper STT] [hi] [1.04s -> 1.28s]: TR
+
+--------------------------------------------------------------------------------
+=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 11:20:35 ===
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 11:26:09 ===
+--------------------------------------------------------------------------------
+[11:26:32] [FINAL] [Whisper STT] [hi] [0.00s -> 2.92s]: स्किलाव पेश करता है, TRS Clips.
+[11:26:32] [FINAL] [Whisper STT] [hi] [3.14s -> 4.44s]: Enjoy the knowledge.
+[11:26:32] [FINAL] [Whisper STT] [hi] [8.00s -> 11.48s]: Varun Bhagwaini की worship वैसे होती है क्या आजकल भाहरत में?
+[11:26:32] [FINAL] [Whisper STT] [hi] [11.82s -> 14.12s]: Not really I think it's almost even
+[11:26:32] [FINAL] [Whisper STT] [hi] [14.12s -> 17.36s]: Yaggyu में may be sometimes if it is mentioned
+[11:26:32] [FINAL] [Whisper STT] [hi] [17.36s -> 20.30s]: but I think broadly Varuna has been
+
+--------------------------------------------------------------------------------
+=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 11:30:58 ===
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 11:31:52 ===
+--------------------------------------------------------------------------------
+[11:32:15] [FINAL] [Whisper STT] [hi] [0.00s -> 2.92s]: स्किलाव पेश करता है, TRS Clips.
+[11:32:15] [FINAL] [Whisper STT] [hi] [3.14s -> 4.44s]: Enjoy the knowledge.
+[11:32:15] [FINAL] [Whisper STT] [hi] [8.00s -> 11.48s]: Varun Bhagwaini की worship वैसे होती है क्या आजकल भाहरत में?
+[11:32:15] [FINAL] [Whisper STT] [hi] [11.82s -> 14.12s]: Not really I think it's almost even
+[11:32:15] [FINAL] [Whisper STT] [hi] [14.12s -> 17.36s]: Yaggyu में may be sometimes if it is mentioned
+[11:32:15] [FINAL] [Whisper STT] [hi] [17.36s -> 20.30s]: but I think broadly Varuna has been
+[11:32:15] [FINAL] [Whisper Live STT] [hi] [0.00s -> 20.74s]: स्किलाव पेश करता है, TRS Clips. Enjoy the knowledge. Varun Bhagwaini की worship वैसे होती है क्या आजकल भाहरत में? Not really I think it's almost even Yaggyu में may be sometimes if it is mentioned but I think broadly Varuna has been
+[11:32:37] [FINAL] [Whisper STT] [en] [0.00s -> 4.54s]: totally assimilated into Vishnu now. Sometimes without context,
+[11:32:37] [FINAL] [Whisper STT] [en] [4.64s -> 8.10s]: if you read about Varunadeva, what is written in Atharvedha?
+[11:32:37] [FINAL] [Whisper STT] [en] [8.18s -> 11.50s]: You would mistake it that this is going to be talking about Krishna or Krishna.
+[11:32:37] [FINAL] [Whisper STT] [en] [11.94s -> 12.26s]: Yes sir.
+[11:32:37] [FINAL] [Whisper STT] [en] [12.38s -> 16.90s]: And for example, Varuna is described as the all-knowing,
+[11:32:37] [FINAL] [Whisper STT] [en] [16.96s -> 18.14s]: all seer deity.
+[11:32:37] [FINAL] [Whisper Live STT] [en] [20.74s -> 40.04s]: totally assimilated into Vishnu now. Sometimes without context, if you read about Varunadeva, what is written in Atharvedha? You would mistake it that this is going to be talking about Krishna or Krishna. Yes sir. And for example, Varuna is described as the all-knowing, all seer deity.
+[11:32:58] [FINAL] [Whisper STT] [en] [0.00s -> 3.30s]: If you feel like someone is not watching, then Varun will also be watching you.
+[11:32:58] [FINAL] [Whisper STT] [en] [3.74s -> 8.24s]: He's said to have thousands of eyes all the time, he's present everywhere.
+[11:32:58] [FINAL] [Whisper STT] [en] [9.52s -> 12.92s]: Omniscient, omnipotent they all come from Varuna.
+[11:32:58] [FINAL] [Whisper STT] [en] [13.68s -> 19.98s]: Indra where you can say warrior spirit, Varuna is about kings.
+[11:32:58] [FINAL] [Whisper Live STT] [en] [40.04s -> 60.46s]: If you feel like someone is not watching, then Varun will also be watching you. He's said to have thousands of eyes all the time, he's present everywhere. Omniscient, omnipotent they all come from Varuna. Indra where you can say warrior spirit, Varuna is about kings.
+[11:33:23] [FINAL] [Whisper STT] [en] [0.18s -> 9.46s]: sovereign. And Varuna is the judge archetype basically. Indra doesn't judge, he just wants
+[11:33:23] [FINAL] [Whisper STT] [en] [9.46s -> 18.98s]: you to do well and excel and desire and aim. Varuna judges you. He will evaluate you. He
+[11:33:23] [FINAL] [Whisper STT] [en] [18.98s -> 19.76s]: you say something
+[11:33:23] [FINAL] [Whisper Live STT] [en] [60.46s -> 80.56s]: sovereign. And Varuna is the judge archetype basically. Indra doesn't judge, he just wants you to do well and excel and desire and aim. Varuna judges you. He will evaluate you. He you say something
+[11:33:43] [FINAL] [Whisper STT] [en] [0.00s -> 2.52s]: And if you break it, Varuna takes note.
+[11:33:43] [FINAL] [Whisper STT] [en] [3.14s -> 4.46s]: So Varuna is the one,
+[11:33:43] [FINAL] [Whisper STT] [en] [4.64s -> 5.84s]: is the god of oaths.
+[11:33:43] [FINAL] [Whisper STT] [en] [5.96s -> 8.36s]: Logh varun ki shapat leete te pehle
+[11:33:43] [FINAL] [Whisper STT] [en] [8.36s -> 11.48s]: and like considering breaking an oath
+[11:33:43] [FINAL] [Whisper STT] [en] [11.48s -> 12.54s]: taken in Varuna's name
+[11:33:43] [FINAL] [Whisper STT] [en] [12.54s -> 14.44s]: would bring a lot of bad things.
+[11:33:43] [FINAL] [Whisper STT] [en] [14.74s -> 16.58s]: So he was feared.
+[11:33:43] [FINAL] [Whisper STT] [en] [17.60s -> 18.76s]: Indra was kind of feared
+[11:33:43] [FINAL] [Whisper STT] [en] [18.76s -> 20.36s]: but Indra could be negotiated.
+[11:33:43] [FINAL] [Whisper Live STT] [en] [80.56s -> 101.38s]: And if you break it, Varuna takes note. So Varuna is the one, is the god of oaths. Logh varun ki shapat leete te pehle and like considering breaking an oath taken in Varuna's name would bring a lot of bad things. So he was feared. Indra was kind of feared but Indra could be negotiated.
+[11:34:07] [FINAL] [Whisper STT] [hi] [0.00s -> 2.40s]: आप उनको सुमा दे करिंप्रेस कर सकते थे,
+[11:34:07] [FINAL] [Whisper STT] [hi] [2.44s -> 3.20s]: he would forgive you.
+[11:34:07] [FINAL] [Whisper STT] [hi] [3.38s -> 4.74s]: But Varuna wasn't like that.
+[11:34:07] [FINAL] [Whisper STT] [hi] [4.84s -> 6.66s]: आप उनको बहला भूसला नहीं सकते थे.
+[11:34:07] [FINAL] [Whisper STT] [hi] [6.86s -> 10.08s]: And to give you the comparison between Indra?
+[11:34:07] [FINAL] [Whisper STT] [hi] [13.12s -> 14.84s]: Indra, even archetypically,
+[11:34:07] [FINAL] [Whisper STT] [hi] [15.00s -> 16.28s]: Indra is the one who releases.
+[11:34:07] [FINAL] [Whisper STT] [hi] [16.66s -> 18.10s]: He's the extroverted God.
+[11:34:07] [FINAL] [Whisper Live STT] [hi] [101.38s -> 120.00s]: आप उनको सुमा दे करिंप्रेस कर सकते थे, he would forgive you. But Varuna wasn't like that. आप उनको बहला भूसला नहीं सकते थे. And to give you the comparison between Indra? Indra, even archetypically, Indra is the one who releases. He's the extroverted God.
+
+--------------------------------------------------------------------------------
+=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 11:37:11 ===
+--------------------------------------------------------------------------------
+[11:37:49] [FINAL] [Whisper STT] [hi] [0.00s -> 2.92s]: स्किलाव पेश करता है, TRS Clips.
+[11:37:49] [FINAL] [Whisper STT] [hi] [3.14s -> 4.44s]: Enjoy the knowledge.
+[11:37:49] [FINAL] [Whisper STT] [hi] [8.00s -> 11.48s]: Varun Bhagwaini की worship वैसे होती है क्या आजकल भाहरत में?
+[11:37:49] [FINAL] [Whisper STT] [hi] [11.82s -> 14.12s]: Not really I think it's almost even
+[11:37:49] [FINAL] [Whisper STT] [hi] [14.12s -> 17.36s]: Yaggyu में may be sometimes if it is mentioned
+[11:37:49] [FINAL] [Whisper STT] [hi] [17.36s -> 20.30s]: but I think broadly Varuna has been
+[11:37:49] [FINAL] [Whisper Live STT] [hi] [0.00s -> 20.74s]: स्किलाव पेश करता है, TRS Clips. Enjoy the knowledge. Varun Bhagwaini की worship वैसे होती है क्या आजकल भाहरत में? Not really I think it's almost even Yaggyu में may be sometimes if it is mentioned but I think broadly Varuna has been
+[11:38:23] [FINAL] [Whisper STT] [en] [0.00s -> 4.54s]: totally assimilated into Vishnu now. Sometimes without context,
+[11:38:23] [FINAL] [Whisper STT] [en] [4.64s -> 8.10s]: if you read about Varunadeva, what is written in Atharvedha?
+[11:38:23] [FINAL] [Whisper STT] [en] [8.18s -> 11.50s]: You would mistake it that this is going to be talking about Krishna or Krishna.
+[11:38:23] [FINAL] [Whisper STT] [en] [11.94s -> 12.26s]: Yes sir.
+[11:38:23] [FINAL] [Whisper STT] [en] [12.38s -> 16.90s]: And for example, Varuna is described as the all-knowing,
+[11:38:23] [FINAL] [Whisper STT] [en] [16.96s -> 18.14s]: all seer deity.
+[11:38:23] [FINAL] [Whisper Live STT] [en] [20.74s -> 40.04s]: totally assimilated into Vishnu now. Sometimes without context, if you read about Varunadeva, what is written in Atharvedha? You would mistake it that this is going to be talking about Krishna or Krishna. Yes sir. And for example, Varuna is described as the all-knowing, all seer deity.
+[11:39:00] [FINAL] [Whisper STT] [en] [0.00s -> 3.30s]: If you feel like someone is not watching, then Varun will also be watching you.
+[11:39:00] [FINAL] [Whisper STT] [en] [3.74s -> 8.24s]: He's said to have thousands of eyes all the time, he's present everywhere.
+[11:39:00] [FINAL] [Whisper STT] [en] [9.52s -> 12.92s]: Omniscient, omnipotent they all come from Varuna.
+[11:39:00] [FINAL] [Whisper STT] [en] [13.68s -> 19.98s]: Indra where you can say warrior spirit, Varuna is about kings.
+[11:39:01] [FINAL] [Whisper Live STT] [en] [40.04s -> 60.46s]: If you feel like someone is not watching, then Varun will also be watching you. He's said to have thousands of eyes all the time, he's present everywhere. Omniscient, omnipotent they all come from Varuna. Indra where you can say warrior spirit, Varuna is about kings.
+[11:39:55] [FINAL] [Whisper STT] [en] [0.18s -> 9.46s]: sovereign. And Varuna is the judge archetype basically. Indra doesn't judge, he just wants
+[11:39:55] [FINAL] [Whisper STT] [en] [9.46s -> 18.98s]: you to do well and excel and desire and aim. Varuna judges you. He will evaluate you. He
+[11:39:55] [FINAL] [Whisper STT] [en] [18.98s -> 19.76s]: you say something
+[11:39:55] [FINAL] [Whisper Live STT] [en] [60.46s -> 80.56s]: sovereign. And Varuna is the judge archetype basically. Indra doesn't judge, he just wants you to do well and excel and desire and aim. Varuna judges you. He will evaluate you. He you say something
+[11:40:33] [FINAL] [Whisper STT] [en] [0.00s -> 2.52s]: And if you break it, Varuna takes note.
+[11:40:33] [FINAL] [Whisper STT] [en] [3.14s -> 4.46s]: So Varuna is the one,
+[11:40:33] [FINAL] [Whisper STT] [en] [4.64s -> 5.84s]: is the god of oaths.
+[11:40:33] [FINAL] [Whisper STT] [en] [5.96s -> 8.36s]: Logh varun ki shapat leete te pehle
+[11:40:33] [FINAL] [Whisper STT] [en] [8.36s -> 11.48s]: and like considering breaking an oath
+[11:40:33] [FINAL] [Whisper STT] [en] [11.48s -> 12.54s]: taken in Varuna's name
+[11:40:33] [FINAL] [Whisper STT] [en] [12.54s -> 14.44s]: would bring a lot of bad things.
+[11:40:33] [FINAL] [Whisper STT] [en] [14.74s -> 16.58s]: So he was feared.
+[11:40:33] [FINAL] [Whisper STT] [en] [17.60s -> 18.76s]: Indra was kind of feared
+[11:40:33] [FINAL] [Whisper STT] [en] [18.76s -> 20.36s]: but Indra could be negotiated.
+[11:40:33] [FINAL] [Whisper Live STT] [en] [80.56s -> 101.38s]: And if you break it, Varuna takes note. So Varuna is the one, is the god of oaths. Logh varun ki shapat leete te pehle and like considering breaking an oath taken in Varuna's name would bring a lot of bad things. So he was feared. Indra was kind of feared but Indra could be negotiated.
+[11:41:09] [FINAL] [Whisper STT] [hi] [0.00s -> 2.40s]: आप उनको सुमा दे करिंप्रेस कर सकते थे,
+[11:41:09] [FINAL] [Whisper STT] [hi] [2.44s -> 3.20s]: he would forgive you.
+[11:41:09] [FINAL] [Whisper STT] [hi] [3.38s -> 4.74s]: But Varuna wasn't like that.
+[11:41:09] [FINAL] [Whisper STT] [hi] [4.84s -> 6.66s]: आप उनको बहला भूसला नहीं सकते थे.
+[11:41:09] [FINAL] [Whisper STT] [hi] [6.86s -> 10.08s]: And to give you the comparison between Indra?
+[11:41:09] [FINAL] [Whisper STT] [hi] [13.12s -> 14.84s]: Indra, even archetypically,
+[11:41:09] [FINAL] [Whisper STT] [hi] [15.00s -> 16.28s]: Indra is the one who releases.
+[11:41:09] [FINAL] [Whisper STT] [hi] [16.66s -> 18.10s]: He's the extroverted God.
+[11:41:09] [FINAL] [Whisper Live STT] [hi] [101.38s -> 120.00s]: आप उनको सुमा दे करिंप्रेस कर सकते थे, he would forgive you. But Varuna wasn't like that. आप उनको बहला भूसला नहीं सकते थे. And to give you the comparison between Indra? Indra, even archetypically, Indra is the one who releases. He's the extroverted God.
+
+--------------------------------------------------------------------------------
+=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 11:53:09 ===
+--------------------------------------------------------------------------------
+[11:53:43] [PARTIAL] [Whisper STT] [en] [0.00s -> 0.90s]: Skill out, space
+[11:53:43] [PARTIAL] [Whisper Live STT] [en] [0.50s -> 1.50s]: Skill out, space
+[11:54:16] [PARTIAL] [Whisper STT] [hi] [0.00s -> 1.66s]: सकिलावस पेश करता है TR
+[11:54:16] [PARTIAL] [Whisper Live STT] [hi] [0.50s -> 2.50s]: सकिलावस पेश करता है TR
+[11:54:46] [PARTIAL] [Whisper STT] [hi] [0.00s -> 2.88s]: स्किलावस पेश करता है TRS Clips
+[11:54:46] [PARTIAL] [Whisper Live STT] [hi] [0.50s -> 3.50s]: स्किलावस पेश करता है TRS Clips
+[11:55:22] [PARTIAL] [Whisper STT] [hi] [0.00s -> 2.94s]: स्किलाव, पेश करता है TRS Clips.
+[11:55:22] [PARTIAL] [Whisper STT] [hi] [3.14s -> 3.52s]: Enjoy!
+[11:55:22] [PARTIAL] [Whisper Live STT] [hi] [0.50s -> 4.50s]: स्किलाव, पेश करता है TRS Clips. Enjoy!
