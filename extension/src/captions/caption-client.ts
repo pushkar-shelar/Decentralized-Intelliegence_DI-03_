@@ -68,7 +68,7 @@ export async function fetchCaptionCues(
     }
 
     if (!raw || !raw.trim()) {
-      console.warn(LOG, 'Empty caption response', { url: track.baseUrl });
+      console.info(LOG, 'No native caption text returned for track, falling back to ASR audio', { url: track.baseUrl });
       return [];
     }
 

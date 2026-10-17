@@ -330,6 +330,9 @@ async def audio_websocket_endpoint(websocket: WebSocket):
                     data = json.loads(message["text"])
                     if data.get("type") == "chunk_meta":
                         latest_meta = data
+                        anchor_data = data.get("anchor", {})
+                        if anchor_data.get("isAd") or anchor_data.get("isSeek"):
+                            processor.reset()
                         if data.get("sourceLang"):
                             preferred_lang = data.get("sourceLang")
                         if data.get("targetLang"):

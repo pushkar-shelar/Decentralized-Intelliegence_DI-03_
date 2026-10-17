@@ -29,6 +29,12 @@ class StreamingSpeechProcessor:
         self.cue_start_video_time: Optional[float] = None
         self.detected_lang: str = "en"
 
+    def reset(self):
+        """Reset internal utterance buffer and ongoing cue tracking on seek or ad interrupt."""
+        self.utterance_buffer.reset()
+        self.active_cue_id = None
+        self.cue_start_video_time = None
+
     def process_chunk(
         self,
         chunk_pcm_int16: np.ndarray,
@@ -40,6 +46,14 @@ class StreamingSpeechProcessor:
         Process incoming 16kHz int16 PCM chunk (~200ms).
         Returns a LiveSub cue dictionary if a partial or final transcription is ready.
         """
+        # If an advertisement is playing or a seek/ad-exit occurred, reset buffer immediately
+        if anchor.get("isAd"):
+            self.reset()
+            return None
+
+        if anchor.get("isSeek"):
+            self.reset()
+
         # Convert Int16 [-32768, 32767] to normalized Float32 [-1.0, 1.0]
         float32_audio = chunk_pcm_int16.astype(np.float32) / 32768.0
 

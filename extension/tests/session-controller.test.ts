@@ -146,4 +146,79 @@ describe('SessionController', () => {
 
     controller.dispose();
   });
+
+  it('suppresses STT cues received during ad playback and accepts them during normal playback', async () => {
+    const settings = createStore<LiveSubSettings>({
+      ...DEFAULT_SETTINGS,
+      demoMode: false,
+    });
+
+    const controller = new SessionController(settings);
+    await controller.onVideoChange('ad-test-video');
+
+    const session = controller.current;
+    expect(session).not.toBeNull();
+
+    // 1. Normal state: STT cues are ingested
+    controller.onSttCue({
+      id: 'stt-001',
+      start: 5.0,
+      end: 8.0,
+      text: 'Main video dialogue',
+      lang: 'en',
+      source: 'stt',
+      revisions: [{ at: 5.0, text: 'Main video dialogue' }],
+      is_final: true,
+      first_shown_at: 5.0,
+    });
+
+    expect(session?.cueStore.length).toBe(1);
+    expect(session?.cueStore.getActiveCue(6.0)?.text).toBe('Main video dialogue');
+
+    // 2. Simulate ad state on player
+    (session?.tracker as any).state = {
+      ...session?.tracker.snapshot,
+      isAd: true,
+    };
+
+    // 3. Ad STT cue arrives
+    controller.onSttCue({
+      id: 'stt-ad-001',
+      start: 0.0,
+      end: 15.0,
+      text: 'Buy this commercial product now!',
+      lang: 'en',
+      source: 'stt',
+      revisions: [{ at: 0.0, text: 'Buy this commercial product now!' }],
+      is_final: true,
+      first_shown_at: 0.0,
+    });
+
+    // CueStore must NOT contain the ad cue!
+    expect(session?.cueStore.length).toBe(1);
+    expect(session?.cueStore.getActiveCue(10.0)?.text).not.toBe('Buy this commercial product now!');
+
+    // 4. Simulate ad completion: isAd becomes false
+    (session?.tracker as any).state = {
+      ...session?.tracker.snapshot,
+      isAd: false,
+    };
+
+    controller.onSttCue({
+      id: 'stt-002',
+      start: 8.5,
+      end: 12.0,
+      text: 'Resumed main video content',
+      lang: 'en',
+      source: 'stt',
+      revisions: [{ at: 8.5, text: 'Resumed main video content' }],
+      is_final: true,
+      first_shown_at: 8.5,
+    });
+
+    expect(session?.cueStore.length).toBe(2);
+    expect(session?.cueStore.getActiveCue(9.0)?.text).toBe('Resumed main video content');
+
+    controller.dispose();
+  });
 });

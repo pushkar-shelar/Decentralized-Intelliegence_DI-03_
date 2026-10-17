@@ -123,6 +123,24 @@ function flushBuffer(session: CaptureSession): void {
   const rms = calculatePcmRms(combined);
   const capturePerfNow = performance.now();
 
+  // If an advertisement is playing, suppress commercial audio stream to STT
+  if (latestAnchor?.isAd) {
+    if (session.ws && session.ws.readyState === WebSocket.OPEN) {
+      session.ws.send(
+        JSON.stringify({
+          type: 'chunk_meta',
+          perfNow: capturePerfNow,
+          durationMs: (total / 16000) * 1000,
+          rms: 0,
+          anchor: latestAnchor,
+          sourceLang: latestAnchor?.sourceLang,
+          targetLang: latestAnchor?.targetLang,
+        }),
+      );
+    }
+    return;
+  }
+
   // Stream binary PCM + header over WebSocket
   if (session.ws && session.ws.readyState === WebSocket.OPEN) {
     // Send metadata header as JSON

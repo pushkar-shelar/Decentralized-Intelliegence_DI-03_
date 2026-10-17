@@ -9,6 +9,8 @@ export interface VideoAnchor {
   paused: boolean;
   /** True if a seek occurred right before or at this anchor. */
   isSeek?: boolean;
+  /** True if an advertisement is currently playing. */
+  isAd?: boolean;
   /** Active user-selected source language code. */
   sourceLang?: string;
   /** Active user-selected target language code. */

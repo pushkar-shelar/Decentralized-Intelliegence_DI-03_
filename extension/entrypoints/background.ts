@@ -111,8 +111,14 @@ export default defineBackground(() => {
 
           sendResponse({ success: true, streamId });
         } catch (err: any) {
-          console.error(LOG, 'Failed to initiate tab audio capture:', err);
-          sendResponse({ success: false, error: err?.message ?? String(err) });
+          const errMsg = err?.message ?? String(err);
+          if (errMsg.includes('Cannot capture a tab with an active stream')) {
+            console.info(LOG, 'Tab audio capture already running for tab', tabId);
+            sendResponse({ success: true, alreadyActive: true });
+          } else {
+            console.error(LOG, 'Failed to initiate tab audio capture:', err);
+            sendResponse({ success: false, error: errMsg });
+          }
         }
       })();
       return true; // async response
