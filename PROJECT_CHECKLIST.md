@@ -94,8 +94,14 @@
 - [x] Record first_shown_at as the video time when the final text first appeared in full (Recorded in `SubtitleOverlay.tsx`)
 - [x] Record every text change in revisions as {at, text} (`revisions: Array<{ at, text }>`)
 - [x] Export the session cue log as JSON (Popup "Export JSON" button & `session-export.ts`)
+- [x] Export subtitles to SubRip (`.srt`) format with sequential numbering and millisecond carry-overs (`srt-serializer.ts`)
+- [x] Export subtitles to Web Video Text Tracks (`.vtt`) format with header and period timestamps (`vtt-serializer.ts`)
+- [x] Support original, translated, and dual/bilingual subtitle export modes (`cue-normalizer.ts`)
+- [x] Support export range selection (complete session vs current playback position)
+- [x] Generate filesystem-safe filenames with video title, language, and mode sanitization (`filename.ts`)
+- [x] In-browser download via UTF-8 Blob and temporary object URL revocation (`downloadTextFile`)
 - [x] Validate exported JSON against the required schema (Validated against `shared/schema/session-export.schema.json` in Vitest)
-- [x] Ensure timestamps and revisions remain correct after seeks and speed changes (Tested in `session-export.test.ts`)
+- [x] Ensure timestamps and revisions remain correct after seeks and speed changes (Tested in `session-export.test.ts` & `subtitle-export.test.ts`)
 - [x] Test the example cue-log format from the brief (Unit tested and verified)
 
 ---
@@ -137,12 +143,14 @@
 - [x] Improve support for Hindi, Marathi, Tamil, Telugu, and code-mixed speech (Tuned with Whisper + Grok + Sarvam Mayura)
 - [ ] Add on-device or offline speech recognition using Whisper via WebGPU or another suitable model *(Uses local backend CTranslate2 rather than in-browser WebGPU)*
 - [x] Use context-aware translation informed by surrounding dialogue and speaker tone (Grok-120b prompt includes cultural context, idiom translation, tone preservation)
-- [x] Add speaker labels (WhisperX speaker diarization + UI badges `ls-speaker-badge`)
+- [x] Add speaker labels and multi-speaker rendering (WhisperX diarization, concurrent multi-speaker overlay, and distinct color badges)
+- [x] Self-healing overlay re-attachment across YouTube SPA navigations (`navigation.ts` & `mount.ts`)
+- [x] Ad detection, stream gating, and utterance buffer purge on ad/seek (`player-state.ts` & `streaming_processor.py`)
 - [ ] Add non-speech cues such as [music] and [laughs]
 - [ ] Let viewers click words to see their meanings
 - [ ] Save selected words to a vocabulary list
-- [x] Export subtitles to SRT format (Implemented in `session-export.ts` & popup download button)
-- [x] Export subtitles to VTT format (Implemented in `session-export.ts` & popup download button)
+- [x] Export subtitles to SRT format (Implemented in `session-export.ts`, `srt-serializer.ts` & popup download button)
+- [x] Export subtitles to VTT format (Implemented in `session-export.ts`, `vtt-serializer.ts` & popup download button)
 - [x] Improve accessibility for deaf and hard-of-hearing viewers (High-contrast overlay, speaker badges, dual captions)
 
 ---
@@ -168,7 +176,7 @@
 ## 12. Required Deliverables
 - [x] Create a code repository (Clean Git repo structure)
 - [x] Write a README with setup, installation, configuration, and usage instructions (`README.md`)
-- [ ] Package the Chrome extension as a ZIP *(Run `npm run zip` in `extension/` to generate release ZIP)*
+- [x] Package the Chrome extension as a ZIP (`extension/.output/livesub-extension-0.1.0-chrome.zip` generated via `wxt zip`)
 - [x] Ensure the extension can be loaded unpacked in a clean Chrome profile (Loads directly from `extension/.output/chrome-mv3`)
 - [ ] Deploy the backend at a public URL for the full judging window, or provide a laptop judges can use *(Local laptop setup is operational; public tunneling via ngrok or cloud hosting pending)*
 - [x] Write a one-page architecture note (`LiveSub_System_Architecture_and_Development_Roadmap.md`)
@@ -184,21 +192,21 @@
 
 # Remaining Items by Section
 
-Below is the structured breakdown of every remaining item, organized by section with details on current status and recommended action:
+Below is the structured breakdown of remaining operational and evaluation preparation items:
 
 ### Section 5: Subtitle Overlay and User Controls
 1. **Allow the viewer to change subtitle colour**
-   - *Current Status:* Fixed high-contrast styling (white primary line `#ffffff` and warm yellow translation line `#ffde7a`).
-   - *Action Needed:* Add a color picker or preset color palette (e.g., White, Yellow, Green, Cyan) into `App.tsx` and bind it to a CSS variable in `overlay.css`.
+   - *Current Status:* High-contrast styling with distinct speaker color badges (`#38bdf8`, `#fbbf24`, `#a78bfa`, `#34d399`, `#f472b6`). Custom user color picker not yet exposed in popup.
+   - *Action Needed:* Add a color preset selector into `App.tsx` and bind it to a CSS variable in `overlay.css`.
 
 ---
 
 ### Section 8: Latency, Accuracy, and Reliability
 1. **Measure CER for Indian-language tests**
-   - *Current Status:* Ground truth reference texts are stored in test suites, but a script calculating mathematical Character Error Rate (CER) via normalized edit distance is not yet executed.
+   - *Current Status:* Ground truth reference texts are stored in test suites, but a standalone metric script calculating exact Character Error Rate (CER) via normalized edit distance is not yet executed.
    - *Action Needed:* Create a short evaluation script (`evaluate_accuracy_metrics.py`) using `editdistance` or `jiwer` to output exact CER percentages.
 2. **Measure WER for English tests**
-   - *Current Status:* English test cases exist in `results/`, but Word Error Rate (WER) formula output is pending.
+   - *Current Status:* English test cases exist in `results/`, but automated Word Error Rate (WER) formula output is pending.
    - *Action Needed:* Include WER calculation in the evaluation script for English test cases.
 3. **Remove punctuation when computing the specified accuracy metrics**
    - *Current Status:* Raw string matching was reviewed qualitatively; formal regex strip `[^\w\s]` is needed before CER/WER computation.
@@ -239,17 +247,15 @@ Below is the structured breakdown of every remaining item, organized by section 
 ---
 
 ### Section 12: Required Deliverables
-1. **Package the Chrome extension as a ZIP**
-   - *Action Needed:* Run `npm run zip` inside `extension/` to generate `livesub-extension.zip`.
-2. **Deploy the backend at a public URL for the full judging window, or provide a laptop judges can use**
+1. **Deploy the backend at a public URL for the full judging window, or provide a laptop judges can use**
    - *Action Needed:* Confirm whether presenting via local laptop (with RTX GPU) or deploying FastAPI via cloud GPU (e.g. RunPod / Modal / ngrok tunnel).
-3. **Prepare a five-minute demonstration**
+2. **Prepare a five-minute demonstration**
    - *Action Needed:* Rehearse a crisp 5-minute demo showing:
      1. Zero-caption Hindi video playing live.
      2. Extension capturing tab audio, streaming to Whisper, generating live dual subtitles.
      3. Seeking backwards 10 seconds to show instant subtitle recovery without lag.
-     4. Exporting session cue log JSON and loading into schema validator.
-4. **Prepare for the technical viva**
+     4. Exporting session cue log as SRT, VTT, and JSON.
+3. **Prepare for the technical viva**
    - *Action Needed:* Review key architectural decisions:
      - Manifest V3 offscreen document rationale for audio capture.
      - `VideoAnchor` timestamp alignment formula at variable playback rates (0.5×–2×).
