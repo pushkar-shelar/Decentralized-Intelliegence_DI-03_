@@ -46,7 +46,7 @@ export default defineBackground(() => {
 
     if (msg.type === 'LIVESUB_STT_CUE') {
       // Forward live STT cue from offscreen audio engine to YouTube tabs
-      chrome.tabs.query({ url: '*://www.youtube.com/*' }, (tabs) => {
+      chrome.tabs.query({ url: ['*://www.youtube.com/*', '*://youtube.com/*'] }, (tabs) => {
         for (const tab of tabs) {
           if (tab.id) {
             chrome.tabs.sendMessage(tab.id, msg).catch(() => {});
@@ -127,8 +127,22 @@ export default defineBackground(() => {
           if (errMsg.includes('Cannot capture a tab with an active stream')) {
             console.info(LOG, 'Tab audio capture already running for tab', tabId);
             sendResponse({ success: true, alreadyActive: true });
+          } else if (
+            errMsg.includes('user gesture') ||
+            errMsg.includes('gesture') ||
+            errMsg.includes('not been invoked') ||
+            errMsg.includes('activeTab')
+          ) {
+            console.info(
+              LOG,
+              'Tab audio capture requires user invocation: Click the LiveSub extension icon and press "Start Live Audio Subtitles".'
+            );
+            sendResponse({
+              success: false,
+              error: 'User gesture required: Click "Start Live Audio Subtitles" in the LiveSub popup',
+            });
           } else {
-            console.error(LOG, 'Failed to initiate tab audio capture:', err);
+            console.error(LOG, 'Failed to initiate tab audio capture:', errMsg);
             sendResponse({ success: false, error: errMsg });
           }
         }

@@ -2,9 +2,9 @@ import time
 from typing import Optional, Dict, Any, List
 import numpy as np
 from backend.app.audio.vad import SileroVAD, UtteranceBuffer
-from backend.app.models.shrutam_engine import ShrutamEngine
 from backend.app.models.whisper_engine import WhisperEngine
 from backend.app.models.whisperx_engine import WhisperXEngine
+from backend.app.utils.profanity_filter import censor_text
 
 INDIC_LANGS = {"hi", "mr", "ta", "te", "bn", "gu", "pa", "kn", "ml", "ur", "or", "as"}
 
@@ -16,14 +16,12 @@ class StreamingSpeechProcessor:
 
     def __init__(
         self,
-        shrutam: Optional[ShrutamEngine] = None,
         whisper: Optional[WhisperEngine] = None,
         vad: Optional[SileroVAD] = None,
         whisperx: Optional[WhisperXEngine] = None,
     ):
         self.vad = vad or SileroVAD()
         self.utterance_buffer = UtteranceBuffer(self.vad)
-        self.shrutam = shrutam
         self.whisper = whisper
         self.whisperx = whisperx
 
@@ -178,17 +176,17 @@ class StreamingSpeechProcessor:
             detected_speaker = self._detect_utterance_speaker(speech_audio)
 
         cue_lang = res.language if res.language != "ur" else "hi"
-
+        clean_text = censor_text(res.text)
         cue: Dict[str, Any] = {
             "id": self.active_cue_id,
             "start": start_time,
             "end": end_time,
             "lang": cue_lang,
-            "text": res.text,
+            "text": clean_text,
             "speaker": detected_speaker,
             "source": "stt",
             "is_final": should_finalize,
-            "revisions": [{"at": round(anchor.get("videoTime", start_time), 2), "text": res.text}],
+            "revisions": [{"at": round(anchor.get("videoTime", start_time), 2), "text": clean_text}],
         }
 
         if should_finalize:

@@ -6,7 +6,7 @@ import { createStore } from '../../src/shared/store';
 import { watchNavigation } from '../../src/youtube/navigation';
 
 export default defineContentScript({
-  matches: ['*://www.youtube.com/*'],
+  matches: ['*://www.youtube.com/*', '*://youtube.com/*'],
   runAt: 'document_idle',
   cssInjectionMode: 'manual',
 

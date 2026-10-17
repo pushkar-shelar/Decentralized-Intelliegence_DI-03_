@@ -30,16 +30,15 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 load_dotenv(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), ".env"))
 
-from backend.app.models.shrutam_engine import ShrutamEngine
 from backend.app.models.whisper_engine import WhisperEngine
 from backend.app.models.whisperx_engine import WhisperXEngine
 from backend.app.audio.vad import SileroVAD
 from backend.app.services.streaming_processor import StreamingSpeechProcessor
 from backend.app.services.stream_resolver import StreamResolver
 from backend.app.translation.unified_translator import UnifiedTranslator
+from backend.app.utils.profanity_filter import censor_text
 
 # Global model references
-shrutam_engine = None
 whisper_engine = None
 whisperx_engine = None
 silero_vad = None
@@ -48,7 +47,7 @@ unified_translator = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global shrutam_engine, whisper_engine, silero_vad, stream_resolver, unified_translator
+    global whisper_engine, silero_vad, stream_resolver, unified_translator
     print("[LiveSub Backend] Initializing models and VAD...")
 
     # Load Silero VAD
@@ -59,9 +58,6 @@ async def lifespan(app: FastAPI):
 
     # Load UnifiedTranslator (Grok primary -> Sarvam fallback)
     unified_translator = UnifiedTranslator()
-
-    # Shrutam-2 deprecated in favor of Whisper large-v3-turbo with language='hi'
-    shrutam_engine = None
 
     # Load Whisper Turbo
     try:
@@ -94,8 +90,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "models", "shrutam-2")
-
 @app.get("/")
 def root():
     return {
@@ -115,15 +109,11 @@ def ws_audio_info():
 
 @app.get("/api/health")
 def health_check():
-    has_shrutam = os.path.isdir(MODEL_DIR) and os.path.exists(os.path.join(MODEL_DIR, "config.json"))
     has_hf_token = bool(os.getenv("HF_TOKEN") or os.getenv("HUGGING_FACE_HUB_TOKEN") or (whisperx_engine and whisperx_engine.hf_token))
     return {
         "status": "ok",
         "backend": "LiveSub",
         "timestamp": time.time(),
-        "shrutam_model_available": has_shrutam,
-        "shrutam_model_dir": MODEL_DIR if has_shrutam else None,
-        "shrutam_loaded": shrutam_engine.is_ready() if shrutam_engine else False,
         "whisper_loaded": whisper_engine.is_ready() if whisper_engine else False,
         "whisperx_loaded": whisperx_engine.is_ready() if whisperx_engine else False,
         "diarization_available": whisperx_engine.is_diarization_ready() if whisperx_engine else False,
@@ -227,19 +217,22 @@ async def preprocess_video(req: PreProcessRequest):
                     text = norm_res["corrected_text"]
                 translation = norm_res.get("translation")
 
+            clean_text = censor_text(text)
+            clean_translation = censor_text(translation) if translation else None
+
             cues.append({
                 "id": f"pre-{req.video_id}-{idx}-{abs_start}",
                 "start": abs_start,
                 "end": abs_end,
-                "text": text,
-                "translation": translation,
+                "text": clean_text,
+                "translation": clean_translation,
                 "speaker": seg.get("speaker"),
                 "lang": detected_lang or "en",
                 "translation_lang": req.target_lang or "en",
                 "source": "pre-process",
                 "is_final": True,
                 "first_shown_at": None,
-                "revisions": [{"at": abs_start, "text": text}],
+                "revisions": [{"at": abs_start, "text": clean_text}],
             })
 
         return {
@@ -262,7 +255,6 @@ async def audio_websocket_endpoint(websocket: WebSocket):
     start_new_log_run("Live Tab Audio Streaming WebSocket")
 
     processor = StreamingSpeechProcessor(
-        shrutam=shrutam_engine,
         whisper=whisper_engine,
         vad=silero_vad,
         whisperx=whisperx_engine,
@@ -318,6 +310,16 @@ async def audio_websocket_endpoint(websocket: WebSocket):
                                 cue["translation_lang"] = target_lang
                             except Exception as e:
                                 print(f"[LiveSub WS] Translation error: {e}")
+
+                    # Censor any profanity in live cue text, translation, and revisions
+                    if cue.get("text"):
+                        cue["text"] = censor_text(cue["text"])
+                    if cue.get("translation"):
+                        cue["translation"] = censor_text(cue["translation"])
+                    if cue.get("revisions"):
+                        for rev in cue["revisions"]:
+                            if rev.get("text"):
+                                rev["text"] = censor_text(rev["text"])
 
                     # Send cue to WebSocket immediately so client gets subtitles
                     await websocket.send_text(

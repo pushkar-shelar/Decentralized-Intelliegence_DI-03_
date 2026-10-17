@@ -312,358 +312,599 @@
 [06:56:51] [FINAL] [Whisper STT] [en] [0.00s -> 0.78s]: vehicles are
 
 --------------------------------------------------------------------------------
-=== Look-Ahead Video Pre-Process [Video ID: vid-002] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 08:37:11 ===
+=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 08:58:03 ===
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-=== Look-Ahead Video Pre-Process [Video ID: vid-002] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 08:37:41 ===
+=== Look-Ahead Video Pre-Process [Video ID: bPfw5EPCONk] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 09:01:47 ===
+--------------------------------------------------------------------------------
+[09:03:49] [FINAL] [Whisper STT] [ta] [3.79s -> 25.55s]: மார்கேட் கெல்லி கோறுகள் தீச்கிரம் மன் செயபத்தை எல்லக்கொண்ட ஏங்க இந்தளோனே ஒன்னார் என்றுக்கொண்ட அத்தையான் மார்கேட் கெல்லக்குண்ட கூண்ட
+[09:03:49] [FINAL] [Whisper STT] [ta] [25.55s -> 27.15s]: असले ये माटल आडकन्द मीरू
+[09:03:49] [FINAL] [Whisper STT] [ta] [27.15s -> 28.67s]: मिमावै चिप्पिन अड्टु
+[09:03:49] [FINAL] [Whisper STT] [ta] [28.67s -> 29.87s]: डब्बुल तीसकोरी
+[09:03:49] [FINAL] [Whisper STT] [ta] [29.87s -> 30.93s]: मार्केट केल्लांड
+[09:03:49] [FINAL] [Whisper STT] [ta] [30.93s -> 32.99s]: कोवर गयलू सरुकुलू तीसकोरांड
+[09:03:49] [FINAL] [Whisper STT] [ta] [32.99s -> 33.99s]: मुन्धेल्लांडी
+[09:03:49] [FINAL] [Whisper STT] [ta] [33.99s -> 36.13s]: ओ, पिछे पेच्चालो शुलू जातनारू
+[09:03:49] [FINAL] [Whisper STT] [ta] [36.13s -> 37.81s]: अधि कादत्त या
+[09:03:49] [FINAL] [Whisper STT] [ta] [37.81s -> 38.53s]: अंटे
+[09:03:49] [FINAL] [Whisper STT] [ta] [41.77s -> 44.61s]: अनमिका भावना मुखाल चूस्कुनार।
+[09:03:49] [FINAL] [Whisper STT] [ta] [68.53s -> 73.85s]: इक चेसेदैमिले का अनामिक्का भावना इंट नीची बयल्देरी उरी मज़्िलो कोच्छे निलबड़्डारू
+[09:03:49] [FINAL] [Whisper STT] [ta] [73.85s -> 81.63s]: एंग शेद्ध मक्का, नीनु आदे हालो चिस्तनां चेल्ली, कूरगैलू सरुकुलू यहला फ्रीगा उस्ताया आनी, हालो चिस्तन
+[09:03:49] [FINAL] [Whisper STT] [ta] [81.63s -> 86.37s]: அப்படிய வாலக்கு ஓக்க இன்டி முந்து நிளவடி அண்ண வடுக் கொண்டும் நாற்க பிச்சகாடு கணி பிஞ்சாடு
+[09:03:49] [FINAL] [Whisper STT] [ta] [86.37s -> 88.93s]: அன்தே அனைமிக்கா முக்காம் வெலிகி போயிந்தி
+[09:03:49] [FINAL] [Whisper STT] [ta] [88.93s -> 90.35s]: ஆர் சூடு செல்லி
+[09:03:49] [FINAL] [Whisper STT] [ta] [90.87s -> 92.35s]: भாவன சூसிந்தி
+[09:03:49] [FINAL] [Whisper STT] [ta] [92.35s -> 93.75s]: பிச்சகாடு கணி பிஞ்சாடு
+[09:03:49] [FINAL] [Whisper STT] [ta] [93.75s -> 95.89s]: भாவன குட சந்தோஷ் படிந்தி
+[09:03:49] [FINAL] [Whisper STT] [ta] [95.89s -> 98.09s]: அக்கா, ஐடிய சூப்ப
+[09:03:49] [FINAL] [Whisper STT] [ta] [108.73s -> 111.15s]: இத்தரு அக்கனெஞ்ச விடிப் போயார்
+
+--------------------------------------------------------------------------------
+=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 09:03:49 ===
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-=== Look-Ahead Video Pre-Process [Video ID: vid-002] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 08:50:46 ===
+=== Look-Ahead Video Pre-Process [Video ID: bPfw5EPCONk] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 09:05:18 ===
+--------------------------------------------------------------------------------
+[09:07:14] [FINAL] [Whisper STT] [ta] [3.79s -> 25.55s]: மார்கேட் கெல்லி கோறுகள் தீச்கிரம் மன் செயபத்தை எல்லக்கொண்ட ஏங்க இந்தளோனே ஒன்னார் என்றுக்கொண்ட அத்தையான் மார்கேட் கெல்லக்குண்ட கூண்ட
+[09:07:14] [FINAL] [Whisper STT] [ta] [25.55s -> 27.15s]: असले ये माटल आडकन्द मीरू
+[09:07:14] [FINAL] [Whisper STT] [ta] [27.15s -> 28.67s]: मिमावै चिप्पिन अड्टु
+[09:07:14] [FINAL] [Whisper STT] [ta] [28.67s -> 29.87s]: डब्बुल तीसकोरी
+[09:07:14] [FINAL] [Whisper STT] [ta] [29.87s -> 30.93s]: मार्केट केल्लांड
+[09:07:14] [FINAL] [Whisper STT] [ta] [30.93s -> 32.99s]: कोवर गयलू सरुकुलू तीसकोरांड
+[09:07:14] [FINAL] [Whisper STT] [ta] [32.99s -> 33.99s]: मुन्धेल्लांडी
+[09:07:14] [FINAL] [Whisper STT] [ta] [33.99s -> 36.13s]: ओ, पिछे पेच्चालो शुलू जातनारू
+[09:07:14] [FINAL] [Whisper STT] [ta] [36.13s -> 37.81s]: अधि कादत्त या
+[09:07:14] [FINAL] [Whisper STT] [ta] [37.81s -> 38.53s]: अंटे
+[09:07:14] [FINAL] [Whisper STT] [ta] [41.77s -> 44.61s]: अनमिका भावना मुखाल चूस्कुनार।
+[09:07:14] [FINAL] [Whisper STT] [ta] [68.53s -> 73.85s]: इक चेसेदैमिले का अनामिक्का भावना इंट नीची बयल्देरी उरी मज़्िलो कोच्छे निलबड़्डारू
+[09:07:14] [FINAL] [Whisper STT] [ta] [73.85s -> 81.63s]: एंग शेद्ध मक्का, नीनु आदे हालो चिस्तनां चेल्ली, कूरगैलू सरुकुलू यहला फ्रीगा उस्ताया आनी, हालो चिस्तन
+[09:07:14] [FINAL] [Whisper STT] [ta] [81.63s -> 86.37s]: அப்படிய வாலக்கு ஓக்க இண்டு முந்து நிளவடி அன்ன வடுக் கொண்டும் நாற்க விச்சகாடு கணி பிஞ்சாடு
+[09:07:14] [FINAL] [Whisper STT] [ta] [86.37s -> 88.89s]: அன்தே அனாமிக்கா முக்காம் வெலைகி போயிருந்தி
+[09:07:14] [FINAL] [Whisper STT] [ta] [88.89s -> 90.35s]: ஆற் சூடு செல்லி
+[09:07:14] [FINAL] [Whisper STT] [ta] [90.35s -> 92.53s]: भாவன சூसिந்தி
+[09:07:14] [FINAL] [Whisper STT] [ta] [92.53s -> 93.75s]: விச்சகாடு கணி பிஞ்சாடு
+[09:07:14] [FINAL] [Whisper STT] [ta] [93.75s -> 95.89s]: भாவன குட சந்தோஷ் படிந்தி
+[09:07:14] [FINAL] [Whisper STT] [ta] [95.89s -> 98.11s]: அक्का, ஐடிய சூப்ப
+[09:07:14] [FINAL] [Whisper STT] [ta] [109.19s -> 111.07s]: இத்தரு அக்க நேனசி விடிபோயார்.
+[09:07:14] [FINAL] [Whisper STT] [ta] [111.07s -> 114.45s]: அணமிகா ஦क्षனம் வைபுல ஒன்ற சீதம் மைந்து மொந்து நெளி படிந்தி.
+[09:07:14] [FINAL] [Whisper STT] [ta] [114.45s -> 118.77s]: ஏவரம் மனுவு இடை செஞ்சிப்பட்டுக் கொணி
+
+--------------------------------------------------------------------------------
+=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 09:07:14 ===
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-=== Look-Ahead Video Pre-Process [Video ID: 02RRZsuhc6U] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 08:51:12 ===
+=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 09:10:02 ===
 --------------------------------------------------------------------------------
-[08:51:20] [FINAL] [Whisper STT] [en] [0.00s -> 3.82s]: I have got a good lesson from you that we should not use always what.
-[08:51:20] [FINAL] [Whisper STT] [en] [3.92s -> 5.70s]: But if it is positive, we can say always.
-[08:51:20] [FINAL] [Whisper STT] [en] [5.82s -> 6.50s]: You always smile.
-[08:51:20] [FINAL] [Whisper STT] [en] [6.62s -> 7.18s]: That's very good.
-[08:51:20] [FINAL] [Whisper STT] [en] [7.38s -> 8.44s]: Yeah, that's very good.
-[08:51:20] [FINAL] [Whisper STT] [en] [8.60s -> 9.62s]: You always smile.
-[08:51:20] [FINAL] [Whisper STT] [en] [9.74s -> 10.20s]: That's very good.
-[08:51:20] [FINAL] [Whisper STT] [en] [10.36s -> 11.14s]: We always cry.
-[08:51:20] [FINAL] [Whisper STT] [en] [11.60s -> 12.16s]: That's not.
-[08:51:20] [FINAL] [Whisper STT] [en] [12.20s -> 12.58s]: Not that.
-[08:51:20] [FINAL] [Whisper STT] [en] [12.88s -> 15.62s]: The other person will say how we'll respond generally?
-[08:51:20] [FINAL] [Whisper STT] [en] [15.80s -> 16.64s]: We focus on the content.
-[08:51:20] [FINAL] [Whisper STT] [en] [16.86s -> 18.78s]: We will talk about the line below or not below.
-[08:51:20] [FINAL] [Whisper STT] [en] [19.06s -> 19.60s]: I'm looking at the line below.
-[08:51:20] [FINAL] [Whisper STT] [en] [20.22s -> 20.62s]: I don't give your number.
-[08:51:20] [FINAL] [Whisper STT] [en] [21.22s -> 21.74s]: I don't do this.
-[08:51:20] [FINAL] [Whisper STT] [en] [21.96s -> 23.14s]: That is the content focus.
-[08:51:20] [FINAL] [Whisper STT] [en] [24.14s -> 27.02s]: But what made us sad is his tone.
-[08:51:20] [FINAL] [Whisper STT] [en] [27.02s -> 29.88s]: the sad part is not that line
-[08:51:20] [FINAL] [Whisper STT] [en] [29.88s -> 31.06s]: you don't look at it
-[08:51:20] [FINAL] [Whisper STT] [en] [31.06s -> 32.18s]: that is not the problem
-[08:51:20] [FINAL] [Whisper STT] [en] [32.18s -> 33.26s]: why do we feel bad?
-[08:51:20] [FINAL] [Whisper STT] [en] [34.20s -> 35.52s]: because our tone is high
-[08:51:20] [FINAL] [Whisper STT] [en] [57.02s -> 57.74s]: and take medicines.
-[08:51:20] [FINAL] [Whisper STT] [en] [57.76s -> 58.56s]: Okay, fever?
-[08:51:20] [FINAL] [Whisper STT] [en] [58.82s -> 59.40s]: Dawa le lo.
-[08:51:20] [FINAL] [Whisper STT] [en] [59.54s -> 60.00s]: Dawa le lo.
-[08:51:20] [FINAL] [Whisper STT] [en] [60.14s -> 60.74s]: I know dava le lo.
-[08:51:20] [FINAL] [Whisper STT] [en] [60.84s -> 61.04s]: It's like,
-[08:51:20] [FINAL] [Whisper STT] [en] [61.32s -> 61.78s]: yeah,
-[08:51:20] [FINAL] [Whisper STT] [en] [61.92s -> 62.84s]: dawa to meh lel hoonga
-[08:51:20] [FINAL] [Whisper STT] [en] [62.84s -> 63.96s]: lekin tumhaari dua...
-[08:51:20] [FINAL] [Whisper STT] [en] [63.96s -> 65.04s]: Arei kya hai dua ka hai?
-[08:51:20] [FINAL] [Whisper STT] [en] [65.06s -> 65.50s]: Dua ka hai?
-[08:51:20] [FINAL] [Whisper STT] [en] [65.64s -> 65.98s]: Dua ka hai?
-[08:51:20] [FINAL] [Whisper STT] [en] [67.90s -> 68.72s]: Hello everyone.
-[08:51:20] [FINAL] [Whisper STT] [en] [69.06s -> 69.60s]: It's gonna be
-[08:51:20] [FINAL] [Whisper STT] [en] [69.60s -> 71.38s]: an interesting conversation
-[08:51:20] [FINAL] [Whisper STT] [en] [71.38s -> 72.12s]: and talks
-[08:51:20] [FINAL] [Whisper STT] [en] [72.12s -> 73.00s]: because today
-[08:51:20] [FINAL] [Whisper STT] [en] [73.00s -> 75.44s]: I have a very special guest
-[08:51:20] [FINAL] [Whisper STT] [en] [75.44s -> 76.26s]: in this podcast
-[08:51:20] [FINAL] [Whisper STT] [en] [77.16s -> 77.98s]: Miss Suman.
-[08:51:20] [FINAL] [Whisper STT] [en] [78.20s -> 78.44s]: Right?
-[08:51:20] [FINAL] [Whisper STT] [en] [78.64s -> 79.22s]: Suman ma'am.
-[08:51:20] [FINAL] [Whisper STT] [en] [79.32s -> 80.12s]: Especially she's
-[08:51:20] [FINAL] [Whisper STT] [en] [80.12s -> 81.14s]: a soft skills trainer
-[08:51:20] [FINAL] [Whisper STT] [en] [81.14s -> 81.72s]: coach
-[08:51:20] [FINAL] [Whisper STT] [en] [81.72s -> 83.10s]: and she is also
-[08:51:20] [FINAL] [Whisper STT] [en] [83.10s -> 83.78s]: a life coach
-[08:51:20] [FINAL] [Whisper STT] [en] [83.78s -> 84.64s]: and yes
-[08:51:20] [FINAL] [Whisper STT] [en] [84.64s -> 85.14s]: spiritual
-[08:51:20] [FINAL] [Whisper STT] [en] [85.14s -> 89.78s]: spiritual coach as well little bit right you know because she was giving me a spirituality
-[08:51:20] [FINAL] [Whisper STT] [en] [89.78s -> 95.26s]: lessons and i was learning a lot so today in this podcast we're going to discuss on communication
-[08:51:20] [FINAL] [Whisper STT] [en] [95.26s -> 99.26s]: and comm skills because communication is case plays wider role to develop your personality
-[08:51:20] [FINAL] [Whisper STT] [en] [99.26s -> 103.78s]: and to develop a relationship and your business so first of all what do you think about it
-[08:51:20] [FINAL] [Whisper STT] [en] [104.30s -> 109.60s]: uh about the spiritual course communication okay you can just stay in court about
-[08:51:20] [FINAL] [Whisper STT] [en] [109.60s -> 113.84s]: spirituality please okay so first thank you so much for introducing me and I'm
-[08:51:20] [FINAL] [Whisper STT] [en] [113.84s -> 118.06s]: someone a soft skill trainer and I would just correct one thing I have not a
-[08:51:20] [FINAL] [Whisper STT] [en] [118.06s -> 118.72s]: spiritual course
+[09:10:09] [PARTIAL] [Whisper STT] [en] [0.00s -> 0.78s]: hello world this is
+[09:10:09] [PARTIAL] [Whisper Live STT] [en] [0.80s -> 1.60s]: hello world this is
+[09:10:23] [PARTIAL] [Whisper STT] [en] [0.00s -> 1.56s]: Hello World This is a Live Day
+[09:10:23] [PARTIAL] [Whisper Live STT] [en] [0.80s -> 2.40s]: Hello World This is a Live Day
+[09:10:37] [PARTIAL] [Whisper STT] [en] [0.00s -> 2.34s]: Hello World this is a live test of subtitles.
+[09:10:37] [PARTIAL] [Whisper Live STT] [en] [0.80s -> 3.20s]: Hello World this is a live test of subtitles.
 
 --------------------------------------------------------------------------------
-=== Look-Ahead Video Pre-Process [Video ID: 02RRZsuhc6U] (Window: 141.0s - 261.0s) | Started at: 2026-10-17 08:51:20 ===
+=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 09:10:43 ===
 --------------------------------------------------------------------------------
-[08:51:26] [FINAL] [Whisper STT] [en] [0.00s -> 1.48s]: being assertive.
-[08:51:26] [FINAL] [Whisper STT] [en] [1.62s -> 3.00s]: So it plays a very important role.
-[08:51:26] [FINAL] [Whisper STT] [en] [3.50s -> 5.52s]: Since I started learning communication,
-[08:51:26] [FINAL] [Whisper STT] [en] [5.72s -> 8.00s]: since I started applying communication in my life,
-[08:51:26] [FINAL] [Whisper STT] [en] [8.14s -> 10.08s]: I found a lot of difference
-[08:51:26] [FINAL] [Whisper STT] [en] [10.08s -> 12.76s]: and obstacles reduce a lot.
-[08:51:26] [FINAL] [Whisper STT] [en] [14.16s -> 15.34s]: How can you prove
-[08:51:26] [FINAL] [Whisper STT] [en] [15.34s -> 16.36s]: and how can you say
-[08:51:26] [FINAL] [Whisper STT] [en] [16.36s -> 17.34s]: and how can you claim
-[08:51:26] [FINAL] [Whisper STT] [en] [17.34s -> 19.32s]: that obstacles are reduced
-[08:51:26] [FINAL] [Whisper STT] [en] [19.32s -> 20.48s]: through or with the help
-[08:51:26] [FINAL] [Whisper STT] [en] [20.48s -> 21.28s]: of communication?
-[08:51:26] [FINAL] [Whisper STT] [en] [22.28s -> 23.48s]: Okay, so one thing is
-[08:51:26] [FINAL] [Whisper STT] [en] [23.48s -> 25.46s]: there is one major topic
-[08:51:26] [FINAL] [Whisper STT] [en] [25.46s -> 26.16s]: in communication
-[08:51:26] [FINAL] [Whisper STT] [en] [26.16s -> 27.96s]: which I use as a
-[08:51:26] [FINAL] [Whisper STT] [en] [27.96s -> 34.14s]: Hukunga Ikka for my kind of communication courses that is non-violent
-[08:51:26] [FINAL] [Whisper STT] [en] [34.14s -> 38.00s]: communication. Non-violent communication? Yes, so first we have to go through many
-[08:51:26] [FINAL] [Whisper STT] [en] [38.00s -> 42.68s]: things for non-volent communication basic things we have to go through to
-[08:51:26] [FINAL] [Whisper STT] [en] [42.68s -> 46.70s]: able to learn a non-violent communication so we don't teach it
-[08:51:26] [FINAL] [Whisper STT] [en] [46.70s -> 51.60s]: directly but it's because it's very heavy kind of stuff and it takes a lot
-[08:51:26] [FINAL] [Whisper STT] [en] [51.60s -> 56.38s]: to learn and really practice it. So when we do non-volent communication the word
-[08:51:26] [FINAL] [Whisper STT] [en] [56.38s -> 62.36s]: is self means non-violent so yeah the simple definition of non-violent is um communicating
-[08:51:26] [FINAL] [Whisper STT] [en] [62.36s -> 69.26s]: expressing our needs expressing our desires without blaming without disrespecting other
-[08:51:26] [FINAL] [Whisper STT] [en] [69.26s -> 76.22s]: that is the basic nowadays disrespect or violence is increasing in the communication
-[08:51:26] [FINAL] [Whisper STT] [en] [76.22s -> 81.82s]: we can say communication or in the language also nowadays language is being so vulgar so violent
-[08:51:26] [FINAL] [Whisper STT] [en] [81.82s -> 87.38s]: all right and so uh frustrating language it's being or irritating language what do you think
-[08:51:26] [FINAL] [Whisper STT] [en] [87.38s -> 91.26s]: about this and how to control this and how to still keep our communication so polite
-[08:51:26] [FINAL] [Whisper STT] [en] [91.26s -> 98.86s]: and while it's pretty one thing is of course learning a technique from the non-violent
-[08:51:26] [FINAL] [Whisper STT] [en] [98.86s -> 104.94s]: communication apart from that if we are not healed within if we have lot of traumas from past
-[08:51:26] [FINAL] [Whisper STT] [en] [104.94s -> 111.28s]: if we have a lot of grudges from the past or negative experiences so then it will show in
-[08:51:26] [FINAL] [Whisper STT] [en] [111.28s -> 115.76s]: our language. So suppose I have done course from some personality development on communication
-[08:51:26] [FINAL] [Whisper STT] [en] [115.76s -> 119.70s]: I've learned some sentences how to talk what to talk but if my wife
+[09:10:51] [PARTIAL] [Whisper STT] [en] [0.00s -> 2.94s]: Hello World This is a life test of subtitle generation
+[09:10:51] [PARTIAL] [Whisper Live STT] [en] [0.80s -> 4.00s]: Hello World This is a life test of subtitle generation
 
 --------------------------------------------------------------------------------
-=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 08:51:26 ===
---------------------------------------------------------------------------------
-[08:51:28] [PARTIAL] [Whisper STT] [en] [0.00s -> 1.00s]: How can you prove an
-[08:51:28] [PARTIAL] [Whisper Live STT] [en] [156.27s -> 157.29s]: How can you prove an
-[08:51:29] [PARTIAL] [Whisper STT] [en] [0.00s -> 1.88s]: How can you prove and how can you say?
-[08:51:29] [PARTIAL] [Whisper Live STT] [en] [156.27s -> 158.32s]: How can you prove and how can you say?
-[08:51:30] [PARTIAL] [Whisper STT] [en] [0.00s -> 1.88s]: How can you prove and how can you say
-[08:51:30] [PARTIAL] [Whisper STT] [en] [1.88s -> 3.04s]: And how can you claim that
-[08:51:30] [PARTIAL] [Whisper Live STT] [en] [156.27s -> 159.34s]: How can you prove and how can you say And how can you claim that
-[08:51:31] [PARTIAL] [Whisper STT] [en] [0.00s -> 1.88s]: How can you prove and how can you say
-[08:51:31] [PARTIAL] [Whisper STT] [en] [1.88s -> 3.54s]: And how can you claim that obstacle
-[08:51:31] [PARTIAL] [Whisper Live STT] [en] [156.27s -> 160.37s]: How can you prove and how can you say And how can you claim that obstacle
-[08:51:32] [PARTIAL] [Whisper STT] [en] [0.00s -> 1.88s]: How can you prove and how can you say
-[08:51:32] [PARTIAL] [Whisper STT] [en] [1.88s -> 4.76s]: And how can you claim that obstacles are reduced
-[08:51:32] [PARTIAL] [Whisper Live STT] [en] [156.27s -> 161.39s]: How can you prove and how can you say And how can you claim that obstacles are reduced
-[08:51:33] [PARTIAL] [Whisper STT] [en] [0.00s -> 1.88s]: How can you prove and how can you say
-[08:51:33] [PARTIAL] [Whisper STT] [en] [1.88s -> 4.82s]: And how can you claim that obstacles are reduced
-[08:51:33] [PARTIAL] [Whisper STT] [en] [4.82s -> 6.12s]: Through or with the help of
-[08:51:33] [PARTIAL] [Whisper Live STT] [en] [156.27s -> 162.41s]: How can you prove and how can you say And how can you claim that obstacles are reduced Through or with the help of
-[08:51:34] [PARTIAL] [Whisper STT] [en] [0.00s -> 1.88s]: how can you prove and how can you say
-[08:51:34] [PARTIAL] [Whisper STT] [en] [1.88s -> 4.84s]: and how can you claim that obstacles are reduced
-[08:51:34] [PARTIAL] [Whisper STT] [en] [4.84s -> 6.78s]: through or with the help of communication.
-[08:51:34] [PARTIAL] [Whisper Live STT] [en] [156.27s -> 163.44s]: how can you prove and how can you say and how can you claim that obstacles are reduced through or with the help of communication.
-[08:51:36] [FINAL] [Whisper STT] [en] [0.00s -> 5.60s]: how can you prove and how can you say and how can you claim that obstacles are reduced through or
-[08:51:36] [FINAL] [Whisper STT] [en] [5.60s -> 7.26s]: with the help of communication is because
-
---------------------------------------------------------------------------------
-=== Look-Ahead Video Pre-Process [Video ID: 02RRZsuhc6U] (Window: 996.0s - 1116.0s) | Started at: 2026-10-17 08:52:53 ===
---------------------------------------------------------------------------------
-[08:53:00] [FINAL] [Whisper STT] [en] [0.00s -> 0.90s]: I'll be polite
-[08:53:00] [FINAL] [Whisper STT] [en] [0.90s -> 2.32s]: and then that's how
-[08:53:00] [FINAL] [Whisper STT] [en] [2.32s -> 3.02s]: we can become
-[08:53:00] [FINAL] [Whisper STT] [en] [3.02s -> 3.92s]: more and more
-[08:53:00] [FINAL] [Whisper STT] [en] [3.92s -> 4.62s]: and more polite
-[08:53:00] [FINAL] [Whisper STT] [en] [4.62s -> 5.38s]: so when
-[08:53:00] [FINAL] [Whisper STT] [en] [5.38s -> 6.42s]: we have worked
-[08:53:00] [FINAL] [Whisper STT] [en] [6.42s -> 6.82s]: within
-[08:53:00] [FINAL] [Whisper STT] [en] [6.82s -> 8.08s]: our emotion is
-[08:53:00] [FINAL] [Whisper STT] [en] [8.68s -> 9.20s]: exhausted
-[08:53:00] [FINAL] [Whisper STT] [en] [9.20s -> 10.26s]: and hatred
-[08:53:00] [FINAL] [Whisper STT] [en] [10.26s -> 11.34s]: is exhausted
-[08:53:00] [FINAL] [Whisper STT] [en] [11.34s -> 12.30s]: and again
-[08:53:00] [FINAL] [Whisper STT] [en] [12.30s -> 12.90s]: the practice
-[08:53:00] [FINAL] [Whisper STT] [en] [12.90s -> 13.56s]: doing it
-[08:53:00] [FINAL] [Whisper STT] [en] [13.56s -> 13.90s]: again and
-[08:53:00] [FINAL] [Whisper STT] [en] [13.90s -> 14.12s]: again
-[08:53:00] [FINAL] [Whisper STT] [en] [14.12s -> 15.00s]: being aware
-[08:53:00] [FINAL] [Whisper STT] [en] [15.00s -> 15.54s]: about it
-[08:53:00] [FINAL] [Whisper STT] [en] [15.54s -> 15.84s]: again and
-[08:53:00] [FINAL] [Whisper STT] [en] [15.84s -> 16.06s]: again
-[08:53:00] [FINAL] [Whisper STT] [en] [16.06s -> 16.84s]: in one way
-[08:53:00] [FINAL] [Whisper STT] [en] [16.84s -> 17.24s]: it will not
-[08:53:00] [FINAL] [Whisper STT] [en] [17.24s -> 17.50s]: come
-[08:53:00] [FINAL] [Whisper STT] [en] [17.50s -> 18.22s]: in just
-[08:53:00] [FINAL] [Whisper STT] [en] [18.22s -> 18.58s]: one go
-[08:53:00] [FINAL] [Whisper STT] [en] [18.58s -> 18.78s]: it will
-[08:53:00] [FINAL] [Whisper STT] [en] [18.78s -> 19.12s]: not come
-[08:53:00] [FINAL] [Whisper STT] [en] [19.12s -> 19.28s]: it's not
-[08:53:00] [FINAL] [Whisper STT] [en] [19.28s -> 19.62s]: like a
-[08:53:00] [FINAL] [Whisper STT] [en] [19.62s -> 20.28s]: quick injection
-[08:53:00] [FINAL] [Whisper STT] [en] [21.96s -> 23.00s]: there is
-[08:53:00] [FINAL] [Whisper STT] [en] [23.00s -> 23.42s]: a very
-[08:53:00] [FINAL] [Whisper STT] [en] [23.42s -> 24.08s]: important point
-[08:53:00] [FINAL] [Whisper STT] [en] [24.08s -> 24.56s]: that is
-[08:53:00] [FINAL] [Whisper STT] [en] [24.56s -> 25.60s]: to understand
-[08:53:00] [FINAL] [Whisper STT] [en] [25.60s -> 26.84s]: the hidden
-[08:53:00] [FINAL] [Whisper STT] [en] [26.84s -> 27.34s]: part of
-[08:53:00] [FINAL] [Whisper STT] [en] [27.34s -> 27.84s]: communication
-[08:53:00] [FINAL] [Whisper STT] [en] [27.84s -> 28.42s]: sometimes
-[08:53:00] [FINAL] [Whisper STT] [en] [28.42s -> 29.04s]: we say
-[08:53:00] [FINAL] [Whisper STT] [en] [29.04s -> 29.34s]: something
-[08:53:00] [FINAL] [Whisper STT] [en] [29.34s -> 29.62s]: different
-[08:53:00] [FINAL] [Whisper STT] [en] [29.62s -> 30.70s]: But we feel something different
-[08:53:00] [FINAL] [Whisper STT] [en] [30.70s -> 31.52s]: We say
-[08:53:00] [FINAL] [Whisper STT] [en] [31.52s -> 33.10s]: I hate you so much
-[08:53:00] [FINAL] [Whisper STT] [en] [33.10s -> 34.32s]: But somewhere in hate
-[08:53:00] [FINAL] [Whisper STT] [en] [34.32s -> 34.94s]: We have love
-[08:53:00] [FINAL] [Whisper STT] [en] [35.42s -> 36.32s]: And we say
-[08:53:00] [FINAL] [Whisper STT] [en] [36.32s -> 37.24s]: I love you so much
-[08:53:00] [FINAL] [Whisper STT] [en] [37.24s -> 37.98s]: Then there is
-[08:53:00] [FINAL] [Whisper STT] [en] [37.98s -> 39.02s]: Hate in the love
-[08:53:00] [FINAL] [Whisper STT] [en] [39.02s -> 40.72s]: So how to understand
-[08:53:00] [FINAL] [Whisper STT] [en] [40.72s -> 41.26s]: The hidden part
-[08:53:00] [FINAL] [Whisper STT] [en] [41.26s -> 41.72s]: Like bacha
-[08:53:00] [FINAL] [Whisper STT] [en] [41.72s -> 42.80s]: The kid comes and says
-[08:53:00] [FINAL] [Whisper STT] [en] [42.80s -> 43.34s]: Mama
-[08:53:00] [FINAL] [Whisper STT] [en] [43.34s -> 43.76s]: Mama
-[08:53:00] [FINAL] [Whisper STT] [en] [43.76s -> 44.94s]: I love you so much
-[08:53:00] [FINAL] [Whisper STT] [en] [44.94s -> 46.06s]: Mama understands
-[08:53:00] [FINAL] [Whisper STT] [en] [46.06s -> 47.44s]: Oh bacha has made any mistake
-[08:53:00] [FINAL] [Whisper STT] [en] [47.44s -> 48.72s]: Or bacha has just
-[08:53:00] [FINAL] [Whisper STT] [en] [48.72s -> 48.94s]: You know
-[08:53:00] [FINAL] [Whisper STT] [en] [48.94s -> 50.34s]: Just he wants something out of me
-[08:53:00] [FINAL] [Whisper STT] [en] [50.34s -> 51.20s]: Like he wants some money
-[08:53:00] [FINAL] [Whisper STT] [en] [51.20s -> 52.30s]: How do you understand
-[08:53:00] [FINAL] [Whisper STT] [en] [52.30s -> 52.94s]: Hidden part
-[08:53:00] [FINAL] [Whisper STT] [en] [52.94s -> 53.58s]: And the emotions
-[08:53:00] [FINAL] [Whisper STT] [en] [53.58s -> 54.48s]: Of the communications
-[08:53:00] [FINAL] [Whisper STT] [en] [55.02s -> 55.96s]: The hidden parts
-[08:53:00] [FINAL] [Whisper STT] [en] [55.96s -> 56.58s]: With communication
-[08:53:00] [FINAL] [Whisper STT] [en] [56.58s -> 58.00s]: Indirect communication
-[08:53:00] [FINAL] [Whisper STT] [en] [58.00s -> 59.00s]: How to understand that
-[08:53:00] [FINAL] [Whisper STT] [en] [59.00s -> 65.54s]: indirect communication one thing is of course taking the pause and not listening just word
-[08:53:00] [FINAL] [Whisper STT] [en] [65.54s -> 71.56s]: but also listening to the person their body language or their tone and where it is coming
-[08:53:00] [FINAL] [Whisper STT] [en] [71.56s -> 78.58s]: from taking a pause if we still confuse we don't know generally girls and women can sense it what
-[08:53:00] [FINAL] [Whisper STT] [en] [78.58s -> 84.06s]: is the reason behind it but sometimes we are clueless what's happening and what other person
-[08:53:00] [FINAL] [Whisper STT] [en] [84.06s -> 89.62s]: is saying and where this is coming from so asking question probing a lot will help okay so this is
-[08:53:00] [FINAL] [Whisper STT] [en] [89.62s -> 95.28s]: one basic technique don't you think like if we probe a lot he or she may be offended as well why
-[08:53:00] [FINAL] [Whisper STT] [en] [95.28s -> 99.92s]: are you asking so many and multiple questions i guess i was saying that please don't torture me
-[08:53:00] [FINAL] [Whisper STT] [en] [99.92s -> 105.76s]: don't disturb me why are you just asking like a cbi right no no don't even probing a lot uh will
-[08:53:00] [FINAL] [Whisper STT] [en] [105.76s -> 110.10s]: create a blunder or problem between the both it depends how we are asking if you're asking
-[08:53:00] [FINAL] [Whisper STT] [en] [110.10s -> 117.42s]: like an interview definitely yes if we are asking was out of the no i we asked
-[08:53:00] [FINAL] [Whisper STT] [en] [117.42s -> 119.70s]: like as a curiosity and genuinely
-
---------------------------------------------------------------------------------
-=== Look-Ahead Video Pre-Process [Video ID: 02RRZsuhc6U] (Window: 1135.0s - 1255.0s) | Started at: 2026-10-17 08:53:46 ===
---------------------------------------------------------------------------------
-[08:53:52] [FINAL] [Whisper STT] [en] [0.00s -> 5.52s]: of genuine knowing that i want to understand i want to know then other person will not get offended
-[08:53:52] [FINAL] [Whisper STT] [en] [5.52s -> 10.32s]: the problem in this competitive world or in this modern world or in this selfish word there is a
-[08:53:52] [FINAL] [Whisper STT] [en] [10.32s -> 16.16s]: problem like people listen but they don't understand people just see you but they don't feel
-[08:53:52] [FINAL] [Whisper STT] [en] [16.16s -> 20.62s]: you and people just give you time but they don't give you their hearts it's like you know
-[08:53:52] [FINAL] [Whisper STT] [en] [20.62s -> 25.86s]: it's like a very show-off type of world right you know so what he in that communication we say
-[08:53:52] [FINAL] [Whisper STT] [en] [25.86s -> 27.18s]: yes, I understand
-[08:53:52] [FINAL] [Whisper STT] [en] [27.18s -> 28.44s]: okay, you have the problem
-[08:53:52] [FINAL] [Whisper STT] [en] [28.44s -> 29.76s]: go ahead and take medicines
-[08:53:52] [FINAL] [Whisper STT] [en] [29.76s -> 30.56s]: ok, fever
-[08:53:52] [FINAL] [Whisper STT] [en] [30.56s -> 31.42s]: let's drink
-[08:53:52] [FINAL] [Whisper STT] [en] [31.42s -> 32.02s]: let's drink
-[08:53:52] [FINAL] [Whisper STT] [en] [32.02s -> 33.06s]: it's like
-[08:53:52] [FINAL] [Whisper STT] [en] [33.06s -> 34.78s]: I will drink
-[08:53:52] [FINAL] [Whisper STT] [en] [34.78s -> 35.84s]: but what do you do?
-[08:53:52] [FINAL] [Whisper STT] [en] [36.08s -> 36.60s]: what do you do?
-[08:53:52] [FINAL] [Whisper STT] [en] [36.98s -> 37.54s]: where do you do?
-[08:53:52] [FINAL] [Whisper STT] [en] [38.18s -> 38.76s]: so that is what
-[08:53:52] [FINAL] [Whisper STT] [en] [38.76s -> 39.48s]: I just want to know
-[08:53:52] [FINAL] [Whisper STT] [en] [39.48s -> 41.66s]: how to be very sympathetic
-[08:53:52] [FINAL] [Whisper STT] [en] [41.66s -> 43.36s]: and empathetic communicator
-[08:53:52] [FINAL] [Whisper STT] [en] [43.36s -> 44.34s]: and listener as well
-[08:53:52] [FINAL] [Whisper STT] [en] [44.34s -> 45.14s]: how to be a great
-[08:53:52] [FINAL] [Whisper STT] [en] [45.14s -> 45.98s]: and effective listener
-[08:53:52] [FINAL] [Whisper STT] [en] [46.66s -> 48.10s]: there is one beautiful video
-[08:53:52] [FINAL] [Whisper STT] [en] [48.10s -> 48.58s]: in YouTube
-[08:53:52] [FINAL] [Whisper STT] [en] [48.58s -> 49.30s]: you can search
-[08:53:52] [FINAL] [Whisper STT] [en] [49.30s -> 50.16s]: and that is
-[08:53:52] [FINAL] [Whisper STT] [en] [50.16s -> 51.80s]: sympathy versus empathy
-[08:53:52] [FINAL] [Whisper STT] [en] [51.80s -> 52.60s]: and I think
-[08:53:52] [FINAL] [Whisper STT] [en] [52.60s -> 53.04s]: it says
-[08:53:52] [FINAL] [Whisper STT] [en] [53.04s -> 54.44s]: pull a beer
-[08:53:52] [FINAL] [Whisper STT] [en] [54.44s -> 60.84s]: there's it's cartoon okay yeah two three minutes hardly okay it's beautiful yeah sympathy versus
-[08:53:52] [FINAL] [Whisper STT] [en] [60.84s -> 65.82s]: empathy story it's beautifully shown what is the difference between sympathy and empathy so what
-[08:53:52] [FINAL] [Whisper STT] [en] [65.82s -> 70.68s]: you just said generally we do sympathy it's like helping out other person okay
-[08:53:52] [FINAL] [Whisper STT] [en] [70.68s -> 80.14s]: empathy is like putting ourself in other person's shoes mostly 99 percent people don't want advice
-[08:53:52] [FINAL] [Whisper STT] [en] [80.80s -> 82.04s]: they don't want advice
-[08:53:52] [FINAL] [Whisper STT] [en] [82.04s -> 83.96s]: they just want someone to be heard
-[08:53:52] [FINAL] [Whisper STT] [en] [83.96s -> 85.50s]: they just want to be heard
-[08:53:52] [FINAL] [Whisper STT] [en] [88.64s -> 90.60s]: it's like a garbage within us
-[08:53:52] [FINAL] [Whisper STT] [en] [90.60s -> 92.00s]: and that we want to just pour out
-[08:53:52] [FINAL] [Whisper STT] [en] [92.00s -> 94.38s]: and someone wants
-[08:53:52] [FINAL] [Whisper STT] [en] [94.38s -> 96.42s]: like we just want someone who can hear us
-[08:53:52] [FINAL] [Whisper STT] [en] [97.36s -> 98.26s]: why people
-[08:53:52] [FINAL] [Whisper STT] [en] [98.26s -> 100.22s]: don't listen, why people just are
-[08:53:52] [FINAL] [Whisper STT] [en] [100.22s -> 101.76s]: so selfish, they talk about themselves
-[08:53:52] [FINAL] [Whisper STT] [en] [101.76s -> 103.02s]: I, I, I
-[08:53:52] [FINAL] [Whisper STT] [en] [103.02s -> 104.74s]: and they become meh, meh, meh
-[08:53:52] [FINAL] [Whisper STT] [en] [104.74s -> 105.68s]: and they become a goat
-[08:53:52] [FINAL] [Whisper STT] [en] [105.68s -> 108.26s]: so that is what I just wanna ask
-[08:53:52] [FINAL] [Whisper STT] [en] [108.26s -> 111.04s]: that how to actually listen with heart.
-[08:53:52] [FINAL] [Whisper STT] [en] [111.86s -> 113.70s]: People are in so rush nowadays
-[08:53:52] [FINAL] [Whisper STT] [en] [113.70s -> 115.92s]: that's why they give you their ears
-[08:53:52] [FINAL] [Whisper STT] [en] [115.92s -> 116.96s]: but they don't give you
-[08:53:52] [FINAL] [Whisper STT] [en] [116.96s -> 118.70s]: their complete focus.
-[08:53:52] [FINAL] [Whisper STT] [en] [119.10s -> 119.80s]: Why is it so?
-
---------------------------------------------------------------------------------
-=== Look-Ahead Video Pre-Process [Video ID: vid-002] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 08:59:06 ===
+=== Look-Ahead Video Pre-Process [Video ID: vid-002] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 09:11:03 ===
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-=== Look-Ahead Video Pre-Process [Video ID: vid-002] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 09:09:49 ===
+=== Look-Ahead Video Pre-Process [Video ID: bPfw5EPCONk] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 09:11:35 ===
+--------------------------------------------------------------------------------
+[09:14:19] [FINAL] [Whisper STT] [ta] [3.79s -> 25.55s]: மார்கேட் கெல்லி கோறுகள் தீச்கிரம் மன் செயபத்தை எல்லக்கொண்ட ஏங்க இந்தளோனே ஒன்னார் என்றுக்கொண்ட அத்தையான் மார்கேட் கெல்லக்குண்ட கூண்ட
+[09:14:19] [FINAL] [Whisper STT] [ta] [25.55s -> 27.15s]: असले ये माटल आडकन्द मीरू
+[09:14:19] [FINAL] [Whisper STT] [ta] [27.15s -> 28.67s]: मिमावै चिप्पिन अड्टु
+[09:14:19] [FINAL] [Whisper STT] [ta] [28.67s -> 29.87s]: डब्बुल तीसकोरी
+[09:14:19] [FINAL] [Whisper STT] [ta] [29.87s -> 30.93s]: मार्केट केल्लांड
+[09:14:19] [FINAL] [Whisper STT] [ta] [30.93s -> 32.99s]: कोवर गयलू सरुकुलू तीसकोरांड
+[09:14:19] [FINAL] [Whisper STT] [ta] [32.99s -> 33.99s]: मुन्धेल्लांडी
+[09:14:19] [FINAL] [Whisper STT] [ta] [33.99s -> 36.13s]: ओ, पिछे पेच्चालो शुलू जातनारू
+[09:14:19] [FINAL] [Whisper STT] [ta] [36.13s -> 37.81s]: अधि कादत्त या
+[09:14:19] [FINAL] [Whisper STT] [ta] [37.81s -> 38.53s]: अंटे
+[09:14:19] [FINAL] [Whisper STT] [ta] [41.77s -> 44.61s]: अनमिका भावना मुखाल चूस्कुनार।
+[09:14:19] [FINAL] [Whisper STT] [ta] [68.53s -> 73.85s]: इक चेसेदैमिले का अनामिक्का भावना इंट नीची बयल्देरी उरी मज़्िलो कोच्छे निलबड़्डारू
+[09:14:19] [FINAL] [Whisper STT] [ta] [73.85s -> 81.63s]: एंग शेद्ध मक्का, नीनु आदे हालो चिस्तनां चेल्ली, कूरगैलू सरुकुलू यहला फ्रीगा उस्ताया आनी, हालो चिस्तन
+[09:14:19] [FINAL] [Whisper STT] [ta] [81.63s -> 86.37s]: अप्पडे वालकी ओक इन्टि मुंदो निलबडी अन्नमणुक कोन्टून उक भिच्छगडू कानि पीन்சाडू
+[09:14:19] [FINAL] [Whisper STT] [ta] [86.37s -> 88.87s]: आंते अनामिका मुखाम वेलिगि पोयेंधी
+[09:14:19] [FINAL] [Whisper STT] [ta] [88.87s -> 90.31s]: आर चूडू चेल्ली
+[09:14:19] [FINAL] [Whisper STT] [ta] [90.31s -> 93.75s]: भावन चूसिंदी भिच्छगडू कानि पीन्चाडू
+[09:14:19] [FINAL] [Whisper STT] [ta] [93.75s -> 95.55s]: பாவனுக் குட சந்தோஷ் படிந்தி
+[09:14:19] [FINAL] [Whisper STT] [ta] [96.15s -> 98.15s]: அக்கா, ஐடே சூபப்
+[09:14:19] [FINAL] [Whisper STT] [ta] [98.15s -> 99.49s]: இக்க ஆலைசம் செய்க்குண்ட
+[09:14:19] [FINAL] [Whisper STT] [ta] [99.49s -> 102.11s]: நீ வு உருக்கி உத் தரம் வைப்பு நின்று மதல பெட்டு
+[09:14:19] [FINAL] [Whisper STT] [ta] [102.11s -> 104.53s]: நேனும் தக்ஷனொன்று மதல பெடத்தானும்.
+[09:14:19] [FINAL] [Whisper STT] [ta] [104.53s -> 106.53s]: நேனுங்கள் அனுக்குண்டு நான் செல்லி
+[09:14:19] [FINAL] [Whisper STT] [ta] [106.53s -> 108.05s]: இந்துளோப் நுவே செப்பேசோ
+[09:14:19] [FINAL] [Whisper STT] [ta] [109.15s -> 111.07s]: இத்தரு வக்க நெஞ்சி விடிப் போயார்.
+[09:14:19] [FINAL] [Whisper STT] [ta] [111.07s -> 114.43s]: அனாமிக் கா தक्षணம் வைபுல ஒன்ற சீதம் ஐந்து முந்து நிளவடிந்தி.
+[09:14:19] [FINAL] [Whisper STT] [ta] [116.23s -> 119.97s]: யாவரம் மனுவு, இடன் சங்சு பட்டுக்கொனி, மா ஐந்து முந்து நிளவே
+
+--------------------------------------------------------------------------------
+=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 09:14:19 ===
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-=== Look-Ahead Video Pre-Process [Video ID: vid-002] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 09:14:40 ===
+=== Look-Ahead Video Pre-Process [Video ID: bPfw5EPCONk] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 09:17:04 ===
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-=== Look-Ahead Video Pre-Process [Video ID: vid-002] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 09:17:05 ===
+=== Look-Ahead Video Pre-Process [Video ID: IIjjwy-fzPM] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 09:21:09 ===
 --------------------------------------------------------------------------------
-[09:20:32] [FINAL] [WhisperX STT] [en] [0.00s -> 1.50s]: Resilient output
-[09:20:32] [FINAL] [WhisperX STT] [hi] [SPEAKER_00] [0.00s -> 1.80s]: अरे ओ, बंसी!
-[09:20:32] [FINAL] [WhisperX STT] [hi] [SPEAKER_01] [2.00s -> 3.80s]: हाँ, तो मैं क्या करूँ?
-[09:20:32] [FINAL] [WhisperX STT] [en] [SPEAKER_00] [0.00s -> 1.20s]: First sentence.
-[09:20:32] [FINAL] [WhisperX STT] [en] [SPEAKER_00] [1.30s -> 2.80s]: Second sentence.
-[09:20:32] [FINAL] [WhisperX STT] [hi] [0.00s -> 1.00s]: परीक्षण
-[09:20:32] [FINAL] [WhisperX STT] [mr] [SPEAKER_00] [0.20s -> 1.80s]: नमस्कार मित्रांनो
-[09:20:33] [FINAL] [WhisperX STT] [hi] [1.25s -> 3.75s]: परीक्षण वाक्य
+[09:23:14] [FINAL] [Whisper STT] [te] [2.19s -> 6.05s]: అదీ పత్చని పొలాలు చెరువుల మధ్య ఉంనా పల్ళటురు
+[09:23:14] [FINAL] [Whisper STT] [te] [6.05s -> 9.75s]: ఆ అందమైన పలుటులో బతుకమ్మ పండుగసంది మొదలేంది
+[09:23:14] [FINAL] [Whisper STT] [te] [9.75s -> 13.67s]: ప్రసాదు కారి ఇంట్లో సారధా ఆ ఉళ్లో నে పెద్దమనిశి
+[09:23:14] [FINAL] [Whisper STT] [te] [13.67s -> 16.03s]: పండుగలంటే ఆమికు ప్రాణం
+[09:23:14] [FINAL] [Whisper STT] [te] [16.03s -> 19.55s]: అందులోను బతుకంమ పండుగంటే మరఈ ఇస్టంగా ఉంటుంది
+[09:23:14] [FINAL] [Whisper STT] [te] [19.55s -> 22.91s]: ప్రసాదు ఆమే ఆసైయాలకు ఎప్పుడు తోడుగా ఉంటాడు
+[09:23:14] [FINAL] [Whisper STT] [te] [22.91s -> 26.19s]: రమేష ముంబాయిలో సౌఫ్ట్వేరు జోగం చేస్తునాడు
+[09:23:14] [FINAL] [Whisper STT] [te] [26.19s -> 30.23s]: అయేన భార్య ఆనామికా ముంబాఈ లోనে పుట్టి పేరిగిన ఆధృనిక యువతి
+[09:23:14] [FINAL] [Whisper STT] [te] [30.23s -> 32.83s]: సురేష బెంగళుఉరులో వీాపారం చేస్తునాడ
+[09:23:14] [FINAL] [Whisper STT] [te] [32.83s -> 39.61s]: అయున భార్యా అవని కర్ణాటకా సంస్కృతి ప్రకృతి సిద్ధమైన జేవన విదాహనం పట్లా మక్కువకలియీ ఉంటోంది.
+[09:23:14] [FINAL] [Whisper STT] [te] [39.61s -> 46.49s]: ఎకారున అమిరికాలో స్తరి పడ్డాడు ఆయన భారియా అంజలి ఆధనిక వేళగులు గ్రాణ్నీస్ని ఇస్టపడే యువతి
+[09:23:14] [FINAL] [Whisper STT] [te] [56.51s -> 60.33s]: ఇపండుగా కోసం అన్దరు ఇంటి కొచెరు
+[09:23:14] [FINAL] [Whisper STT] [te] [102.55s -> 105.85s]: ముంబాయ ఫాస్టిక్ పూలో చేద్ధా.
+[09:23:14] [FINAL] [Whisper STT] [te] [106.49s -> 110.21s]: వేరంకు చలా ఏకో ఫ్రినీగ పద్ధతిగా ఉంటుంది.
 
 --------------------------------------------------------------------------------
-=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 09:22:17 ===
+=== Look-Ahead Video Pre-Process [Video ID: LMUA0_ZaxpA] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 09:23:45 ===
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 09:23:01 ===
+=== Look-Ahead Video Pre-Process [Video ID: qWrtAyHcbL0] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 09:30:40 ===
+--------------------------------------------------------------------------------
+[09:34:56] [FINAL] [Whisper STT] [ta] [1.97s -> 6.21s]: उक चिन्न पलेटूर लो, प्रसात्यारी उम्मडि कुठुम्बं निवसीस्तोंदे
+[09:34:56] [FINAL] [Whisper STT] [ta] [6.21s -> 10.71s]: रमेश, उन्न कोध्धिपाटि पोला नी नमुकोनी व्योसाइन चेस्तोंटे
+[09:34:56] [FINAL] [Whisper STT] [ta] [10.71s -> 14.53s]: सुरेश अरुन पक्कने उन्न चिन्न ताउन लो, प्रैवेट उज्जोगाल चेस्तु
+[09:34:56] [FINAL] [Whisper STT] [ta] [14.53s -> 16.41s]: குட்டும்பானிக்கே ஆசராக உண் நாறு
+[09:34:56] [FINAL] [Whisper STT] [ta] [16.41s -> 18.11s]: ஒரோஜு சையந்திர மந்தரு
+[09:34:56] [FINAL] [Whisper STT] [ta] [18.11s -> 19.89s]: हால்லோ கூர்சனி மாட்ளாடு கொண்டும் நாறு
+[09:34:56] [FINAL] [Whisper STT] [ta] [19.89s -> 21.09s]: ரमेशு
+[09:34:56] [FINAL] [Whisper STT] [ta] [21.09s -> 23.49s]: इसारी வரிப் பெயிரு بானை விரிகின்திக
+[09:34:56] [FINAL] [Whisper STT] [ta] [23.49s -> 25.53s]: வர்ش அல் சமியானிக்கு படித்தே
+[09:34:56] [FINAL] [Whisper STT] [ta] [25.53s -> 26.81s]: இ தவ்பா திகுவுடு
+[09:34:56] [FINAL] [Whisper STT] [ta] [26.81s -> 27.63s]: வாழ்ச்சுத்தி
+[09:34:56] [FINAL] [Whisper STT] [ta] [27.63s -> 29.31s]: मனக் கஸ்டால் கட்டிக்குத்தை
+[09:34:56] [FINAL] [Whisper STT] [ta] [29.31s -> 30.53s]: அவனானா
+[09:34:56] [FINAL] [Whisper STT] [ta] [30.53s -> 36.89s]: பொலம் பண்டிலன் நினைத் தோனே பூற்காய் வாத்தவனன் சுச்துந்தே இ ராதரிக்கி கட்டி வர்ஷம் படையிலாகய உந்தி
+[09:34:56] [FINAL] [Whisper STT] [ta] [36.89s -> 40.87s]: அவனிண்டை புத்து நீண்டி விபரயா தமேன ஓகப் போத்த கொந்தே
+[09:34:56] [FINAL] [Whisper STT] [ta] [40.87s -> 43.25s]: ஆகாசங்கள் கொட நல்லாட முபுள் பெட்டிந்தி
+[09:34:56] [FINAL] [Whisper STT] [ta] [43.25s -> 44.73s]: சல்லகால ஒத்துந்தே
+[09:34:56] [FINAL] [Whisper STT] [ta] [44.73s -> 46.35s]: மட்டு ஆஸனு கொட ஒத்துந்தி
+[09:34:56] [FINAL] [Whisper STT] [ta] [46.35s -> 47.91s]: அத்திகாரும்
+[09:34:56] [FINAL] [Whisper STT] [ta] [47.91s -> 48.87s]: रாதறிக்க அந்தரிக்கி
+[09:34:56] [FINAL] [Whisper STT] [ta] [48.87s -> 49.97s]: வேடு-βेडिக அண்ணம்
+[09:34:56] [FINAL] [Whisper STT] [ta] [49.97s -> 50.61s]: கந்திப்பப்பு
+[09:34:56] [FINAL] [Whisper STT] [ta] [50.61s -> 51.81s]: ஆவகைத் தீஸ் படத்தானु
+[09:34:56] [FINAL] [Whisper STT] [ta] [51.81s -> 54.67s]: வர்ஷம் படதே வா தவறன சலக உண்டுந்தி கதா
+[09:34:56] [FINAL] [Whisper STT] [ta] [54.67s -> 57.81s]: அந்திலோ காச்த நீ இவேச்குன் திண்டைய முருத்தலா உண்டுந்தி
+[09:34:56] [FINAL] [Whisper STT] [ta] [57.81s -> 61.69s]: அவனக்க வாத்தவர் நானிக்கி அபோஜுனம் பள்ளை உண்டுந்தி
+[09:34:56] [FINAL] [Whisper STT] [ta] [61.69s -> 64.69s]: பதா நீ நீக்கு சहாயங்க கூருகள் கோசித்தான।
+[09:34:56] [FINAL] [Whisper STT] [ta] [64.69s -> 66.65s]: நீனு பியின் கடுகி பெடத்தானாக
+[09:34:56] [FINAL] [Whisper STT] [ta] [66.65s -> 69.37s]: அத்தகாரு கிஷ்டமேன் அப்படால் கொட வெயைத்தோம்.
+[09:34:56] [FINAL] [Whisper STT] [ta] [69.37s -> 72.65s]: பவந்துது நா, இறோஜ ஓफिसलो बाγα அளசிப்பயான।
+[09:34:56] [FINAL] [Whisper STT] [ta] [72.65s -> 75.65s]: மீர் சேசையாக அம்மட்டி بوجжணன் தின்டை அளசடந்த எகிரி போத்துந்தி
+[09:34:56] [FINAL] [Whisper STT] [ta] [75.65s -> 78.15s]: நான் கைத்தை ஒதுனே மாட்கள் விண்டு உண்டுங்டேனே
+[09:34:56] [FINAL] [Whisper STT] [ta] [78.15s -> 79.53s]: பாக ஆக்கல் காவுந்தான் யா
+[09:34:56] [FINAL] [Whisper STT] [ta] [79.53s -> 81.59s]: தொந்தரக வாண்ட பூற்तி ஜேசுதை தினாத்தோம்.
+[09:34:56] [FINAL] [Whisper STT] [ta] [82.17s -> 85.05s]: ஆ சம்பாஷ் நெய் என்றோ சந்தோஸங் கா நடுस्து உண்டகானே
+[09:34:56] [FINAL] [Whisper STT] [ta] [85.05s -> 87.65s]: பைட ஆகாசனலோ பெத்த உரும் பூறிமின்தி
+[09:34:56] [FINAL] [Whisper STT] [ta] [87.65s -> 89.97s]: வாத்தாவர்ன முக்கசாரிகா چல்ல படிந்தி
+[09:34:56] [FINAL] [Whisper STT] [ta] [89.97s -> 93.95s]: சூஸ்து உண்டகானே ஆகாசனக்கி சிள்ளு பட்டட்டு வர்شம் பிராரம்பவையின்தி
+[09:34:56] [FINAL] [Whisper STT] [ta] [93.95s -> 97.97s]: சின்னக முதலையேண வான நிமிஷாள விவத்திலோனே குண்ட பொத்தக மாரிந்தி
+[09:34:56] [FINAL] [Whisper STT] [ta] [97.97s -> 101.47s]: உறுமுழுமெருப்பில தो ராத்ரஞ்ட வர்சம் படுத்துமே ஒன்தி
+[09:34:56] [FINAL] [Whisper STT] [ta] [101.47s -> 106.13s]: அλα உண்டகா தெல்லாரே சரிக்கி ஆ உரி பரிस्ததி பூற்றிக மாரிப்பை இந்தி
+[09:34:56] [FINAL] [Whisper STT] [ta] [106.13s -> 109.91s]: பக்கனே உன்ன ஏரு பொங்கி உள்ளோகி வரதனீருச் செரிந்தி
+[09:34:56] [FINAL] [Whisper STT] [ta] [109.91s -> 112.95s]: प्रसादी इन்டலोकि कुड मो काले लोत नीरों चेसिंदी
+[09:34:56] [FINAL] [Whisper STT] [ta] [112.95s -> 116.45s]: हैयो देवड, एंटी गाली वारब्या पत्स
+[09:34:56] [FINAL] [Whisper STT] [ta] [116.45s -> 118.85s]: ஏर फोंगी इन्टलोक नीरों चेसाई
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: qWrtAyHcbL0] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 09:34:56 ===
+--------------------------------------------------------------------------------
+[09:40:20] [FINAL] [Whisper STT] [ta] [1.97s -> 6.21s]: उक चिन्न पलेटूर लो, प्रसात्यारी उम्मडि कुठुम्बं निवसीस्तोंदे
+[09:40:20] [FINAL] [Whisper STT] [ta] [6.21s -> 10.71s]: रमेश, उन्न कोध्धिपाटि पोला नी नमुकोनी व्योसाइन चेस्तोंटे
+[09:40:20] [FINAL] [Whisper STT] [ta] [10.71s -> 14.53s]: सुरेश अरुन पक्कने उन्न चिन्न ताउन लो, प्रैवेट उज्जोगाल चेस्तु
+[09:40:20] [FINAL] [Whisper STT] [ta] [14.53s -> 16.41s]: குட்டும்பானிக்கே ஆசராக உண் நாறு
+[09:40:20] [FINAL] [Whisper STT] [ta] [16.41s -> 18.11s]: ஒரோஜு சையந்திர மந்தரு
+[09:40:20] [FINAL] [Whisper STT] [ta] [18.11s -> 19.89s]: हால்லோ கூர்சனி மாட்ளாடு கொண்டும் நாறு
+[09:40:20] [FINAL] [Whisper STT] [ta] [19.89s -> 21.09s]: ரमेशு
+[09:40:20] [FINAL] [Whisper STT] [ta] [21.09s -> 23.49s]: इसारी வரிப் பெயிரு بானை விரிகின்திக
+[09:40:20] [FINAL] [Whisper STT] [ta] [23.49s -> 25.53s]: வர்ش அல் சமியானிக்கு படித்தே
+[09:40:20] [FINAL] [Whisper STT] [ta] [25.53s -> 26.81s]: இ தவ்பா திகுவுடு
+[09:40:20] [FINAL] [Whisper STT] [ta] [26.81s -> 27.63s]: வாழ்ச்சுத்தி
+[09:40:20] [FINAL] [Whisper STT] [ta] [27.63s -> 29.31s]: मனக் கஸ்டால் கட்டிக்குத்தை
+[09:40:20] [FINAL] [Whisper STT] [ta] [29.31s -> 30.53s]: அவனானா
+[09:40:20] [FINAL] [Whisper STT] [ta] [30.53s -> 36.89s]: பொலம் பண்டிலன் நினைத் தோனே பூற்காய் வாத்தவனன் சுச்துந்தே இ ராதரிக்கி கட்டி வர்ஷம் படையிலாகய உந்தி
+[09:40:20] [FINAL] [Whisper STT] [ta] [36.89s -> 40.87s]: அவனிண்டை புத்து நீண்டி விபரயா தமேன ஓகப் போத்த கொந்தே
+[09:40:20] [FINAL] [Whisper STT] [ta] [40.87s -> 43.25s]: ஆகாசங்கள் கொட நல்லாட முபுள் பெட்டிந்தி
+[09:40:20] [FINAL] [Whisper STT] [ta] [43.25s -> 44.73s]: சல்லகால ஒத்துந்தே
+[09:40:20] [FINAL] [Whisper STT] [ta] [44.73s -> 46.35s]: மட்டு ஆஸனு கொட ஒத்துந்தி
+[09:40:20] [FINAL] [Whisper STT] [ta] [46.35s -> 47.91s]: அத்திகாரும்
+[09:40:20] [FINAL] [Whisper STT] [ta] [47.91s -> 48.87s]: रாதறிக்க அந்தரிக்கி
+[09:40:20] [FINAL] [Whisper STT] [ta] [48.87s -> 49.97s]: வேடு-βेडिக அண்ணம்
+[09:40:20] [FINAL] [Whisper STT] [ta] [49.97s -> 50.61s]: கந்திப்பப்பு
+[09:40:20] [FINAL] [Whisper STT] [ta] [50.61s -> 51.81s]: ஆவகைத் தீஸ் படத்தானु
+[09:40:20] [FINAL] [Whisper STT] [ta] [51.81s -> 54.67s]: வர்ஷம் படதே வா தவறன சலக உண்டுந்தி கதா
+[09:40:20] [FINAL] [Whisper STT] [ta] [54.67s -> 57.81s]: அந்திலோ காச்த நீ இவேச்குன் திண்டைய முருத்தலா உண்டுந்தி
+[09:40:20] [FINAL] [Whisper STT] [ta] [57.81s -> 61.69s]: அவனக்க வாத்தவர் நானிக்கி அபோஜுனம் பள்ளை உண்டுந்தி
+[09:40:20] [FINAL] [Whisper STT] [ta] [61.69s -> 64.69s]: பதா நீ நீக்கு சहாயங்க கூருகள் கோசித்தான।
+[09:40:20] [FINAL] [Whisper STT] [ta] [64.69s -> 66.65s]: நீனு பியின் கடுகி பெடத்தானாக
+[09:40:20] [FINAL] [Whisper STT] [ta] [66.65s -> 69.25s]: अत्वेकार किस்டमेन आப்படாலு கुड வேத்தோம்.
+[09:40:20] [FINAL] [Whisper STT] [ta] [69.25s -> 72.65s]: बाउंदोधिना, इरोज ओफिसलो भागा अलसीपयान।
+[09:40:20] [FINAL] [Whisper STT] [ta] [72.65s -> 75.65s]: मैर चेसा या कम्मट्टी भोजिनेंदि निंटे अलसतंत एगिरिपोत्तुन्दी
+[09:40:20] [FINAL] [Whisper STT] [ta] [75.65s -> 79.53s]: நாக் கைதே ஒதுனே மாடலி வீண்டும் தென்றேனே பாக ஆகல் காவுந்தான் யா
+[09:40:20] [FINAL] [Whisper STT] [ta] [79.53s -> 81.65s]: தொந்தரக வாண்டபூர்த்துச் செய்தே தினாத்தاؤں
+[09:40:20] [FINAL] [Whisper STT] [ta] [81.65s -> 89.89s]: आ सम्भाषने यंतो संतोशंगा नडुस्तு உண்டகானे, बैटा आकासनलो पेद्ध उर्मूरिमींदी, वातावर्न मोक्कसारिगा चल्लबढ़ींदी
+[09:40:20] [FINAL] [Whisper STT] [ta] [89.89s -> 93.95s]: சூஸ்து உண்டகானே ஆகாசி நானைக் கில்ளு பட்டட்டு வர்شம் பறாரம்பவையிந்தி
+[09:40:20] [FINAL] [Whisper STT] [ta] [93.95s -> 98.01s]: சின்னக மொதலையின வான நிமிஷால வ्यவத்திலோனே குண்ட போத்தகா மாரிந்தி
+[09:40:20] [FINAL] [Whisper STT] [ta] [98.01s -> 101.49s]: ஒருமுழு உமெருப்படத் தो ராத்ரண்டா வர்ஷம் படுத்து உண்டி
+[09:40:20] [FINAL] [Whisper STT] [ta] [101.49s -> 105.85s]: அலா உண்டகா தெள்ளாரே சरுகி ஆ ஊறி பரिசதைப் பூட்டிகமாரிப்பயிந்தி
+[09:40:20] [FINAL] [Whisper STT] [ta] [105.85s -> 109.85s]: பக்क நீ ஒன்ன ஏரு போங்கி உள்ளொ கி வரதனிருச்சிரிந்தி
+[09:40:20] [FINAL] [Whisper STT] [ta] [109.85s -> 113.33s]: प्रसादी இன்றுலोக்கி குட மோக்களுளோத் நீரோச்சிச்சிந்தி
+[09:40:20] [FINAL] [Whisper STT] [ta] [113.33s -> 116.77s]: ஹையோ தேவுடா, ஏன்றி காலி வாரப்பய பதசம்
+[09:40:20] [FINAL] [Whisper STT] [ta] [116.77s -> 118.83s]: ஏறு பொங்கீண்டலோக நீள்ளு செசை
+
+--------------------------------------------------------------------------------
+=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 09:40:20 ===
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
-=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 09:24:01 ===
+=== Look-Ahead Video Pre-Process [Video ID: qWrtAyHcbL0] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 09:40:20 ===
 --------------------------------------------------------------------------------
-[09:24:38] [FINAL] [WhisperX STT] [en] [0.00s -> 1.50s]: Resilient output
-[09:24:39] [FINAL] [WhisperX STT] [hi] [SPEAKER_00] [0.00s -> 1.80s]: अरे ओ, बंसी!
-[09:24:39] [FINAL] [WhisperX STT] [hi] [SPEAKER_01] [2.00s -> 3.80s]: हाँ, तो मैं क्या करूँ?
-[09:24:39] [FINAL] [WhisperX STT] [en] [SPEAKER_00] [0.00s -> 1.20s]: First sentence.
-[09:24:39] [FINAL] [WhisperX STT] [en] [SPEAKER_00] [1.30s -> 2.80s]: Second sentence.
-[09:24:39] [FINAL] [WhisperX STT] [hi] [0.00s -> 1.00s]: परीक्षण
-[09:24:39] [FINAL] [WhisperX STT] [mr] [SPEAKER_00] [0.20s -> 1.80s]: नमस्कार मित्रांनो
-[09:24:39] [FINAL] [WhisperX STT] [hi] [1.25s -> 3.75s]: परीक्षण वाक्य
-[09:51:02] [FINAL] [WhisperX STT] [en] [0.00s -> 1.50s]: Resilient output
-[09:51:04] [FINAL] [WhisperX STT] [hi] [SPEAKER_00] [0.00s -> 1.80s]: अरे ओ, बंसी!
-[09:51:04] [FINAL] [WhisperX STT] [hi] [SPEAKER_01] [2.00s -> 3.80s]: हाँ, तो मैं क्या करूँ?
-[09:51:04] [FINAL] [WhisperX STT] [en] [SPEAKER_00] [0.00s -> 1.20s]: First sentence.
-[09:51:04] [FINAL] [WhisperX STT] [en] [SPEAKER_00] [1.30s -> 2.80s]: Second sentence.
-[09:51:04] [FINAL] [WhisperX STT] [hi] [0.00s -> 1.00s]: परीक्षण
-[09:51:04] [FINAL] [WhisperX STT] [mr] [SPEAKER_00] [0.20s -> 1.80s]: नमस्कार मित्रांनो
-[09:51:04] [FINAL] [WhisperX STT] [hi] [1.25s -> 3.75s]: परीक्षण वाक्य
+[09:43:24] [FINAL] [Whisper STT] [ta] [1.97s -> 6.21s]: उक चिन्न पलेटूर लो, प्रसात्यारी उम्मडि कुठुम्बं निवसीस्तोंदे
+[09:43:24] [FINAL] [Whisper STT] [ta] [6.21s -> 10.71s]: रमेश, उन्न कोध्धिपाटि पोला नी नमुकोनी व्योसाइन चेस्तोंटे
+[09:43:24] [FINAL] [Whisper STT] [ta] [10.71s -> 14.53s]: सुरेश अरुन पक्कने उन्न चिन्न ताउन लो, प्रैवेट उज्जोगाल चेस्तु
+[09:43:24] [FINAL] [Whisper STT] [ta] [14.53s -> 16.41s]: குட்டும்பானிக்கே ஆசராக உண் நாறு
+[09:43:24] [FINAL] [Whisper STT] [ta] [16.41s -> 18.11s]: ஒரோஜு சையந்திர மந்தரு
+[09:43:24] [FINAL] [Whisper STT] [ta] [18.11s -> 19.89s]: हால்லோ கூர்சனி மாட்ளாடு கொண்டும் நாறு
+[09:43:24] [FINAL] [Whisper STT] [ta] [19.89s -> 21.09s]: ரमेशு
+[09:43:24] [FINAL] [Whisper STT] [ta] [21.09s -> 23.49s]: इसारी வரிப் பெயிரு بானை விரிகின்திக
+[09:43:24] [FINAL] [Whisper STT] [ta] [23.49s -> 25.53s]: வர்ش அல் சமியானிக்கு படித்தே
+[09:43:24] [FINAL] [Whisper STT] [ta] [25.53s -> 26.81s]: இ தவ்பா திகுவுடு
+[09:43:24] [FINAL] [Whisper STT] [ta] [26.81s -> 27.63s]: வாழ்ச்சுத்தி
+[09:43:24] [FINAL] [Whisper STT] [ta] [27.63s -> 29.31s]: मனக் கஸ்டால் கட்டிக்குத்தை
+[09:43:24] [FINAL] [Whisper STT] [ta] [29.31s -> 30.53s]: அவனானா
+[09:43:24] [FINAL] [Whisper STT] [ta] [30.53s -> 36.89s]: பொலம் பண்டிலன் நினைத் தோனே பூற்காய் வாத்தவனன் சுச்துந்தே இ ராதரிக்கி கட்டி வர்ஷம் படையிலாகய உந்தி
+[09:43:24] [FINAL] [Whisper STT] [ta] [36.89s -> 40.87s]: அவனிண்டை புத்து நீண்டி விபரயா தமேன ஓகப் போத்த கொந்தே
+[09:43:24] [FINAL] [Whisper STT] [ta] [40.87s -> 43.25s]: ஆகாசங்கள் கொட நல்லாட முபுள் பெட்டிந்தி
+[09:43:24] [FINAL] [Whisper STT] [ta] [43.25s -> 44.73s]: சல்லகால ஒத்துந்தே
+[09:43:24] [FINAL] [Whisper STT] [ta] [44.73s -> 46.35s]: மட்டு ஆஸனு கொட ஒத்துந்தி
+[09:43:24] [FINAL] [Whisper STT] [ta] [46.35s -> 47.91s]: அத்திகாரும்
+[09:43:24] [FINAL] [Whisper STT] [ta] [47.91s -> 48.87s]: रாதறிக்க அந்தரிக்கி
+[09:43:24] [FINAL] [Whisper STT] [ta] [48.87s -> 49.97s]: வேடு-βेडिக அண்ணம்
+[09:43:24] [FINAL] [Whisper STT] [ta] [49.97s -> 50.61s]: கந்திப்பப்பு
+[09:43:24] [FINAL] [Whisper STT] [ta] [50.61s -> 51.81s]: ஆவகைத் தீஸ் படத்தானु
+[09:43:24] [FINAL] [Whisper STT] [ta] [51.81s -> 54.67s]: வர்ஷம் படதே வா தவறன சலக உண்டுந்தி கதா
+[09:43:24] [FINAL] [Whisper STT] [ta] [54.67s -> 57.81s]: அந்திலோ காச்த நீ இவேச்குன் திண்டைய முருத்தலா உண்டுந்தி
+[09:43:24] [FINAL] [Whisper STT] [ta] [57.81s -> 61.69s]: அவனக்க வாத்தவர் நானிக்கி அபோஜுனம் பள்ளை உண்டுந்தி
+[09:43:24] [FINAL] [Whisper STT] [ta] [61.69s -> 64.69s]: பதா நீ நீக்கு சहாயங்க கூருகள் கோசித்தான।
+[09:43:24] [FINAL] [Whisper STT] [ta] [64.69s -> 66.65s]: நீனு பியின் கடுகி பெடத்தானாக
+[09:43:24] [FINAL] [Whisper STT] [ta] [66.65s -> 69.37s]: அத்தகாரு கிஷ்டமேன் அப்படால் கொட வெயைத்தோம்.
+[09:43:24] [FINAL] [Whisper STT] [ta] [69.37s -> 72.65s]: பவந்துது நா, இறோஜ ஓफिसलो बाγα அளசிப்பயான।
+[09:43:24] [FINAL] [Whisper STT] [ta] [72.65s -> 75.65s]: மீர் சேசையாக அம்மட்டி بوجжணன் தின்டை அளசடந்த எகிரி போத்துந்தி
+[09:43:24] [FINAL] [Whisper STT] [ta] [75.65s -> 78.15s]: நான் கைத்தை ஒதுனே மாட்கள் விண்டு உண்டுங்டேனே
+[09:43:24] [FINAL] [Whisper STT] [ta] [78.15s -> 79.53s]: பாக ஆக்கல் காவுந்தான் யா
+[09:43:24] [FINAL] [Whisper STT] [ta] [79.53s -> 81.53s]: தொந்தரக வாண்ட பூற்றி ஜேசுதை தினாத்தவோம்.
+[09:43:24] [FINAL] [Whisper STT] [ta] [82.17s -> 85.07s]: ஆ சம்பாஷ் நென்தோ சந்தோஸங்க நடுस्து உண்ட கானை
+[09:43:24] [FINAL] [Whisper STT] [ta] [85.07s -> 87.63s]: बயிட ஆகாசனலோ பெத்த உரும் பூறி மீண்டி
+[09:43:24] [FINAL] [Whisper STT] [ta] [87.63s -> 89.91s]: வாத்தாவர்னம் ஒக்க சரிகா சல்ளபடிந்தி
+[09:43:24] [FINAL] [Whisper STT] [ta] [89.91s -> 93.99s]: چூஸ்து உண்ட கானை ஆகாசனக்கி சिல்லு பட்டட்டு வர்شம் பிராரம்பவை இந்தி
+[09:43:24] [FINAL] [Whisper STT] [ta] [93.99s -> 97.97s]: சின்னக முதலையின வாண நிமிஷால விவத்திலோனே கொண்ட போத்தக மாரிந்தி
+[09:43:24] [FINAL] [Whisper STT] [ta] [97.97s -> 101.49s]: உறுமுளுமெருப்படத்தோ ராத்ரண்ட வர்சம் படுத்தூனே ஒந்தி
+[09:43:24] [FINAL] [Whisper STT] [ta] [101.49s -> 106.13s]: அலா உண்டக தெல்லாரே சரிக்கி ஆ உரி பரिस்தத்தி பூற்றிக மாரிப்பை இந்தி
+[09:43:24] [FINAL] [Whisper STT] [ta] [106.13s -> 109.91s]: பக்கனே உன்ன ஏறு பोங்கி உள்ளோக்கி வரத நீருச்சிரிந்தி
+[09:43:24] [FINAL] [Whisper STT] [ta] [109.91s -> 112.95s]: प्रसादी इन்டலोकि कुड मो काले लोत नीरों चेसिंदी
+[09:43:24] [FINAL] [Whisper STT] [ta] [112.95s -> 116.45s]: हैयो देवड, एंटी गाली वारब्या पत्स
+[09:43:24] [FINAL] [Whisper STT] [ta] [116.45s -> 118.85s]: ஏर फोंगी इन्टलोक नीरों चेसाई
 
 --------------------------------------------------------------------------------
-=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 09:51:04 ===
+=== Look-Ahead Video Pre-Process [Video ID: qWrtAyHcbL0] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 09:43:24 ===
 --------------------------------------------------------------------------------
-[09:53:31] [FINAL] [WhisperX STT] [en] [0.00s -> 1.50s]: Resilient output
-[09:53:32] [FINAL] [WhisperX STT] [hi] [SPEAKER_00] [0.00s -> 1.80s]: अरे ओ, बंसी!
-[09:53:32] [FINAL] [WhisperX STT] [hi] [SPEAKER_01] [2.00s -> 3.80s]: हाँ, तो मैं क्या करूँ?
-[09:53:32] [FINAL] [WhisperX STT] [en] [SPEAKER_00] [0.00s -> 1.20s]: First sentence.
-[09:53:32] [FINAL] [WhisperX STT] [en] [SPEAKER_00] [1.30s -> 2.80s]: Second sentence.
-[09:53:32] [FINAL] [WhisperX STT] [hi] [0.00s -> 1.00s]: परीक्षण
-[09:53:32] [FINAL] [WhisperX STT] [mr] [SPEAKER_00] [0.20s -> 1.80s]: नमस्कार मित्रांनो
-[09:53:32] [FINAL] [WhisperX STT] [hi] [1.25s -> 3.75s]: परीक्षण वाक्य
+[09:46:42] [FINAL] [Whisper STT] [ta] [1.97s -> 6.21s]: उक चिन्न पलेटूर लो, प्रसात्यारी उम्मडि कुठुम्बं निवसीस्तोंदे
+[09:46:42] [FINAL] [Whisper STT] [ta] [6.21s -> 10.71s]: रमेश, उन्न कोध्धिपाटि पोला नी नमुकोनी व्योसाइन चेस्तोंटे
+[09:46:42] [FINAL] [Whisper STT] [ta] [10.71s -> 14.53s]: सुरेश अरुन पक्कने उन्न चिन्न ताउन लो, प्रैवेट उज्जोगाल चेस्तु
+[09:46:42] [FINAL] [Whisper STT] [ta] [14.53s -> 16.41s]: குட்டும்பானிக்கே ஆசராக உண் நாறு
+[09:46:42] [FINAL] [Whisper STT] [ta] [16.41s -> 18.11s]: ஒரோஜு சையந்திர மந்தரு
+[09:46:42] [FINAL] [Whisper STT] [ta] [18.11s -> 19.89s]: हால்லோ கூர்சனி மாட்ளாடு கொண்டும் நாறு
+[09:46:42] [FINAL] [Whisper STT] [ta] [19.89s -> 21.09s]: ரमेशு
+[09:46:42] [FINAL] [Whisper STT] [ta] [21.09s -> 23.49s]: इसारी வரிப் பெயிரு بானை விரிகின்திக
+[09:46:42] [FINAL] [Whisper STT] [ta] [23.49s -> 25.53s]: வர்ش அல் சமியானிக்கு படித்தே
+[09:46:42] [FINAL] [Whisper STT] [ta] [25.53s -> 26.81s]: இ தவ்பா திகுவுடு
+[09:46:42] [FINAL] [Whisper STT] [ta] [26.81s -> 27.63s]: வாழ்ச்சுத்தி
+[09:46:42] [FINAL] [Whisper STT] [ta] [27.63s -> 29.31s]: मனக் கஸ்டால் கட்டிக்குத்தை
+[09:46:42] [FINAL] [Whisper STT] [ta] [29.31s -> 30.53s]: அவனானா
+[09:46:42] [FINAL] [Whisper STT] [ta] [30.53s -> 36.89s]: பொலம் பண்டிலன் நினைத் தோனே பூற்காய் வாத்தவனன் சுச்துந்தே இ ராதரிக்கி கட்டி வர்ஷம் படையிலாகய உந்தி
+[09:46:42] [FINAL] [Whisper STT] [ta] [36.89s -> 40.87s]: அவனிண்டை புத்து நீண்டி விபரயா தமேன ஓகப் போத்த கொந்தே
+[09:46:42] [FINAL] [Whisper STT] [ta] [40.87s -> 43.25s]: ஆகாசங்கள் கொட நல்லாட முபுள் பெட்டிந்தி
+[09:46:42] [FINAL] [Whisper STT] [ta] [43.25s -> 44.73s]: சல்லகால ஒத்துந்தே
+[09:46:42] [FINAL] [Whisper STT] [ta] [44.73s -> 46.35s]: மட்டு ஆஸனு கொட ஒத்துந்தி
+[09:46:42] [FINAL] [Whisper STT] [ta] [46.35s -> 47.91s]: அத்திகாரும்
+[09:46:42] [FINAL] [Whisper STT] [ta] [47.91s -> 48.87s]: रாதறிக்க அந்தரிக்கி
+[09:46:42] [FINAL] [Whisper STT] [ta] [48.87s -> 49.97s]: வேடு-βेडिக அண்ணம்
+[09:46:42] [FINAL] [Whisper STT] [ta] [49.97s -> 50.61s]: கந்திப்பப்பு
+[09:46:42] [FINAL] [Whisper STT] [ta] [50.61s -> 51.81s]: ஆவகைத் தீஸ் படத்தானु
+[09:46:42] [FINAL] [Whisper STT] [ta] [51.81s -> 54.67s]: வர்ஷம் படதே வா தவறன சலக உண்டுந்தி கதா
+[09:46:42] [FINAL] [Whisper STT] [ta] [54.67s -> 57.81s]: அந்திலோ காச்த நீ இவேச்குன் திண்டைய முருத்தலா உண்டுந்தி
+[09:46:42] [FINAL] [Whisper STT] [ta] [57.81s -> 61.69s]: அவனக்க வாத்தவர் நானிக்கி அபோஜுனம் பள்ளை உண்டுந்தி
+[09:46:42] [FINAL] [Whisper STT] [ta] [61.69s -> 64.69s]: பதா நீ நீக்கு சहாயங்க கூருகள் கோசித்தான।
+[09:46:42] [FINAL] [Whisper STT] [ta] [64.69s -> 66.65s]: நீனு பியின் கடுகி பெடத்தானாக
+[09:46:42] [FINAL] [Whisper STT] [ta] [66.65s -> 69.37s]: அத்தகாரு கிஷ்டமேன் அப்படால் கொட வெயைத்தோம்.
+[09:46:42] [FINAL] [Whisper STT] [ta] [69.37s -> 72.65s]: பவந்துது நா, இறோஜ ஓफिसलो बाγα அளசிப்பயான।
+[09:46:42] [FINAL] [Whisper STT] [ta] [72.65s -> 75.65s]: மீர் சேசையாக அம்மட்டி بوجжணன் தின்டை அளசடந்த எகிரி போத்துந்தி
+[09:46:42] [FINAL] [Whisper STT] [ta] [75.65s -> 78.15s]: நான் கைத்தை ஒதுனே மாட்கள் விண்டு உண்டுங்டேனே
+[09:46:42] [FINAL] [Whisper STT] [ta] [78.15s -> 79.53s]: பாக ஆக்கல் காவுந்தான் யா
+[09:46:42] [FINAL] [Whisper STT] [ta] [79.53s -> 81.53s]: தொந்தரக வாண்ட பூற்तி ஜேசுதை தினாத்தோம்.
+[09:46:42] [FINAL] [Whisper STT] [ta] [82.17s -> 85.05s]: ஆ சம்பாஷ்னை எந்தோ சந்தோஸங்க நடுसத்து உண்ட கானை
+[09:46:42] [FINAL] [Whisper STT] [ta] [85.05s -> 87.65s]: பய்ட ஆகாசெல்லோ பெத்த உரும் பூறிமின்தி
+[09:46:42] [FINAL] [Whisper STT] [ta] [87.65s -> 89.95s]: வாத்தாவர்னம் ஒக்க சரிகா چள்ள படிந்தி
+[09:46:42] [FINAL] [Whisper STT] [ta] [89.95s -> 93.95s]: சூஸ்து உண்ட கானை ஆகாசெல்லும் பட்டட்டு வர்சம் பராரம்பவையின்தி
+[09:46:42] [FINAL] [Whisper STT] [ta] [93.95s -> 97.99s]: சின்ணக முதலையேன வான நிமிசாள விவத்திலொனே குந்டபோத்தக மாரிந்தி
+[09:46:42] [FINAL] [Whisper STT] [ta] [97.99s -> 101.47s]: உறுமுழு உமெருப் பிலத்தோ ராத்ர அங்கள் தா வரஷம் படுத்தூனே வந்தி
+[09:46:42] [FINAL] [Whisper STT] [ta] [101.47s -> 106.03s]: அλα உண்டகா தெல்லாரே சரிக்கி ஆ உரி பரισ்ததி பூற்றிக மாரிப்பாயிந்தி
+[09:46:42] [FINAL] [Whisper STT] [ta] [106.03s -> 109.85s]: பக்கனை ஒன்ன ஏறு போங்கி உள்ளோக்கி வரத நீருச்சிரிந்தي
+[09:46:42] [FINAL] [Whisper STT] [ta] [109.85s -> 112.93s]: பரசாதி இன்றுலோக்கி கூட மோக்காளலோது நீரொச் செய்ந்தி
+[09:46:42] [FINAL] [Whisper STT] [ta] [112.93s -> 114.13s]: ஹையோ தேவுட
+[09:46:42] [FINAL] [Whisper STT] [ta] [114.13s -> 116.83s]: ஏன்டி காலி வாரப்பய பத்சம்
+[09:46:42] [FINAL] [Whisper STT] [ta] [116.83s -> 118.85s]: ஏறுப் பங்கு இன்றுலோக்கு நீழுச் சேசை
 
 --------------------------------------------------------------------------------
-=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 09:53:32 ===
+=== Look-Ahead Video Pre-Process [Video ID: qWrtAyHcbL0] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 09:46:42 ===
+--------------------------------------------------------------------------------
+[09:51:15] [FINAL] [Whisper STT] [ta] [1.97s -> 6.21s]: उक चिन्न पलेटूर लो, प्रसात्यारी उम्मडि कुठुम्बं निवसीस्तोंदे
+[09:51:15] [FINAL] [Whisper STT] [ta] [6.21s -> 10.71s]: रमेश, उन्न कोध्धिपाटि पोला नी नमुकोनी व्योसाइन चेस्तोंटे
+[09:51:15] [FINAL] [Whisper STT] [ta] [10.71s -> 14.53s]: सुरेश अरुन पक्कने उन्न चिन्न ताउन लो, प्रैवेट उज्जोगाल चेस्तु
+[09:51:15] [FINAL] [Whisper STT] [ta] [14.53s -> 16.41s]: குட்டும்பானிக்கே ஆசராக உண் நாறு
+[09:51:15] [FINAL] [Whisper STT] [ta] [16.41s -> 18.11s]: ஒரோஜு சையந்திர மந்தரு
+[09:51:15] [FINAL] [Whisper STT] [ta] [18.11s -> 19.89s]: हால்லோ கூர்சனி மாட்ளாடு கொண்டும் நாறு
+[09:51:15] [FINAL] [Whisper STT] [ta] [19.89s -> 21.09s]: ரमेशு
+[09:51:15] [FINAL] [Whisper STT] [ta] [21.09s -> 23.49s]: इसारी வரிப் பெயிரு بானை விரிகின்திக
+[09:51:15] [FINAL] [Whisper STT] [ta] [23.49s -> 25.53s]: வர்ش அல் சமியானிக்கு படித்தே
+[09:51:15] [FINAL] [Whisper STT] [ta] [25.53s -> 26.81s]: இ தவ்பா திகுவுடு
+[09:51:15] [FINAL] [Whisper STT] [ta] [26.81s -> 27.63s]: வாழ்ச்சுத்தி
+[09:51:15] [FINAL] [Whisper STT] [ta] [27.63s -> 29.31s]: मனக் கஸ்டால் கட்டிக்குத்தை
+[09:51:15] [FINAL] [Whisper STT] [ta] [29.31s -> 30.53s]: அவனானா
+[09:51:15] [FINAL] [Whisper STT] [ta] [30.53s -> 36.89s]: பொலம் பண்டிலன் நினைத் தோனே பூற்காய் வாத்தவனன் சுச்துந்தே இ ராதரிக்கி கட்டி வர்ஷம் படையிலாகய உந்தி
+[09:51:15] [FINAL] [Whisper STT] [ta] [36.89s -> 40.87s]: அவனிண்டை புத்து நீண்டி விபரயா தமேன ஓகப் போத்த கொந்தே
+[09:51:15] [FINAL] [Whisper STT] [ta] [40.87s -> 43.25s]: ஆகாசங்கள் கொட நல்லாட முபுள் பெட்டிந்தி
+[09:51:15] [FINAL] [Whisper STT] [ta] [43.25s -> 44.73s]: சல்லகால ஒத்துந்தே
+[09:51:15] [FINAL] [Whisper STT] [ta] [44.73s -> 46.35s]: மட்டு ஆஸனு கொட ஒத்துந்தி
+[09:51:15] [FINAL] [Whisper STT] [ta] [46.35s -> 47.91s]: அத்திகாரும்
+[09:51:15] [FINAL] [Whisper STT] [ta] [47.91s -> 48.87s]: रாதறிக்க அந்தரிக்கி
+[09:51:15] [FINAL] [Whisper STT] [ta] [48.87s -> 49.97s]: வேடு-βेडिக அண்ணம்
+[09:51:15] [FINAL] [Whisper STT] [ta] [49.97s -> 50.61s]: கந்திப்பப்பு
+[09:51:15] [FINAL] [Whisper STT] [ta] [50.61s -> 51.81s]: ஆவகைத் தீஸ் படத்தானु
+[09:51:15] [FINAL] [Whisper STT] [ta] [51.81s -> 54.67s]: வர்ஷம் படதே வா தவறன சலக உண்டுந்தி கதா
+[09:51:15] [FINAL] [Whisper STT] [ta] [54.67s -> 57.81s]: அந்திலோ காச்த நீ இவேச்குன் திண்டைய முருத்தலா உண்டுந்தி
+[09:51:15] [FINAL] [Whisper STT] [ta] [57.81s -> 61.69s]: அவனக்க வாத்தவர் நானிக்கி அபோஜுனம் பள்ளை உண்டுந்தி
+[09:51:15] [FINAL] [Whisper STT] [ta] [61.69s -> 64.69s]: பதா நீ நீக்கு சहாயங்க கூருகள் கோசித்தான।
+[09:51:15] [FINAL] [Whisper STT] [ta] [64.69s -> 66.65s]: நீனு பியின் கடுகி பெடத்தானாக
+[09:51:15] [FINAL] [Whisper STT] [ta] [66.65s -> 69.03s]: अत्तेगार किस्टमेन आப்படாल கुட வேத्दू
+[09:51:15] [FINAL] [Whisper STT] [ta] [69.03s -> 70.39s]: बावंदो धुना
+[09:51:15] [FINAL] [Whisper STT] [ta] [70.39s -> 72.53s]: इरोज ओफीसलो भाग अलस्पयान
+[09:51:15] [FINAL] [Whisper STT] [ta] [72.53s -> 74.47s]: मेर चैसे यह कम्मठी बोझनें तिन्टे
+[09:51:15] [FINAL] [Whisper STT] [ta] [74.47s -> 75.59s]: अलसटन्त एकिरिपोत्तुंद
+[09:51:15] [FINAL] [Whisper STT] [ta] [75.59s -> 78.13s]: ना कैथे उदुने माटल विन्ट विन्ट उन्टेने
+[09:51:15] [FINAL] [Whisper STT] [ta] [78.13s -> 79.77s]: भाग आकल खाऊंदाने या
+[09:51:15] [FINAL] [Whisper STT] [ta] [79.77s -> 82.17s]: தொந்தரக வாண்ட பூற்றி ஜேசுதை தினாத்தோம்.
+[09:51:15] [FINAL] [Whisper STT] [ta] [82.17s -> 85.07s]: ஆ சம்பாஷ்னை எந்தோ சந்தோஸங்க நடுस்து உண்ட கானே
+[09:51:15] [FINAL] [Whisper STT] [ta] [85.07s -> 87.65s]: बய்ட ஆகாசனலो பெத்த உரும் பூறிமின்தி
+[09:51:15] [FINAL] [Whisper STT] [ta] [87.65s -> 89.95s]: வாத்தாவர்னம் ஒக்க சரிகா چல்ள படின்தி
+[09:51:15] [FINAL] [Whisper STT] [ta] [89.95s -> 91.17s]: சூஸ்து உண்ட கானே
+[09:51:15] [FINAL] [Whisper STT] [ta] [91.17s -> 93.95s]: ஆகாசனக்கி சில்லு பட்டட்டு வர்شம் பராரம்பவையின்தி
+[09:51:15] [FINAL] [Whisper STT] [ta] [93.95s -> 97.99s]: சின்னக முதலையேன வாண நிமிஷாள வயவத்திலோனே கொண்ட போத்தக மாரிந்தி
+[09:51:15] [FINAL] [Whisper STT] [ta] [97.99s -> 101.49s]: உருமுழுமெறுப்படத்தो ராத்ரண்ட வர்சம் படுத்தூனே ஒந்தி
+[09:51:15] [FINAL] [Whisper STT] [ta] [101.49s -> 106.13s]: அலா உண்டகா தெல்லாரே சரிக்கி ஆ உரி பரिस்தித்தி பூர்ட்டிக மாரிப்பை இந்தி
+[09:51:15] [FINAL] [Whisper STT] [ta] [106.13s -> 109.91s]: பக்கனை உன்ன ஏறு பொங்கி உள்ளோக்கி வரத நீருச்செரிந்தி
+[09:51:15] [FINAL] [Whisper STT] [ta] [109.91s -> 112.95s]: प्रसादी इन்டலोकि कुड मो काले लोत नीरों चेसिंदी
+[09:51:15] [FINAL] [Whisper STT] [ta] [112.95s -> 116.45s]: हैयो देवड, एंटी गाली वारब्या पत्स
+[09:51:15] [FINAL] [Whisper STT] [ta] [116.45s -> 118.85s]: ஏर फोंगी इन्टलोक नीरों चेसाई
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: qWrtAyHcbL0] (Window: 9.0s - 129.0s) | Started at: 2026-10-17 09:51:15 ===
+--------------------------------------------------------------------------------
+[09:54:19] [FINAL] [Whisper STT] [ta] [1.70s -> 7.46s]: சுரேஷ் அறுன் பக்கணை உன்ன சின் நடாவன்லோ பெய்த்து குட்டும்பானிக்கு ஆசராக உன்னார।
+[09:54:19] [FINAL] [Whisper STT] [ta] [7.46s -> 10.90s]: ஒரோஜு சாயந்திர மந்தரு ஹால்லோ கூர்சனி மாட்ளாடுகொண்டுன்னார।
+[09:54:19] [FINAL] [Whisper STT] [ta] [10.90s -> 20.30s]: रमेशु, इसारी वरिप्पैरू बाने बिरिगिंदिका, वर्षाल समयानिक बड़िते, ए धफ़ा दिखोडी भागा उच्छुद्धी, मने कस्टाल गट्टे कुथै
+[09:54:19] [FINAL] [Whisper STT] [ta] [20.30s -> 23.78s]: அவுனானா பொலம்பணிள நினைத் தோனே பூட்டையை
+[09:54:19] [FINAL] [Whisper STT] [ta] [23.78s -> 27.90s]: வாத்தாவனன் சூச்துந்து இராதறிக்கி கட்டி வர்شம் படைய லாகிய உண்தி
+[09:54:19] [FINAL] [Whisper STT] [ta] [27.90s -> 31.88s]: அவனுண்டை போத்திர் நீண்டி விப்றயாதமேன ஓகப் போத்த கொந்தே
+[09:54:19] [FINAL] [Whisper STT] [ta] [31.88s -> 34.28s]: ஆகாசங்கள் கொட நல்லாட் முபுள் பெட்டின்னி
+[09:54:19] [FINAL] [Whisper STT] [ta] [34.28s -> 35.72s]: சல்லகால் ஒத்துந்தே
+[09:54:19] [FINAL] [Whisper STT] [ta] [35.72s -> 37.36s]: மட்டுவாஸனு கொட ஒத்துந்தே
+[09:54:19] [FINAL] [Whisper STT] [ta] [37.36s -> 38.90s]: அத்திகாரும்
+[09:54:19] [FINAL] [Whisper STT] [ta] [38.90s -> 39.86s]: ராதிரிக்க அந்தரிக்கி
+[09:54:19] [FINAL] [Whisper STT] [ta] [39.86s -> 41.58s]: வேடுவேடிக அண்ணம் கந்திபப்பு
+[09:54:19] [FINAL] [Whisper STT] [ta] [41.58s -> 42.80s]: ஆவகை தீச்படுத்தானு
+[09:54:19] [FINAL] [Whisper STT] [ta] [42.80s -> 45.66s]: வர்சம் படதே வாத்வறன சலகா உண்டுந்தி கதா
+[09:54:19] [FINAL] [Whisper STT] [ta] [45.66s -> 48.80s]: அந்துளோ காஸ்த நீ வேசக்குன் தின்டைய முர்த்துலா உண்டுந்து
+[09:54:19] [FINAL] [Whisper STT] [ta] [48.80s -> 52.66s]: அவனக்கா வாத்தவரனானிக்கி அபோஜுனம் بழை உண்டுந்தி
+[09:54:19] [FINAL] [Whisper STT] [ta] [52.66s -> 55.78s]: பதா நீ நீக்கு சहாயங்க கூருகள் கொசிστதான।
+[09:54:19] [FINAL] [Whisper STT] [ta] [55.78s -> 57.90s]: நீனு பியிங்க கடிகி பெடத்தானாக்கா
+[09:54:19] [FINAL] [Whisper STT] [ta] [66.72s -> 73.02s]: अत्वेकार किस்டमेन आப்படாலுக் கुड வேத்தோம்.
+[09:54:19] [FINAL] [Whisper STT] [ta] [73.02s -> 78.64s]: आ सम्भाषिने यंतो संतोशंगा नडुस्तு உண்டகானे बैटा आकासनलो पेद्ध उर्मूरिमींदी
+[09:54:19] [FINAL] [Whisper STT] [ta] [78.64s -> 80.92s]: वाथावर्न मोक्कसारिगा चल्लबढ़ियंदी
+[09:54:19] [FINAL] [Whisper STT] [ta] [80.92s -> 84.94s]: चूस्तு உண்டகाने आकासन की चिल्लु पड़ट्ट्टु वर्षम प्रारंपवैंदी
+[09:54:19] [FINAL] [Whisper STT] [ta] [84.94s -> 88.96s]: சின்னக முதலேன வாண நிமிஷால வயவத்திலோனை கொண்ட போத்தக மாரிந்தி
+[09:54:19] [FINAL] [Whisper STT] [ta] [88.96s -> 92.50s]: உறுமுளுமெருப்படத்தो ராத் தரண்ட வர்சம் படுத்தூனே ஒந்தி
+[09:54:19] [FINAL] [Whisper STT] [ta] [92.50s -> 96.88s]: அலா உண்டகா தெல்லாரே சரிக்கி ஆ உரி பரिस்ததி பூர்த்திக மாரிப்பை இந்தி
+[09:54:19] [FINAL] [Whisper STT] [ta] [96.88s -> 100.88s]: பக்கனை உன்ன ஏறு பொங்கி உள்ளோக்கி வரத நீருச்செரிந்தி
+[09:54:19] [FINAL] [Whisper STT] [ta] [100.88s -> 103.94s]: प्रसादी इंटलोकि कुड मो कालो लोत नीरोच जेसिन्दी
+[09:54:19] [FINAL] [Whisper STT] [ta] [103.94s -> 107.46s]: हैयो दे इवड, एंटी गाली वारा ब्या बत्स
+[09:54:19] [FINAL] [Whisper STT] [ta] [107.46s -> 109.84s]: यहर फोंगी इंटलोकि नीरोच चेसाई
+[09:54:19] [FINAL] [Whisper STT] [ta] [109.84s -> 111.92s]: सामल्लानी तडिस पौता आयायमो
+[09:54:19] [FINAL] [Whisper STT] [ta] [111.92s -> 113.74s]: कांगार पड़ भाक्स आरता
+[09:54:19] [FINAL] [Whisper STT] [ta] [113.74s -> 116.82s]: इड अनடूले नंतका वर्षंचाल एक्कोगा बढिंदी
+
+--------------------------------------------------------------------------------
+=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 09:54:19 ===
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: VUz11CC-EMw] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 09:54:19 ===
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: eLZH1GEeBU4] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 09:54:47 ===
+--------------------------------------------------------------------------------
+[09:57:36] [FINAL] [Whisper STT] [en] [0.00s -> 0.60s]: Hello, brother.
+[09:57:36] [FINAL] [Whisper STT] [en] [1.14s -> 5.70s]: If you want to get a notification on the bell icon, click the bell icon.
+[09:57:36] [FINAL] [Whisper STT] [en] [5.90s -> 6.36s]: That's it?
+[09:57:36] [FINAL] [Whisper STT] [en] [23.92s -> 25.46s]: I don't know how many invicilators are.
+[09:57:36] [FINAL] [Whisper STT] [en] [25.90s -> 26.50s]: It's great.
+[09:57:36] [FINAL] [Whisper STT] [en] [26.98s -> 27.70s]: Yeah, every day.
+[09:57:36] [FINAL] [Whisper STT] [en] [28.74s -> 29.58s]: I'm sorry.
+[09:57:36] [FINAL] [Whisper STT] [en] [32.04s -> 33.20s]: So if you want to give him some slips,
+[09:57:36] [FINAL] [Whisper STT] [en] [34.42s -> 35.12s]: I'll show you.
+[09:57:36] [FINAL] [Whisper STT] [en] [35.34s -> 36.04s]: Did you see that?
+[09:57:36] [FINAL] [Whisper STT] [en] [40.80s -> 41.70s]: Okay students!
+[09:57:36] [FINAL] [Whisper STT] [en] [42.46s -> 43.24s]: So what do we need for this exam?
+[09:57:36] [FINAL] [Whisper STT] [en] [44.30s -> 44.84s]: Max!
+[09:57:36] [FINAL] [Whisper STT] [en] [46.86s -> 47.40s]: Hey!
+[09:57:36] [FINAL] [Whisper STT] [en] [47.40s -> 48.02s]: This is Macs?
+[09:57:36] [FINAL] [Whisper STT] [en] [48.22s -> 48.70s]: Physics.
+[09:57:36] [FINAL] [Whisper STT] [en] [51.16s -> 53.54s]: Ok students, let me show you the paper
+[09:57:36] [FINAL] [Whisper STT] [en] [53.54s -> 55.74s]: I'll tell your statutes
+[09:57:36] [FINAL] [Whisper STT] [en] [57.22s -> 58.14s]: Pass
+[09:57:36] [FINAL] [Whisper STT] [en] [59.40s -> 60.28s]: Take it
+[09:57:36] [FINAL] [Whisper STT] [en] [60.28s -> 68.62s]: You don't have to take a picture
+[09:57:36] [FINAL] [Whisper STT] [en] [69.84s -> 70.76s]: It's up here
+[09:57:36] [FINAL] [Whisper STT] [en] [70.76s -> 72.96s]: I'm going to show you the paper
+[09:57:36] [FINAL] [Whisper STT] [en] [72.96s -> 74.90s]: Excuse me sir
+[09:57:36] [FINAL] [Whisper STT] [en] [74.90s -> 78.00s]: Sir, this is my paper
+[09:57:36] [FINAL] [Whisper STT] [en] [78.40s -> 79.20s]: There's no mistake
+[09:57:36] [FINAL] [Whisper STT] [en] [79.20s -> 81.22s]: You can't see it, you can't see it.
+[09:57:36] [FINAL] [Whisper STT] [en] [81.50s -> 82.06s]: Okay
+[09:57:36] [FINAL] [Whisper STT] [en] [82.06s -> 82.34s]: Hey!
+[09:57:36] [FINAL] [Whisper STT] [en] [82.92s -> 83.48s]: Is there any rule numbers ready?
+[09:57:36] [FINAL] [Whisper STT] [en] [94.63s -> 95.19s]: Okay
+[09:57:36] [FINAL] [Whisper STT] [en] [96.09s -> 96.65s]: Hey!
+[09:57:36] [FINAL] [Whisper STT] [en] [98.99s -> 99.71s]: Use this fellow
+[09:57:36] [FINAL] [Whisper STT] [en] [100.25s -> 100.57s]: What's the intro?
+[09:57:36] [FINAL] [Whisper STT] [en] [103.81s -> 104.75s]: Okay guys
+[09:57:36] [FINAL] [Whisper STT] [en] [105.15s -> 106.81s]: So your exam is going to start in
+[09:57:36] [FINAL] [Whisper STT] [en] [106.81s -> 107.65s]: One
+[09:57:36] [FINAL] [Whisper STT] [en] [112.32s -> 112.88s]: Ray
+[09:57:36] [FINAL] [Whisper STT] [en] [118.51s -> 119.33s]: 1 and 2
+
+--------------------------------------------------------------------------------
+=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 09:57:36 ===
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: VUz11CC-EMw] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 09:57:36 ===
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: VUz11CC-EMw] (Window: 18.0s - 138.0s) | Started at: 2026-10-17 09:57:53 ===
+--------------------------------------------------------------------------------
+[09:58:27] [FINAL] [Whisper STT] [en] [4.85s -> 47.36s]: More minutes!
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: VUz11CC-EMw] (Window: 24.0s - 144.0s) | Started at: 2026-10-17 09:58:27 ===
+--------------------------------------------------------------------------------
+[09:59:02] [FINAL] [Whisper STT] [en] [40.88s -> 41.42s]: more minutes.
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: VUz11CC-EMw] (Window: 39.0s - 159.0s) | Started at: 2026-10-17 09:59:02 ===
+--------------------------------------------------------------------------------
+[09:59:35] [FINAL] [Whisper STT] [en] [25.30s -> 26.38s]: Just five more minutes.
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: VUz11CC-EMw] (Window: 39.0s - 159.0s) | Started at: 2026-10-17 09:59:35 ===
+--------------------------------------------------------------------------------
+[10:00:08] [FINAL] [Whisper STT] [en] [25.30s -> 26.38s]: Just five more minutes.
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: VUz11CC-EMw] (Window: 35.0s - 155.0s) | Started at: 2026-10-17 10:00:08 ===
+--------------------------------------------------------------------------------
+[10:00:41] [FINAL] [Whisper STT] [en] [29.30s -> 30.38s]: Just five more minutes.
+
+--------------------------------------------------------------------------------
+=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 10:00:41 ===
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: ADbqZMJQPTM] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 10:00:41 ===
+--------------------------------------------------------------------------------
+[10:04:54] [FINAL] [Whisper STT] [hi] [0.00s -> 8.22s]: बूर्णिंग आज आहे डे 14 लास एन फाइनल दे आहे अपला मंझे पुम्टन डेस उधे आपन निकतो है
+[10:04:54] [FINAL] [Whisper STT] [hi] [8.22s -> 11.64s]: मंझे आपन परवा निकनार होतों बढ़ उधे आपन निकतो है
+[10:04:54] [FINAL] [Whisper STT] [hi] [11.64s -> 18.64s]: फाईनेली कारण आपन सुमूरी जे स्थे होता तो कैंसल के आपन जासता ठंडी असलाम हो
+[10:04:54] [FINAL] [Whisper STT] [hi] [18.64s -> 48.58s]: आपन आज डायरेक लिए हला पूछलो, मैंची इकड्या अपन लग करा होत, तहर आता आपन करतो है, त्यास होटेल में त्यास ठीकाने होत, फक्त थोड़ा सा घर आपले बेखला है, आपले ते तो वाला, मैंची माझा आणी ताही चा तो कोटेश है, और आई भाउन चा यह
+[10:04:54] [FINAL] [Whisper STT] [hi] [50.86s -> 54.90s]: करना रहे मंज आपन एका पलस ला जाना है तो इतुद्मा मार्केट ला जाना
+[10:04:54] [FINAL] [Whisper STT] [hi] [54.90s -> 57.56s]: मों पैकिंगाना राची हाणी मों वूध्या
+[10:04:54] [FINAL] [Whisper STT] [hi] [58.18s -> 61.58s]: मैंझे आज रात रिष अपन ओल फेल्म ला जाना रहोड
+[10:04:54] [FINAL] [Whisper STT] [hi] [61.58s -> 65.30s]: नाइट शो एंजा गाना साथी आणी ठीकन जम ला तो सुभी नाज याईचे
+[10:04:54] [FINAL] [Whisper STT] [hi] [65.30s -> 67.98s]: कारण आपलेला सियाचीन आणी रेजांग ला
+[10:04:54] [FINAL] [Whisper STT] [hi] [67.98s -> 69.82s]: आणी कार्किल बॉर मेमोरियल ला
+[10:04:54] [FINAL] [Whisper STT] [hi] [69.82s -> 71.40s]: दोनी ठिखानी आपलेला
+[10:04:54] [FINAL] [Whisper STT] [hi] [71.40s -> 72.46s]: नाही में अले
+[10:04:54] [FINAL] [Whisper STT] [hi] [72.46s -> 74.84s]: which is very
+[10:04:54] [FINAL] [Whisper STT] [hi] [74.84s -> 76.56s]: heartbreaking thing for me
+[10:04:54] [FINAL] [Whisper STT] [hi] [76.56s -> 78.90s]: but hopefully hall of fame
+[10:04:54] [FINAL] [Whisper STT] [hi] [78.90s -> 80.44s]: छेएथे आपले मैडाव
+[10:04:54] [FINAL] [Whisper STT] [hi] [80.44s -> 82.82s]: आसी प्रात्ना में गरतो
+[10:04:54] [FINAL] [Whisper STT] [hi] [82.82s -> 84.20s]: आणी
+[10:04:54] [FINAL] [Whisper STT] [hi] [84.20s -> 85.70s]: काई धोड़े gifts गहेचेट
+[10:04:54] [FINAL] [Whisper STT] [hi] [85.70s -> 86.76s]: आपले मित्रान शाथी
+[10:04:54] [FINAL] [Whisper STT] [hi] [88.36s -> 92.02s]: तर्देपन की हो आपन मारकेट में अत्ता सध्या नास्ता कुल मिले
+[10:04:54] [FINAL] [Whisper STT] [hi] [92.02s -> 98.52s]: अज आज आपन जहतो है लिह मारकेट फिरा यह एक पैलेस काना मारकेट भिणा रहे
+[10:04:54] [FINAL] [Whisper STT] [hi] [98.52s -> 102.48s]: थेचे शाम्त लाट ला रात्री शो एंजय काना रहे
+[10:04:54] [FINAL] [Whisper STT] [hi] [103.12s -> 107.60s]: दरहाता में रेडी जालो है, पहलना आउट्फेट गातले असा वाट्य में पहलना सिबिल ड्रेस गातले
+[10:04:54] [FINAL] [Whisper STT] [hi] [107.60s -> 113.48s]: असा वाट्य करेंड जीन्स और भीध इस नवेंड आउट्फेट आहे हा
+[10:04:54] [FINAL] [Whisper STT] [hi] [113.48s -> 119.98s]: हाँ मी सूजलें चाटी घित लेला तो आत्ता खहल्द नधे ओड़े दिवस्तेज धर्मल और फ्लीश जैकेड और
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: ADbqZMJQPTM] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 10:04:54 ===
+--------------------------------------------------------------------------------
+[10:07:45] [FINAL] [Whisper STT] [hi] [0.00s -> 8.22s]: बूर्णिंग आज आहे डे 14 लास एन फाइनल दे आहे अपला मंझे पुम्टन डेस उधे आपन निकतो है
+[10:07:45] [FINAL] [Whisper STT] [hi] [8.22s -> 11.64s]: मंझे आपन परवा निकनार होतों बढ़ उधे आपन निकतो है
+[10:07:45] [FINAL] [Whisper STT] [hi] [11.64s -> 18.64s]: फाईनेली कारण आपन सुमूरी जे स्थे होता तो कैंसल के आपन जासता ठंडी असलाम हो
+[10:07:45] [FINAL] [Whisper STT] [hi] [18.64s -> 48.58s]: आपन आज डायरेक लिए हला पूछलो, मैंची इकड्या अपन लग करा होत, तहर आता आपन करतो है, त्यास होटेल में त्यास ठीकाने होत, फक्त थोड़ा सा घर आपले बेखला है, आपले ते तो वाला, मैंची माझा आणी ताही चा तो कोटेश है, और आई भाउन चा यह
+[10:07:45] [FINAL] [Whisper STT] [hi] [50.86s -> 54.90s]: करना रहे मंज आपन एका पलस ला जाना है तो इतुद्मा मार्केट ला जाना
+[10:07:45] [FINAL] [Whisper STT] [hi] [54.90s -> 57.56s]: मों पैकिंगाना राची हाणी मों वूध्या
+[10:07:45] [FINAL] [Whisper STT] [hi] [58.18s -> 61.58s]: मैंझे आज रात रिष अपन ओल फेल्म ला जाना रहोड
+[10:07:45] [FINAL] [Whisper STT] [hi] [61.58s -> 65.30s]: नाइट शो एंजा गाना साथी आणी ठीकन जम ला तो सुभी नाज याईचे
+[10:07:45] [FINAL] [Whisper STT] [hi] [65.30s -> 67.98s]: कारण आपलेला सियाचीन आणी रेजांग ला
+[10:07:45] [FINAL] [Whisper STT] [hi] [67.98s -> 69.82s]: आणी कार्किल बॉर मेमोरियल ला
+[10:07:45] [FINAL] [Whisper STT] [hi] [69.82s -> 71.40s]: दोनी ठिखानी आपलेला
+[10:07:45] [FINAL] [Whisper STT] [hi] [71.40s -> 72.46s]: नाही में अले
+[10:07:45] [FINAL] [Whisper STT] [hi] [72.46s -> 74.84s]: which is very
+[10:07:45] [FINAL] [Whisper STT] [hi] [74.84s -> 76.56s]: heartbreaking thing for me
+[10:07:45] [FINAL] [Whisper STT] [hi] [76.56s -> 78.90s]: but hopefully hall of fame
+[10:07:45] [FINAL] [Whisper STT] [hi] [78.90s -> 80.44s]: छेएथे आपले मैडाव
+[10:07:45] [FINAL] [Whisper STT] [hi] [80.44s -> 82.82s]: आसी प्रात्ना में गरतो
+[10:07:45] [FINAL] [Whisper STT] [hi] [82.82s -> 84.20s]: आणी
+[10:07:45] [FINAL] [Whisper STT] [hi] [84.20s -> 85.70s]: काई धोड़े gifts गहेचेट
+[10:07:45] [FINAL] [Whisper STT] [hi] [85.70s -> 86.76s]: आपले मित्रान शाथी
+[10:07:45] [FINAL] [Whisper STT] [hi] [88.36s -> 92.26s]: तर्देपन कियो आपना मार्केट में अत्त सध्या नास्ता कुल गूए है
+[10:07:45] [FINAL] [Whisper STT] [hi] [92.26s -> 96.00s]: अज आज आपन चाहतो है लिह मार्केट फीरा है
+[10:07:45] [FINAL] [Whisper STT] [hi] [96.00s -> 98.52s]: मैं इक पैलेस काना मार्केट फिरना रहे
+[10:07:45] [FINAL] [Whisper STT] [hi] [98.52s -> 102.50s]: थे शेले लाड रातरी शोव एंजोई काना रहे
+[10:07:45] [FINAL] [Whisper STT] [hi] [102.50s -> 104.38s]: दर आता मी रेडी जालो है
+[10:07:45] [FINAL] [Whisper STT] [hi] [104.38s -> 113.48s]: पहलाने आउट्फेट घंतले असा वाट्य मी पहलाने सिविल्डरेश घंतले असा तक है जीन्स और भीद इस नवीन आउट्फेट आहे हा
+[10:07:45] [FINAL] [Whisper STT] [hi] [113.48s -> 119.98s]: हमी सुईजा लेंचाठी केत लेला तो बात्ता खालत थे ओड़े दिवस्तेज धर्मल और फ्लीष जैकेट और
+[10:54:20] [FINAL] [WhisperX STT] [en] [0.00s -> 1.50s]: Resilient output
+[10:54:20] [FINAL] [WhisperX STT] [hi] [SPEAKER_00] [0.00s -> 1.80s]: अरे ओ, बंसी!
+[10:54:20] [FINAL] [WhisperX STT] [hi] [SPEAKER_01] [2.00s -> 3.80s]: हाँ, तो मैं क्या करूँ?
+[10:54:20] [FINAL] [WhisperX STT] [en] [SPEAKER_00] [0.00s -> 1.20s]: First sentence.
+[10:54:20] [FINAL] [WhisperX STT] [en] [SPEAKER_00] [1.30s -> 2.80s]: Second sentence.
+[10:54:20] [FINAL] [WhisperX STT] [hi] [0.00s -> 1.00s]: परीक्षण
+[10:54:20] [FINAL] [WhisperX STT] [mr] [SPEAKER_00] [0.20s -> 1.80s]: नमस्कार मित्रांनो
+[10:54:20] [FINAL] [WhisperX STT] [hi] [1.25s -> 3.75s]: परीक्षण वाक्य
+
+--------------------------------------------------------------------------------
+=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 10:54:20 ===
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: vid-002] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 15:10:44 ===
 --------------------------------------------------------------------------------
 [10:31:55] [FINAL] [WhisperX STT] [en] [0.00s -> 1.50s]: Resilient output
 [10:31:55] [FINAL] [WhisperX STT] [hi] [SPEAKER_00] [0.00s -> 1.80s]: अरे ओ, बंसी!

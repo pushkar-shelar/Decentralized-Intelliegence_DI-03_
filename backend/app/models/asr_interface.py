@@ -18,8 +18,7 @@ class ASRResult:
 
 class BaseASREngine(ABC):
     """
-    Common abstraction for all Speech-to-Text inference engines
-    (Shrutam-2, Whisper Turbo, IndicConformer).
+    Common abstraction for Speech-to-Text inference engines (e.g. Whisper Turbo).
     """
 
     @abstractmethod

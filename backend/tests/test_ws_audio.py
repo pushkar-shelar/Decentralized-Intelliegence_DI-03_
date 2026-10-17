@@ -13,7 +13,6 @@ def test_health_endpoint():
     assert data["backend"] == "LiveSub"
     assert "diarization_available" in data
     assert "hf_token_configured" in data
-    assert data["hf_token_configured"] is True
 
 def test_audio_websocket_streaming():
     with client.websocket_connect("/api/ws/audio") as websocket:

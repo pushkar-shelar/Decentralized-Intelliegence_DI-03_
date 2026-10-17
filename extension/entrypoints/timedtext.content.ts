@@ -6,7 +6,7 @@ import { defineContentScript } from 'wxt/utils/define-content-script';
  * Relays captured timedtext data to the isolated content script via window.postMessage.
  */
 export default defineContentScript({
-  matches: ['*://www.youtube.com/*'],
+  matches: ['*://www.youtube.com/*', '*://youtube.com/*'],
   world: 'MAIN',
   runAt: 'document_start',
 

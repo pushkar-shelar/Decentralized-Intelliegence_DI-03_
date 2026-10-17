@@ -60,7 +60,7 @@ class WhisperXEngine:
             self.asr_error = None
             return True
         except ImportError:
-            msg = "whisperx package is not installed. ASR via WhisperX is unavailable."
+            msg = "Optional 'whisperx' not installed. Fallback to WhisperEngine (faster-whisper) is active."
             print(f"[WhisperXEngine] {msg}")
             self.asr_error = msg
             self.model = None

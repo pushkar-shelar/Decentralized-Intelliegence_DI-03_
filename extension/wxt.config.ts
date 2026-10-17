@@ -24,6 +24,6 @@ export default defineConfig({
       },
     },
     permissions: ['storage', 'tabCapture', 'offscreen', 'activeTab'],
-    host_permissions: ['*://www.youtube.com/*'],
+    host_permissions: ['*://www.youtube.com/*', '*://youtube.com/*'],
   },
 });
