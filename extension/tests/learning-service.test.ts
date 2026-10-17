@@ -1,8 +1,46 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { LearningService } from '../src/learning/learning-service';
 import { MockTranslationService } from '../src/translation/translation-service';
 
 describe('learning-service', () => {
+  beforeEach(() => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockImplementation((url: string) => {
+        if (typeof url === 'string' && url.includes('dictionaryapi.dev')) {
+          const word = url.split('/').pop() || 'test';
+          return Promise.resolve({
+            ok: true,
+            status: 200,
+            json: () =>
+              Promise.resolve([
+                {
+                  word,
+                  phonetic: `/${word}/`,
+                  meanings: [
+                    {
+                      partOfSpeech: 'adjective',
+                      definitions: [
+                        {
+                          definition: `Pleasing or fine quality of ${word}.`,
+                          example: `This is a truly ${word} example.`,
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ]),
+          });
+        }
+        return Promise.resolve({ ok: false, status: 404, json: () => Promise.resolve([]) });
+      }),
+    );
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   it('looks up a word and returns structured result', async () => {
     const mockTrans = new MockTranslationService();
     mockTrans.registerHandler((req) => {

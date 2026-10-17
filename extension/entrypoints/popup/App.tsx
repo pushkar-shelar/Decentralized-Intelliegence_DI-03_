@@ -584,6 +584,9 @@ export default function App() {
               </svg>
               <span>Vocabulary</span>
             </button>
+
+            <button
+              type="button"
               className={`action-btn-card ${activeDrawer === 'export' ? 'action-btn-card--active' : ''}`}
               onClick={() => setActiveDrawer('export')}
             >
@@ -909,10 +912,6 @@ export default function App() {
         </div>
       )}
 
-<<<<<<< HEAD
-      {/* 3. Settings & Diagnostics Drawer */}
-      {activeDrawer === 'settings' && (
-=======
       {/* 3. Vocabulary Drawer */}
       {activeDrawer === 'vocabulary' && (
         <div className="drawer-backdrop" onClick={() => setActiveDrawer(null)}>
@@ -926,9 +925,8 @@ export default function App() {
         </div>
       )}
 
-      {/* 4. More & Developer Drawer */}
-      {activeDrawer === 'more' && (
->>>>>>> feat/video-subtitle-website
+      {/* 4. Settings & Diagnostics Drawer */}
+      {(activeDrawer === 'settings' || activeDrawer === 'more') && (
         <div className="drawer-backdrop" onClick={() => setActiveDrawer(null)}>
           <div className="drawer-content" onClick={(e) => e.stopPropagation()}>
             <div className="drawer-header">
