@@ -100,24 +100,7 @@ export const App: React.FC = () => {
         },
       });
 
-      if (results.length === 0) {
-        // Fallback: If no speech was detected by VAD
-        setFinalCues([
-          {
-            id: 'c-empty',
-            start: 0,
-            end: Math.min(5, audioData.durationSec),
-            text: 'No speech detected in this video segment.',
-            translation: null,
-            lang: 'en',
-            source: 'stt',
-            is_final: true,
-          },
-        ]);
-      } else {
-        setFinalCues(results);
-      }
-
+      setFinalCues(results);
       setViewState('studio');
     } catch (err: unknown) {
       if (abortController.signal.aborted) return;

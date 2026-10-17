@@ -1,4 +1,18 @@
 import os
+import sys
+
+# Ensure UTF-8 console output for multilingual text (Hindi, Tamil, Marathi, etc.)
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="backslashreplace")
+    except Exception:
+        pass
+if hasattr(sys.stderr, "reconfigure"):
+    try:
+        sys.stderr.reconfigure(encoding="utf-8", errors="backslashreplace")
+    except Exception:
+        pass
+
 # Force PyTorch-only backend in transformers and avoid protobuf conflicts with tensorflow
 os.environ["USE_TF"] = "0"
 os.environ["TRANSFORMERS_NO_TF"] = "1"
@@ -305,29 +319,36 @@ async def audio_websocket_endpoint(websocket: WebSocket):
                             except Exception as e:
                                 print(f"[LiveSub WS] Translation error: {e}")
 
-                    spk_label = f" [{cue.get('speaker')}]" if cue.get("speaker") else ""
-                    log_msg = f"[LiveSub WS] {status_str} Cue [{cue.get('lang', 'hi')}]{spk_label}: {cue['text']}"
-                    if cue.get("translation"):
-                        log_msg += f" --> [{cue.get('translation_lang', 'en')}]: {cue['translation']}"
-                    print(log_msg, flush=True)
-
-                    # Log to whispr_logs.txt on each STT output
-                    log_stt_output(
-                        text=cue["text"],
-                        start=cue.get("start"),
-                        end=cue.get("end"),
-                        language=cue.get("lang"),
-                        speaker=cue.get("speaker"),
-                        source="Whisper Live STT",
-                        status=status_str,
-                    )
-
+                    # Send cue to WebSocket immediately so client gets subtitles
                     await websocket.send_text(
                         json.dumps({
                             "type": "cue_update",
                             "cue": cue,
                         })
                     )
+
+                    try:
+                        spk_label = f" [{cue.get('speaker')}]" if cue.get("speaker") else ""
+                        log_msg = f"[LiveSub WS] {status_str} Cue [{cue.get('lang', 'hi')}]{spk_label}: {cue['text']}"
+                        if cue.get("translation"):
+                            log_msg += f" --> [{cue.get('translation_lang', 'en')}]: {cue['translation']}"
+                        print(log_msg, flush=True)
+                    except Exception:
+                        pass
+
+                    # Log to whispr_logs.txt on each STT output
+                    try:
+                        log_stt_output(
+                            text=cue["text"],
+                            start=cue.get("start"),
+                            end=cue.get("end"),
+                            language=cue.get("lang"),
+                            speaker=cue.get("speaker"),
+                            source="Whisper Live STT",
+                            status=status_str,
+                        )
+                    except Exception:
+                        pass
                 else:
                     # Periodic ack
                     if chunk_count % 10 == 1:

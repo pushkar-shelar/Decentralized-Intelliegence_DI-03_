@@ -575,7 +575,7 @@ export const SubtitleStudio: React.FC<SubtitleStudioProps> = ({
             <div className="transcript-list">
               {filteredCues.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '32px 16px', color: 'var(--color-text-secondary)' }}>
-                  No matching transcript segments
+                  {cues.length === 0 ? 'No speech detected in this video' : 'No matching transcript segments'}
                 </div>
               ) : (
                 filteredCues.map((c) => {
