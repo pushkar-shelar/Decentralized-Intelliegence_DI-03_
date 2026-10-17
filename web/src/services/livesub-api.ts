@@ -28,11 +28,11 @@ export type CueCallback = (cue: SubtitleCue) => void;
  * Avoids IPv6 localhost resolution failures by probing relative path and IPv4 127.0.0.1.
  */
 export async function checkBackendHealth(): Promise<{ online: boolean; details?: BackendHealth }> {
-  // 1. Try relative URL via Vite proxy
+  // 1. Try relative URL via Vite proxy (6s timeout to tolerate CPU model inference)
   try {
     const res = await fetch('/api/health', {
       headers: { Accept: 'application/json' },
-      signal: AbortSignal.timeout(2000),
+      signal: AbortSignal.timeout(6000),
     });
     if (res.ok) {
       const data = await res.json();
@@ -46,7 +46,7 @@ export async function checkBackendHealth(): Promise<{ online: boolean; details?:
   try {
     const res = await fetch('http://127.0.0.1:8765/api/health', {
       headers: { Accept: 'application/json' },
-      signal: AbortSignal.timeout(2500),
+      signal: AbortSignal.timeout(6000),
     });
     if (res.ok) {
       const data = await res.json();
@@ -61,7 +61,8 @@ export async function checkBackendHealth(): Promise<{ online: boolean; details?:
 
 /**
  * Streams smart 20-second PCM audio chunks to the existing LiveSub backend.
- * Paces requests smoothly without flooding the WebSocket in milliseconds.
+ * Streams in ~500ms-1000ms slices to feed SileroVAD and utterance segmentation,
+ * then awaits Whisper transcription completion without premature WebSocket closing.
  */
 export async function processAudioStreamViaWebSocket(params: {
   chunks: SmartAudioChunk[] | Int16Array[];
@@ -85,6 +86,7 @@ export async function processAudioStreamViaWebSocket(params: {
     let isFinished = false;
     let chunksSent = 0;
     const totalChunks = chunks.length;
+    let lastCueTimestamp = Date.now();
 
     const cleanup = () => {
       isFinished = true;
@@ -121,13 +123,13 @@ export async function processAudioStreamViaWebSocket(params: {
         }),
       );
 
-      // 2. Stream smart 20s audio chunks
-      streamSmartChunks();
+      // 2. Stream audio chunks to VAD
+      streamAudioChunks();
     };
 
-    const streamSmartChunks = async () => {
-      // Create a 400ms silence packet (6400 samples) to trigger VAD sentence finalization
-      const silenceBuffer = new Int16Array(6400);
+    const streamAudioChunks = async () => {
+      const SUB_CHUNK_SAMPLES = 8000; // 0.5s @ 16kHz for smooth VAD feeding
+      const silenceBuffer = new Int16Array(6400); // 400ms silence to signal boundary
 
       for (let i = 0; i < totalChunks; i++) {
         if (isFinished || signal?.aborted) return;
@@ -137,36 +139,47 @@ export async function processAudioStreamViaWebSocket(params: {
         }
 
         const rawChunk = chunks[i]!;
-        // Handle both SmartAudioChunk and plain Int16Array
         const isSmart = 'pcm' in rawChunk;
         const pcmData: Int16Array = isSmart ? rawChunk.pcm : rawChunk;
         const chunkStartSec = isSmart ? rawChunk.startSec : (i * (durationSec / totalChunks));
         const chunkDurationSec = isSmart ? rawChunk.durationSec : (pcmData.length / 16000);
 
-        // 1. Send metadata for this 20-second chunk
-        const meta = {
-          type: 'chunk_meta',
-          perfNow: performance.now(),
-          durationMs: chunkDurationSec * 1000,
-          anchor: {
-            videoTime: chunkStartSec,
-            rate: 1.0,
-            paused: false,
-          },
-          sourceLang,
-          targetLang,
-        };
+        // Feed this ~20s chunk to backend in ~0.5s sub-slices so SileroVAD tracks utterance boundaries
+        for (let offset = 0; offset < pcmData.length; offset += SUB_CHUNK_SAMPLES) {
+          if (isFinished || signal?.aborted) return;
+          if (ws.readyState !== WebSocket.OPEN) break;
 
-        ws.send(JSON.stringify(meta));
+          const end = Math.min(offset + SUB_CHUNK_SAMPLES, pcmData.length);
+          const subPcm = pcmData.slice(offset, end);
+          const currentVideoSec = chunkStartSec + (offset / 16000);
 
-        // 2. Send the audio PCM buffer
-        ws.send(pcmData.buffer);
+          const meta = {
+            type: 'chunk_meta',
+            perfNow: performance.now(),
+            durationMs: (subPcm.length / 16000) * 1000,
+            anchor: {
+              videoTime: Number(currentVideoSec.toFixed(2)),
+              rate: 1.0,
+              paused: false,
+            },
+            sourceLang,
+            targetLang,
+          };
 
-        // 3. Send silence padding to signal sentence boundary to VAD
-        ws.send(silenceBuffer.buffer);
+          ws.send(JSON.stringify(meta));
+          ws.send(subPcm.buffer);
+
+          // Pacing delay (~25ms) so we don't flood TCP queue
+          await new Promise((r) => setTimeout(r, 25));
+        }
+
+        // At end of each 20s block, send silence padding to finalize any speech utterance in VAD buffer
+        if (ws.readyState === WebSocket.OPEN) {
+          ws.send(silenceBuffer.buffer);
+        }
 
         chunksSent++;
-        const pct = Math.min(92, Math.round(((i + 1) / totalChunks) * 88));
+        const pct = Math.min(88, Math.round(((i + 1) / totalChunks) * 85));
 
         onProgress?.({
           stage: 'transcribing',
@@ -177,15 +190,43 @@ export async function processAudioStreamViaWebSocket(params: {
           durationSec,
         });
 
-        // Smart pacing: wait ~700ms between 20-second chunks so Whisper has comfortable inference time
-        await new Promise((r) => setTimeout(r, 750));
+        // Allow Whisper time to transcribe finalized utterances
+        await new Promise((r) => setTimeout(r, 1000));
       }
 
-      // Allow trailing VAD hangover to finalize any pending sentence
-      await new Promise((r) => setTimeout(r, 1200));
+      // Trailing grace period: wait for Whisper to complete all pending audio decodes
+      onProgress?.({
+        stage: 'transcribing',
+        percent: 90,
+        chunksProcessed: totalChunks,
+        totalChunks,
+        currentTimeSec: durationSec,
+        durationSec,
+      });
+
+      // Send extra silence to flush final speech tail
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(silenceBuffer.buffer);
+      }
+
+      // Wait up to 10 seconds or until cues settle (no new cue for 3 seconds)
+      const maxWaitMs = 12000;
+      const startTime = Date.now();
+      while (Date.now() - startTime < maxWaitMs) {
+        if (signal?.aborted) return;
+        await new Promise((r) => setTimeout(r, 800));
+        // If we received cues and no new cue arrived for 3 seconds, we're done
+        if (cuesMap.size > 0 && Date.now() - lastCueTimestamp > 3200) {
+          break;
+        }
+      }
 
       isFinished = true;
-      ws.close();
+      try {
+        ws.close();
+      } catch {
+        // ignore
+      }
 
       const finalCues = Array.from(cuesMap.values()).sort((a, b) => a.start - b.start || a.end - b.end);
 
@@ -256,6 +297,7 @@ export async function processAudioStreamViaWebSocket(params: {
             is_final: Boolean(msg.cue.is_final),
           };
 
+          lastCueTimestamp = Date.now();
           cuesMap.set(cue.id, cue);
           onCue?.(cue);
 

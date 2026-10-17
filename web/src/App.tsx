@@ -33,21 +33,22 @@ export const App: React.FC = () => {
 
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  // Check backend health periodically
+  // Check backend health periodically (pauses during active transcription to prevent CPU contention)
   useEffect(() => {
     let active = true;
     const check = async () => {
+      if (viewState === 'processing') return;
       const res = await checkBackendHealth();
       if (active) setIsBackendOnline(res.online);
     };
 
     check();
-    const interval = setInterval(check, 8000);
+    const interval = setInterval(check, 10000);
     return () => {
       active = false;
       clearInterval(interval);
     };
-  }, []);
+  }, [viewState]);
 
   const handleStartProcessing = async (file: File, selectedTargetLang: string) => {
     setActiveFile(file);
