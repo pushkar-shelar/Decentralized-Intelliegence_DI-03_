@@ -310,3 +310,306 @@
 === Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 06:56:44 ===
 --------------------------------------------------------------------------------
 [06:56:51] [FINAL] [Whisper STT] [en] [0.00s -> 0.78s]: vehicles are
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: vid-002] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 08:37:11 ===
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: vid-002] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 08:37:41 ===
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: vid-002] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 08:50:46 ===
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: 02RRZsuhc6U] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 08:51:12 ===
+--------------------------------------------------------------------------------
+[08:51:20] [FINAL] [Whisper STT] [en] [0.00s -> 3.82s]: I have got a good lesson from you that we should not use always what.
+[08:51:20] [FINAL] [Whisper STT] [en] [3.92s -> 5.70s]: But if it is positive, we can say always.
+[08:51:20] [FINAL] [Whisper STT] [en] [5.82s -> 6.50s]: You always smile.
+[08:51:20] [FINAL] [Whisper STT] [en] [6.62s -> 7.18s]: That's very good.
+[08:51:20] [FINAL] [Whisper STT] [en] [7.38s -> 8.44s]: Yeah, that's very good.
+[08:51:20] [FINAL] [Whisper STT] [en] [8.60s -> 9.62s]: You always smile.
+[08:51:20] [FINAL] [Whisper STT] [en] [9.74s -> 10.20s]: That's very good.
+[08:51:20] [FINAL] [Whisper STT] [en] [10.36s -> 11.14s]: We always cry.
+[08:51:20] [FINAL] [Whisper STT] [en] [11.60s -> 12.16s]: That's not.
+[08:51:20] [FINAL] [Whisper STT] [en] [12.20s -> 12.58s]: Not that.
+[08:51:20] [FINAL] [Whisper STT] [en] [12.88s -> 15.62s]: The other person will say how we'll respond generally?
+[08:51:20] [FINAL] [Whisper STT] [en] [15.80s -> 16.64s]: We focus on the content.
+[08:51:20] [FINAL] [Whisper STT] [en] [16.86s -> 18.78s]: We will talk about the line below or not below.
+[08:51:20] [FINAL] [Whisper STT] [en] [19.06s -> 19.60s]: I'm looking at the line below.
+[08:51:20] [FINAL] [Whisper STT] [en] [20.22s -> 20.62s]: I don't give your number.
+[08:51:20] [FINAL] [Whisper STT] [en] [21.22s -> 21.74s]: I don't do this.
+[08:51:20] [FINAL] [Whisper STT] [en] [21.96s -> 23.14s]: That is the content focus.
+[08:51:20] [FINAL] [Whisper STT] [en] [24.14s -> 27.02s]: But what made us sad is his tone.
+[08:51:20] [FINAL] [Whisper STT] [en] [27.02s -> 29.88s]: the sad part is not that line
+[08:51:20] [FINAL] [Whisper STT] [en] [29.88s -> 31.06s]: you don't look at it
+[08:51:20] [FINAL] [Whisper STT] [en] [31.06s -> 32.18s]: that is not the problem
+[08:51:20] [FINAL] [Whisper STT] [en] [32.18s -> 33.26s]: why do we feel bad?
+[08:51:20] [FINAL] [Whisper STT] [en] [34.20s -> 35.52s]: because our tone is high
+[08:51:20] [FINAL] [Whisper STT] [en] [57.02s -> 57.74s]: and take medicines.
+[08:51:20] [FINAL] [Whisper STT] [en] [57.76s -> 58.56s]: Okay, fever?
+[08:51:20] [FINAL] [Whisper STT] [en] [58.82s -> 59.40s]: Dawa le lo.
+[08:51:20] [FINAL] [Whisper STT] [en] [59.54s -> 60.00s]: Dawa le lo.
+[08:51:20] [FINAL] [Whisper STT] [en] [60.14s -> 60.74s]: I know dava le lo.
+[08:51:20] [FINAL] [Whisper STT] [en] [60.84s -> 61.04s]: It's like,
+[08:51:20] [FINAL] [Whisper STT] [en] [61.32s -> 61.78s]: yeah,
+[08:51:20] [FINAL] [Whisper STT] [en] [61.92s -> 62.84s]: dawa to meh lel hoonga
+[08:51:20] [FINAL] [Whisper STT] [en] [62.84s -> 63.96s]: lekin tumhaari dua...
+[08:51:20] [FINAL] [Whisper STT] [en] [63.96s -> 65.04s]: Arei kya hai dua ka hai?
+[08:51:20] [FINAL] [Whisper STT] [en] [65.06s -> 65.50s]: Dua ka hai?
+[08:51:20] [FINAL] [Whisper STT] [en] [65.64s -> 65.98s]: Dua ka hai?
+[08:51:20] [FINAL] [Whisper STT] [en] [67.90s -> 68.72s]: Hello everyone.
+[08:51:20] [FINAL] [Whisper STT] [en] [69.06s -> 69.60s]: It's gonna be
+[08:51:20] [FINAL] [Whisper STT] [en] [69.60s -> 71.38s]: an interesting conversation
+[08:51:20] [FINAL] [Whisper STT] [en] [71.38s -> 72.12s]: and talks
+[08:51:20] [FINAL] [Whisper STT] [en] [72.12s -> 73.00s]: because today
+[08:51:20] [FINAL] [Whisper STT] [en] [73.00s -> 75.44s]: I have a very special guest
+[08:51:20] [FINAL] [Whisper STT] [en] [75.44s -> 76.26s]: in this podcast
+[08:51:20] [FINAL] [Whisper STT] [en] [77.16s -> 77.98s]: Miss Suman.
+[08:51:20] [FINAL] [Whisper STT] [en] [78.20s -> 78.44s]: Right?
+[08:51:20] [FINAL] [Whisper STT] [en] [78.64s -> 79.22s]: Suman ma'am.
+[08:51:20] [FINAL] [Whisper STT] [en] [79.32s -> 80.12s]: Especially she's
+[08:51:20] [FINAL] [Whisper STT] [en] [80.12s -> 81.14s]: a soft skills trainer
+[08:51:20] [FINAL] [Whisper STT] [en] [81.14s -> 81.72s]: coach
+[08:51:20] [FINAL] [Whisper STT] [en] [81.72s -> 83.10s]: and she is also
+[08:51:20] [FINAL] [Whisper STT] [en] [83.10s -> 83.78s]: a life coach
+[08:51:20] [FINAL] [Whisper STT] [en] [83.78s -> 84.64s]: and yes
+[08:51:20] [FINAL] [Whisper STT] [en] [84.64s -> 85.14s]: spiritual
+[08:51:20] [FINAL] [Whisper STT] [en] [85.14s -> 89.78s]: spiritual coach as well little bit right you know because she was giving me a spirituality
+[08:51:20] [FINAL] [Whisper STT] [en] [89.78s -> 95.26s]: lessons and i was learning a lot so today in this podcast we're going to discuss on communication
+[08:51:20] [FINAL] [Whisper STT] [en] [95.26s -> 99.26s]: and comm skills because communication is case plays wider role to develop your personality
+[08:51:20] [FINAL] [Whisper STT] [en] [99.26s -> 103.78s]: and to develop a relationship and your business so first of all what do you think about it
+[08:51:20] [FINAL] [Whisper STT] [en] [104.30s -> 109.60s]: uh about the spiritual course communication okay you can just stay in court about
+[08:51:20] [FINAL] [Whisper STT] [en] [109.60s -> 113.84s]: spirituality please okay so first thank you so much for introducing me and I'm
+[08:51:20] [FINAL] [Whisper STT] [en] [113.84s -> 118.06s]: someone a soft skill trainer and I would just correct one thing I have not a
+[08:51:20] [FINAL] [Whisper STT] [en] [118.06s -> 118.72s]: spiritual course
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: 02RRZsuhc6U] (Window: 141.0s - 261.0s) | Started at: 2026-10-17 08:51:20 ===
+--------------------------------------------------------------------------------
+[08:51:26] [FINAL] [Whisper STT] [en] [0.00s -> 1.48s]: being assertive.
+[08:51:26] [FINAL] [Whisper STT] [en] [1.62s -> 3.00s]: So it plays a very important role.
+[08:51:26] [FINAL] [Whisper STT] [en] [3.50s -> 5.52s]: Since I started learning communication,
+[08:51:26] [FINAL] [Whisper STT] [en] [5.72s -> 8.00s]: since I started applying communication in my life,
+[08:51:26] [FINAL] [Whisper STT] [en] [8.14s -> 10.08s]: I found a lot of difference
+[08:51:26] [FINAL] [Whisper STT] [en] [10.08s -> 12.76s]: and obstacles reduce a lot.
+[08:51:26] [FINAL] [Whisper STT] [en] [14.16s -> 15.34s]: How can you prove
+[08:51:26] [FINAL] [Whisper STT] [en] [15.34s -> 16.36s]: and how can you say
+[08:51:26] [FINAL] [Whisper STT] [en] [16.36s -> 17.34s]: and how can you claim
+[08:51:26] [FINAL] [Whisper STT] [en] [17.34s -> 19.32s]: that obstacles are reduced
+[08:51:26] [FINAL] [Whisper STT] [en] [19.32s -> 20.48s]: through or with the help
+[08:51:26] [FINAL] [Whisper STT] [en] [20.48s -> 21.28s]: of communication?
+[08:51:26] [FINAL] [Whisper STT] [en] [22.28s -> 23.48s]: Okay, so one thing is
+[08:51:26] [FINAL] [Whisper STT] [en] [23.48s -> 25.46s]: there is one major topic
+[08:51:26] [FINAL] [Whisper STT] [en] [25.46s -> 26.16s]: in communication
+[08:51:26] [FINAL] [Whisper STT] [en] [26.16s -> 27.96s]: which I use as a
+[08:51:26] [FINAL] [Whisper STT] [en] [27.96s -> 34.14s]: Hukunga Ikka for my kind of communication courses that is non-violent
+[08:51:26] [FINAL] [Whisper STT] [en] [34.14s -> 38.00s]: communication. Non-violent communication? Yes, so first we have to go through many
+[08:51:26] [FINAL] [Whisper STT] [en] [38.00s -> 42.68s]: things for non-volent communication basic things we have to go through to
+[08:51:26] [FINAL] [Whisper STT] [en] [42.68s -> 46.70s]: able to learn a non-violent communication so we don't teach it
+[08:51:26] [FINAL] [Whisper STT] [en] [46.70s -> 51.60s]: directly but it's because it's very heavy kind of stuff and it takes a lot
+[08:51:26] [FINAL] [Whisper STT] [en] [51.60s -> 56.38s]: to learn and really practice it. So when we do non-volent communication the word
+[08:51:26] [FINAL] [Whisper STT] [en] [56.38s -> 62.36s]: is self means non-violent so yeah the simple definition of non-violent is um communicating
+[08:51:26] [FINAL] [Whisper STT] [en] [62.36s -> 69.26s]: expressing our needs expressing our desires without blaming without disrespecting other
+[08:51:26] [FINAL] [Whisper STT] [en] [69.26s -> 76.22s]: that is the basic nowadays disrespect or violence is increasing in the communication
+[08:51:26] [FINAL] [Whisper STT] [en] [76.22s -> 81.82s]: we can say communication or in the language also nowadays language is being so vulgar so violent
+[08:51:26] [FINAL] [Whisper STT] [en] [81.82s -> 87.38s]: all right and so uh frustrating language it's being or irritating language what do you think
+[08:51:26] [FINAL] [Whisper STT] [en] [87.38s -> 91.26s]: about this and how to control this and how to still keep our communication so polite
+[08:51:26] [FINAL] [Whisper STT] [en] [91.26s -> 98.86s]: and while it's pretty one thing is of course learning a technique from the non-violent
+[08:51:26] [FINAL] [Whisper STT] [en] [98.86s -> 104.94s]: communication apart from that if we are not healed within if we have lot of traumas from past
+[08:51:26] [FINAL] [Whisper STT] [en] [104.94s -> 111.28s]: if we have a lot of grudges from the past or negative experiences so then it will show in
+[08:51:26] [FINAL] [Whisper STT] [en] [111.28s -> 115.76s]: our language. So suppose I have done course from some personality development on communication
+[08:51:26] [FINAL] [Whisper STT] [en] [115.76s -> 119.70s]: I've learned some sentences how to talk what to talk but if my wife
+
+--------------------------------------------------------------------------------
+=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 08:51:26 ===
+--------------------------------------------------------------------------------
+[08:51:28] [PARTIAL] [Whisper STT] [en] [0.00s -> 1.00s]: How can you prove an
+[08:51:28] [PARTIAL] [Whisper Live STT] [en] [156.27s -> 157.29s]: How can you prove an
+[08:51:29] [PARTIAL] [Whisper STT] [en] [0.00s -> 1.88s]: How can you prove and how can you say?
+[08:51:29] [PARTIAL] [Whisper Live STT] [en] [156.27s -> 158.32s]: How can you prove and how can you say?
+[08:51:30] [PARTIAL] [Whisper STT] [en] [0.00s -> 1.88s]: How can you prove and how can you say
+[08:51:30] [PARTIAL] [Whisper STT] [en] [1.88s -> 3.04s]: And how can you claim that
+[08:51:30] [PARTIAL] [Whisper Live STT] [en] [156.27s -> 159.34s]: How can you prove and how can you say And how can you claim that
+[08:51:31] [PARTIAL] [Whisper STT] [en] [0.00s -> 1.88s]: How can you prove and how can you say
+[08:51:31] [PARTIAL] [Whisper STT] [en] [1.88s -> 3.54s]: And how can you claim that obstacle
+[08:51:31] [PARTIAL] [Whisper Live STT] [en] [156.27s -> 160.37s]: How can you prove and how can you say And how can you claim that obstacle
+[08:51:32] [PARTIAL] [Whisper STT] [en] [0.00s -> 1.88s]: How can you prove and how can you say
+[08:51:32] [PARTIAL] [Whisper STT] [en] [1.88s -> 4.76s]: And how can you claim that obstacles are reduced
+[08:51:32] [PARTIAL] [Whisper Live STT] [en] [156.27s -> 161.39s]: How can you prove and how can you say And how can you claim that obstacles are reduced
+[08:51:33] [PARTIAL] [Whisper STT] [en] [0.00s -> 1.88s]: How can you prove and how can you say
+[08:51:33] [PARTIAL] [Whisper STT] [en] [1.88s -> 4.82s]: And how can you claim that obstacles are reduced
+[08:51:33] [PARTIAL] [Whisper STT] [en] [4.82s -> 6.12s]: Through or with the help of
+[08:51:33] [PARTIAL] [Whisper Live STT] [en] [156.27s -> 162.41s]: How can you prove and how can you say And how can you claim that obstacles are reduced Through or with the help of
+[08:51:34] [PARTIAL] [Whisper STT] [en] [0.00s -> 1.88s]: how can you prove and how can you say
+[08:51:34] [PARTIAL] [Whisper STT] [en] [1.88s -> 4.84s]: and how can you claim that obstacles are reduced
+[08:51:34] [PARTIAL] [Whisper STT] [en] [4.84s -> 6.78s]: through or with the help of communication.
+[08:51:34] [PARTIAL] [Whisper Live STT] [en] [156.27s -> 163.44s]: how can you prove and how can you say and how can you claim that obstacles are reduced through or with the help of communication.
+[08:51:36] [FINAL] [Whisper STT] [en] [0.00s -> 5.60s]: how can you prove and how can you say and how can you claim that obstacles are reduced through or
+[08:51:36] [FINAL] [Whisper STT] [en] [5.60s -> 7.26s]: with the help of communication is because
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: 02RRZsuhc6U] (Window: 996.0s - 1116.0s) | Started at: 2026-10-17 08:52:53 ===
+--------------------------------------------------------------------------------
+[08:53:00] [FINAL] [Whisper STT] [en] [0.00s -> 0.90s]: I'll be polite
+[08:53:00] [FINAL] [Whisper STT] [en] [0.90s -> 2.32s]: and then that's how
+[08:53:00] [FINAL] [Whisper STT] [en] [2.32s -> 3.02s]: we can become
+[08:53:00] [FINAL] [Whisper STT] [en] [3.02s -> 3.92s]: more and more
+[08:53:00] [FINAL] [Whisper STT] [en] [3.92s -> 4.62s]: and more polite
+[08:53:00] [FINAL] [Whisper STT] [en] [4.62s -> 5.38s]: so when
+[08:53:00] [FINAL] [Whisper STT] [en] [5.38s -> 6.42s]: we have worked
+[08:53:00] [FINAL] [Whisper STT] [en] [6.42s -> 6.82s]: within
+[08:53:00] [FINAL] [Whisper STT] [en] [6.82s -> 8.08s]: our emotion is
+[08:53:00] [FINAL] [Whisper STT] [en] [8.68s -> 9.20s]: exhausted
+[08:53:00] [FINAL] [Whisper STT] [en] [9.20s -> 10.26s]: and hatred
+[08:53:00] [FINAL] [Whisper STT] [en] [10.26s -> 11.34s]: is exhausted
+[08:53:00] [FINAL] [Whisper STT] [en] [11.34s -> 12.30s]: and again
+[08:53:00] [FINAL] [Whisper STT] [en] [12.30s -> 12.90s]: the practice
+[08:53:00] [FINAL] [Whisper STT] [en] [12.90s -> 13.56s]: doing it
+[08:53:00] [FINAL] [Whisper STT] [en] [13.56s -> 13.90s]: again and
+[08:53:00] [FINAL] [Whisper STT] [en] [13.90s -> 14.12s]: again
+[08:53:00] [FINAL] [Whisper STT] [en] [14.12s -> 15.00s]: being aware
+[08:53:00] [FINAL] [Whisper STT] [en] [15.00s -> 15.54s]: about it
+[08:53:00] [FINAL] [Whisper STT] [en] [15.54s -> 15.84s]: again and
+[08:53:00] [FINAL] [Whisper STT] [en] [15.84s -> 16.06s]: again
+[08:53:00] [FINAL] [Whisper STT] [en] [16.06s -> 16.84s]: in one way
+[08:53:00] [FINAL] [Whisper STT] [en] [16.84s -> 17.24s]: it will not
+[08:53:00] [FINAL] [Whisper STT] [en] [17.24s -> 17.50s]: come
+[08:53:00] [FINAL] [Whisper STT] [en] [17.50s -> 18.22s]: in just
+[08:53:00] [FINAL] [Whisper STT] [en] [18.22s -> 18.58s]: one go
+[08:53:00] [FINAL] [Whisper STT] [en] [18.58s -> 18.78s]: it will
+[08:53:00] [FINAL] [Whisper STT] [en] [18.78s -> 19.12s]: not come
+[08:53:00] [FINAL] [Whisper STT] [en] [19.12s -> 19.28s]: it's not
+[08:53:00] [FINAL] [Whisper STT] [en] [19.28s -> 19.62s]: like a
+[08:53:00] [FINAL] [Whisper STT] [en] [19.62s -> 20.28s]: quick injection
+[08:53:00] [FINAL] [Whisper STT] [en] [21.96s -> 23.00s]: there is
+[08:53:00] [FINAL] [Whisper STT] [en] [23.00s -> 23.42s]: a very
+[08:53:00] [FINAL] [Whisper STT] [en] [23.42s -> 24.08s]: important point
+[08:53:00] [FINAL] [Whisper STT] [en] [24.08s -> 24.56s]: that is
+[08:53:00] [FINAL] [Whisper STT] [en] [24.56s -> 25.60s]: to understand
+[08:53:00] [FINAL] [Whisper STT] [en] [25.60s -> 26.84s]: the hidden
+[08:53:00] [FINAL] [Whisper STT] [en] [26.84s -> 27.34s]: part of
+[08:53:00] [FINAL] [Whisper STT] [en] [27.34s -> 27.84s]: communication
+[08:53:00] [FINAL] [Whisper STT] [en] [27.84s -> 28.42s]: sometimes
+[08:53:00] [FINAL] [Whisper STT] [en] [28.42s -> 29.04s]: we say
+[08:53:00] [FINAL] [Whisper STT] [en] [29.04s -> 29.34s]: something
+[08:53:00] [FINAL] [Whisper STT] [en] [29.34s -> 29.62s]: different
+[08:53:00] [FINAL] [Whisper STT] [en] [29.62s -> 30.70s]: But we feel something different
+[08:53:00] [FINAL] [Whisper STT] [en] [30.70s -> 31.52s]: We say
+[08:53:00] [FINAL] [Whisper STT] [en] [31.52s -> 33.10s]: I hate you so much
+[08:53:00] [FINAL] [Whisper STT] [en] [33.10s -> 34.32s]: But somewhere in hate
+[08:53:00] [FINAL] [Whisper STT] [en] [34.32s -> 34.94s]: We have love
+[08:53:00] [FINAL] [Whisper STT] [en] [35.42s -> 36.32s]: And we say
+[08:53:00] [FINAL] [Whisper STT] [en] [36.32s -> 37.24s]: I love you so much
+[08:53:00] [FINAL] [Whisper STT] [en] [37.24s -> 37.98s]: Then there is
+[08:53:00] [FINAL] [Whisper STT] [en] [37.98s -> 39.02s]: Hate in the love
+[08:53:00] [FINAL] [Whisper STT] [en] [39.02s -> 40.72s]: So how to understand
+[08:53:00] [FINAL] [Whisper STT] [en] [40.72s -> 41.26s]: The hidden part
+[08:53:00] [FINAL] [Whisper STT] [en] [41.26s -> 41.72s]: Like bacha
+[08:53:00] [FINAL] [Whisper STT] [en] [41.72s -> 42.80s]: The kid comes and says
+[08:53:00] [FINAL] [Whisper STT] [en] [42.80s -> 43.34s]: Mama
+[08:53:00] [FINAL] [Whisper STT] [en] [43.34s -> 43.76s]: Mama
+[08:53:00] [FINAL] [Whisper STT] [en] [43.76s -> 44.94s]: I love you so much
+[08:53:00] [FINAL] [Whisper STT] [en] [44.94s -> 46.06s]: Mama understands
+[08:53:00] [FINAL] [Whisper STT] [en] [46.06s -> 47.44s]: Oh bacha has made any mistake
+[08:53:00] [FINAL] [Whisper STT] [en] [47.44s -> 48.72s]: Or bacha has just
+[08:53:00] [FINAL] [Whisper STT] [en] [48.72s -> 48.94s]: You know
+[08:53:00] [FINAL] [Whisper STT] [en] [48.94s -> 50.34s]: Just he wants something out of me
+[08:53:00] [FINAL] [Whisper STT] [en] [50.34s -> 51.20s]: Like he wants some money
+[08:53:00] [FINAL] [Whisper STT] [en] [51.20s -> 52.30s]: How do you understand
+[08:53:00] [FINAL] [Whisper STT] [en] [52.30s -> 52.94s]: Hidden part
+[08:53:00] [FINAL] [Whisper STT] [en] [52.94s -> 53.58s]: And the emotions
+[08:53:00] [FINAL] [Whisper STT] [en] [53.58s -> 54.48s]: Of the communications
+[08:53:00] [FINAL] [Whisper STT] [en] [55.02s -> 55.96s]: The hidden parts
+[08:53:00] [FINAL] [Whisper STT] [en] [55.96s -> 56.58s]: With communication
+[08:53:00] [FINAL] [Whisper STT] [en] [56.58s -> 58.00s]: Indirect communication
+[08:53:00] [FINAL] [Whisper STT] [en] [58.00s -> 59.00s]: How to understand that
+[08:53:00] [FINAL] [Whisper STT] [en] [59.00s -> 65.54s]: indirect communication one thing is of course taking the pause and not listening just word
+[08:53:00] [FINAL] [Whisper STT] [en] [65.54s -> 71.56s]: but also listening to the person their body language or their tone and where it is coming
+[08:53:00] [FINAL] [Whisper STT] [en] [71.56s -> 78.58s]: from taking a pause if we still confuse we don't know generally girls and women can sense it what
+[08:53:00] [FINAL] [Whisper STT] [en] [78.58s -> 84.06s]: is the reason behind it but sometimes we are clueless what's happening and what other person
+[08:53:00] [FINAL] [Whisper STT] [en] [84.06s -> 89.62s]: is saying and where this is coming from so asking question probing a lot will help okay so this is
+[08:53:00] [FINAL] [Whisper STT] [en] [89.62s -> 95.28s]: one basic technique don't you think like if we probe a lot he or she may be offended as well why
+[08:53:00] [FINAL] [Whisper STT] [en] [95.28s -> 99.92s]: are you asking so many and multiple questions i guess i was saying that please don't torture me
+[08:53:00] [FINAL] [Whisper STT] [en] [99.92s -> 105.76s]: don't disturb me why are you just asking like a cbi right no no don't even probing a lot uh will
+[08:53:00] [FINAL] [Whisper STT] [en] [105.76s -> 110.10s]: create a blunder or problem between the both it depends how we are asking if you're asking
+[08:53:00] [FINAL] [Whisper STT] [en] [110.10s -> 117.42s]: like an interview definitely yes if we are asking was out of the no i we asked
+[08:53:00] [FINAL] [Whisper STT] [en] [117.42s -> 119.70s]: like as a curiosity and genuinely
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: 02RRZsuhc6U] (Window: 1135.0s - 1255.0s) | Started at: 2026-10-17 08:53:46 ===
+--------------------------------------------------------------------------------
+[08:53:52] [FINAL] [Whisper STT] [en] [0.00s -> 5.52s]: of genuine knowing that i want to understand i want to know then other person will not get offended
+[08:53:52] [FINAL] [Whisper STT] [en] [5.52s -> 10.32s]: the problem in this competitive world or in this modern world or in this selfish word there is a
+[08:53:52] [FINAL] [Whisper STT] [en] [10.32s -> 16.16s]: problem like people listen but they don't understand people just see you but they don't feel
+[08:53:52] [FINAL] [Whisper STT] [en] [16.16s -> 20.62s]: you and people just give you time but they don't give you their hearts it's like you know
+[08:53:52] [FINAL] [Whisper STT] [en] [20.62s -> 25.86s]: it's like a very show-off type of world right you know so what he in that communication we say
+[08:53:52] [FINAL] [Whisper STT] [en] [25.86s -> 27.18s]: yes, I understand
+[08:53:52] [FINAL] [Whisper STT] [en] [27.18s -> 28.44s]: okay, you have the problem
+[08:53:52] [FINAL] [Whisper STT] [en] [28.44s -> 29.76s]: go ahead and take medicines
+[08:53:52] [FINAL] [Whisper STT] [en] [29.76s -> 30.56s]: ok, fever
+[08:53:52] [FINAL] [Whisper STT] [en] [30.56s -> 31.42s]: let's drink
+[08:53:52] [FINAL] [Whisper STT] [en] [31.42s -> 32.02s]: let's drink
+[08:53:52] [FINAL] [Whisper STT] [en] [32.02s -> 33.06s]: it's like
+[08:53:52] [FINAL] [Whisper STT] [en] [33.06s -> 34.78s]: I will drink
+[08:53:52] [FINAL] [Whisper STT] [en] [34.78s -> 35.84s]: but what do you do?
+[08:53:52] [FINAL] [Whisper STT] [en] [36.08s -> 36.60s]: what do you do?
+[08:53:52] [FINAL] [Whisper STT] [en] [36.98s -> 37.54s]: where do you do?
+[08:53:52] [FINAL] [Whisper STT] [en] [38.18s -> 38.76s]: so that is what
+[08:53:52] [FINAL] [Whisper STT] [en] [38.76s -> 39.48s]: I just want to know
+[08:53:52] [FINAL] [Whisper STT] [en] [39.48s -> 41.66s]: how to be very sympathetic
+[08:53:52] [FINAL] [Whisper STT] [en] [41.66s -> 43.36s]: and empathetic communicator
+[08:53:52] [FINAL] [Whisper STT] [en] [43.36s -> 44.34s]: and listener as well
+[08:53:52] [FINAL] [Whisper STT] [en] [44.34s -> 45.14s]: how to be a great
+[08:53:52] [FINAL] [Whisper STT] [en] [45.14s -> 45.98s]: and effective listener
+[08:53:52] [FINAL] [Whisper STT] [en] [46.66s -> 48.10s]: there is one beautiful video
+[08:53:52] [FINAL] [Whisper STT] [en] [48.10s -> 48.58s]: in YouTube
+[08:53:52] [FINAL] [Whisper STT] [en] [48.58s -> 49.30s]: you can search
+[08:53:52] [FINAL] [Whisper STT] [en] [49.30s -> 50.16s]: and that is
+[08:53:52] [FINAL] [Whisper STT] [en] [50.16s -> 51.80s]: sympathy versus empathy
+[08:53:52] [FINAL] [Whisper STT] [en] [51.80s -> 52.60s]: and I think
+[08:53:52] [FINAL] [Whisper STT] [en] [52.60s -> 53.04s]: it says
+[08:53:52] [FINAL] [Whisper STT] [en] [53.04s -> 54.44s]: pull a beer
+[08:53:52] [FINAL] [Whisper STT] [en] [54.44s -> 60.84s]: there's it's cartoon okay yeah two three minutes hardly okay it's beautiful yeah sympathy versus
+[08:53:52] [FINAL] [Whisper STT] [en] [60.84s -> 65.82s]: empathy story it's beautifully shown what is the difference between sympathy and empathy so what
+[08:53:52] [FINAL] [Whisper STT] [en] [65.82s -> 70.68s]: you just said generally we do sympathy it's like helping out other person okay
+[08:53:52] [FINAL] [Whisper STT] [en] [70.68s -> 80.14s]: empathy is like putting ourself in other person's shoes mostly 99 percent people don't want advice
+[08:53:52] [FINAL] [Whisper STT] [en] [80.80s -> 82.04s]: they don't want advice
+[08:53:52] [FINAL] [Whisper STT] [en] [82.04s -> 83.96s]: they just want someone to be heard
+[08:53:52] [FINAL] [Whisper STT] [en] [83.96s -> 85.50s]: they just want to be heard
+[08:53:52] [FINAL] [Whisper STT] [en] [88.64s -> 90.60s]: it's like a garbage within us
+[08:53:52] [FINAL] [Whisper STT] [en] [90.60s -> 92.00s]: and that we want to just pour out
+[08:53:52] [FINAL] [Whisper STT] [en] [92.00s -> 94.38s]: and someone wants
+[08:53:52] [FINAL] [Whisper STT] [en] [94.38s -> 96.42s]: like we just want someone who can hear us
+[08:53:52] [FINAL] [Whisper STT] [en] [97.36s -> 98.26s]: why people
+[08:53:52] [FINAL] [Whisper STT] [en] [98.26s -> 100.22s]: don't listen, why people just are
+[08:53:52] [FINAL] [Whisper STT] [en] [100.22s -> 101.76s]: so selfish, they talk about themselves
+[08:53:52] [FINAL] [Whisper STT] [en] [101.76s -> 103.02s]: I, I, I
+[08:53:52] [FINAL] [Whisper STT] [en] [103.02s -> 104.74s]: and they become meh, meh, meh
+[08:53:52] [FINAL] [Whisper STT] [en] [104.74s -> 105.68s]: and they become a goat
+[08:53:52] [FINAL] [Whisper STT] [en] [105.68s -> 108.26s]: so that is what I just wanna ask
+[08:53:52] [FINAL] [Whisper STT] [en] [108.26s -> 111.04s]: that how to actually listen with heart.
+[08:53:52] [FINAL] [Whisper STT] [en] [111.86s -> 113.70s]: People are in so rush nowadays
+[08:53:52] [FINAL] [Whisper STT] [en] [113.70s -> 115.92s]: that's why they give you their ears
+[08:53:52] [FINAL] [Whisper STT] [en] [115.92s -> 116.96s]: but they don't give you
+[08:53:52] [FINAL] [Whisper STT] [en] [116.96s -> 118.70s]: their complete focus.
+[08:53:52] [FINAL] [Whisper STT] [en] [119.10s -> 119.80s]: Why is it so?
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: vid-002] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 08:59:06 ===
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: vid-002] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 09:09:49 ===
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: vid-002] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 09:14:40 ===
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: vid-002] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 09:17:05 ===
+--------------------------------------------------------------------------------
