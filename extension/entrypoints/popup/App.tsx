@@ -20,12 +20,13 @@ import {
   type LiveSubSettings,
 } from '../../src/settings/settings';
 import { parseVideoId } from '../../src/youtube/video-id';
+import { VocabularyView } from '../../src/learning/VocabularyView';
 import './popup.css';
 
 type TabStatus = { kind: 'loading' } | { kind: 'video'; videoId: string } | { kind: 'other' };
-type ExportFormat = 'srt' | 'vtt' | 'json';
-type ExportScope = 'all' | 'playback';
-type ActiveNavTab = 'subtitles' | 'transcript' | 'tools';
+export type ExportFormat = 'srt' | 'vtt' | 'json';
+export type ExportScope = 'all' | 'playback';
+type ActiveNavTab = 'subtitles' | 'transcript' | 'vocabulary' | 'tools';
 type ActiveDrawer = null | 'appearance' | 'vocabulary' | 'export' | 'more' | 'detected-lang';
 
 interface RawCue {
@@ -375,6 +376,15 @@ export default function App() {
         <button
           type="button"
           role="tab"
+          aria-selected={navTab === 'vocabulary'}
+          className={`nav-tab-btn ${navTab === 'vocabulary' ? 'nav-tab-btn--active' : ''}`}
+          onClick={() => setNavTab('vocabulary')}
+        >
+          Vocabulary
+        </button>
+        <button
+          type="button"
+          role="tab"
           aria-selected={navTab === 'tools'}
           className={`nav-tab-btn ${navTab === 'tools' ? 'nav-tab-btn--active' : ''}`}
           onClick={() => setNavTab('tools')}
@@ -588,8 +598,8 @@ export default function App() {
 
             <button
               type="button"
-              className={`action-btn-card ${activeDrawer === 'vocabulary' ? 'action-btn-card--active' : ''}`}
-              onClick={() => setActiveDrawer('vocabulary')}
+              className={`action-btn-card ${navTab === 'vocabulary' ? 'action-btn-card--active' : ''}`}
+              onClick={() => setNavTab('vocabulary')}
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
@@ -665,6 +675,9 @@ export default function App() {
           )}
         </div>
       )}
+
+      {/* ---------- View: Vocabulary Tab ---------- */}
+      {navTab === 'vocabulary' && <VocabularyView />}
 
       {/* ---------- View: Tools Tab ---------- */}
       {navTab === 'tools' && (
@@ -927,29 +940,12 @@ export default function App() {
       {/* 3. Vocabulary Drawer */}
       {activeDrawer === 'vocabulary' && (
         <div className="drawer-backdrop" onClick={() => setActiveDrawer(null)}>
-          <div className="drawer-content" onClick={(e) => e.stopPropagation()}>
+          <div className="drawer-content" style={{ maxHeight: '90vh' }} onClick={(e) => e.stopPropagation()}>
             <div className="drawer-header">
-              <h3 className="drawer-title">Phonetic & Idiom Normalization</h3>
+              <h3 className="drawer-title">Personal Vocabulary</h3>
               <button className="btn-drawer-close" onClick={() => setActiveDrawer(null)}>✕</button>
             </div>
-
-            <div style={{ fontSize: '12px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
-              LiveSub automatically repairs noisy Whisper speech-to-text outputs using Grok and Sarvam AI models.
-            </div>
-
-            <div className="info-card">
-              <div className="info-card-texts">
-                <span className="info-card-label">Hindi Idiom Normalization</span>
-                <span className="info-card-value">"दाल में कुछ काला है" → "Something is fishy"</span>
-              </div>
-            </div>
-
-            <div className="info-card">
-              <div className="info-card-texts">
-                <span className="info-card-label">Acoustic Misspelling Filter</span>
-                <span className="info-card-value">"भागध्याना" / "Can Barna" → "भाग जाना" / "कान भरना"</span>
-              </div>
-            </div>
+            <VocabularyView />
           </div>
         </div>
       )}
