@@ -18,6 +18,7 @@ import {
   saveSettings,
   type LangCode,
   type LiveSubSettings,
+  type SourceLang,
 } from '../../src/settings/settings';
 import { parseVideoId } from '../../src/youtube/video-id';
 import './popup.css';
@@ -25,8 +26,8 @@ import './popup.css';
 type TabStatus = { kind: 'loading' } | { kind: 'video'; videoId: string } | { kind: 'other' };
 type ExportFormat = 'srt' | 'vtt' | 'json';
 type ExportScope = 'all' | 'playback';
-type ActiveNavTab = 'subtitles' | 'transcript' | 'tools';
-type ActiveDrawer = null | 'appearance' | 'vocabulary' | 'export' | 'more' | 'detected-lang';
+type ActiveNavTab = 'subtitles' | 'transcript';
+type ActiveDrawer = null | 'appearance' | 'export' | 'settings';
 
 interface RawCue {
   id: string;
@@ -44,6 +45,7 @@ const LANGUAGE_FLAGS: Record<string, string> = {
   mr: '🇮🇳',
   ta: '🇮🇳',
   te: '🇮🇳',
+  auto: '🌐',
 };
 
 const LANGUAGE_NAMES: Record<string, string> = {
@@ -52,6 +54,7 @@ const LANGUAGE_NAMES: Record<string, string> = {
   mr: 'Marathi (मराठी)',
   ta: 'Tamil (தமிழ்)',
   te: 'Telugu (తెలుగు)',
+  auto: 'Auto-detect',
 };
 
 function formatClock(t: number): string {
@@ -70,7 +73,7 @@ export default function App() {
   const [videoTitle, setVideoTitle] = useState<string | null>(null);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [sessionCues, setSessionCues] = useState<RawCue[]>([]);
-  
+
   // Navigation & Drawer state
   const [navTab, setNavTab] = useState<ActiveNavTab>('subtitles');
   const [activeDrawer, setActiveDrawer] = useState<ActiveDrawer>(null);
@@ -351,7 +354,7 @@ export default function App() {
             type="button"
             className="btn-icon-gear"
             title="Settings & Diagnostics"
-            onClick={() => setActiveDrawer('more')}
+            onClick={() => setActiveDrawer('settings')}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="12" cy="12" r="3" />
@@ -361,7 +364,7 @@ export default function App() {
         </div>
       </header>
 
-      {/* ---------- Top Segmented Control ---------- */}
+      {/* ---------- Top Segmented Control (Subtitles vs Transcript) ---------- */}
       <nav className="nav-segmented" role="tablist">
         <button
           type="button"
@@ -380,15 +383,6 @@ export default function App() {
           onClick={() => setNavTab('transcript')}
         >
           Transcript
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={navTab === 'tools'}
-          className={`nav-tab-btn ${navTab === 'tools' ? 'nav-tab-btn--active' : ''}`}
-          onClick={() => setNavTab('tools')}
-        >
-          Tools
         </button>
       </nav>
 
@@ -462,7 +456,7 @@ export default function App() {
             </div>
           </section>
 
-          {/* Target Language */}
+          {/* Target Language Selection */}
           <section className="section-block">
             <h2 className="section-label">Target Language</h2>
             <div className="lang-selector-wrap">
@@ -495,66 +489,31 @@ export default function App() {
             </div>
           </section>
 
-          {/* Telemetry & Source Cards */}
-          <div className="info-card-list">
-            {/* Detected Language Card */}
-            <div
-              className="info-card"
-              role="button"
-              tabIndex={0}
-              onClick={() => setActiveDrawer('detected-lang')}
-            >
-              <div className="info-card-left">
-                <div className="info-badge-icon info-badge-icon--purple">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M12 2v20M17 5v14M7 9v6M22 10v4M2 11v2" />
-                  </svg>
-                </div>
-                <div className="info-card-texts">
-                  <span className="info-card-label">Detected Language</span>
-                  <span className="info-card-value">Hindi (86%) + English (14%)</span>
-                </div>
-              </div>
-              <div className="info-card-arrow">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <polyline points="9 18 15 12 9 6" />
+          {/* Truthful Connection Status Card */}
+          <div className="info-card">
+            <div className="info-card-left">
+              <div className="info-badge-icon info-badge-icon--green">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="2" y="3" width="20" height="14" rx="2" />
+                  <line x1="8" y1="21" x2="16" y2="21" />
+                  <line x1="12" y1="17" x2="12" y2="21" />
                 </svg>
               </div>
-            </div>
-
-            {/* Source Card */}
-            <div
-              className="info-card"
-              role="button"
-              tabIndex={0}
-              onClick={startAudioCaptureFromPopup}
-              title="Click to toggle tab audio streaming"
-            >
-              <div className="info-card-left">
-                <div className="info-badge-icon info-badge-icon--green">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <rect x="2" y="3" width="20" height="14" rx="2" />
-                    <line x1="8" y1="21" x2="16" y2="21" />
-                    <line x1="12" y1="17" x2="12" y2="21" />
-                  </svg>
-                </div>
-                <div className="info-card-texts">
-                  <span className="info-card-label">Source</span>
-                  <span className="info-card-value">
-                    <span style={{ color: '#16a34a', fontSize: '10px' }}>●</span>{' '}
-                    {capturing ? 'STT (Live Audio)' : 'STT (Live Audio)'}
-                  </span>
-                </div>
-              </div>
-              <div className="info-card-arrow">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <polyline points="9 18 15 12 9 6" />
-                </svg>
+              <div className="info-card-texts">
+                <span className="info-card-label">
+                  {tab.kind === 'video' ? 'YouTube Player Connected' : 'Ready for YouTube'}
+                </span>
+                <span className="info-card-value">
+                  <span style={{ color: isLive ? '#16a34a' : '#d97706', fontSize: '10px' }}>●</span>{' '}
+                  {tab.kind === 'video'
+                    ? (videoTitle ? (videoTitle.length > 28 ? `${videoTitle.slice(0, 28)}…` : videoTitle) : `Video: ${tab.videoId}`)
+                    : 'Open any YouTube video to activate'}
+                </span>
               </div>
             </div>
           </div>
 
-          {/* Primary Action Button */}
+          {/* Primary Action Button (Start / Stop Subtitles) */}
           <button
             id="toggle-enabled"
             type="button"
@@ -578,7 +537,7 @@ export default function App() {
             )}
           </button>
 
-          {/* Bottom Action Grid */}
+          {/* Bottom Action Grid: 3 Working High-Value Tools */}
           <div className="action-grid">
             <button
               type="button"
@@ -597,18 +556,6 @@ export default function App() {
 
             <button
               type="button"
-              className={`action-btn-card ${activeDrawer === 'vocabulary' ? 'action-btn-card--active' : ''}`}
-              onClick={() => setActiveDrawer('vocabulary')}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-              </svg>
-              <span>Vocabulary</span>
-            </button>
-
-            <button
-              type="button"
               className={`action-btn-card ${activeDrawer === 'export' ? 'action-btn-card--active' : ''}`}
               onClick={() => setActiveDrawer('export')}
             >
@@ -622,15 +569,14 @@ export default function App() {
 
             <button
               type="button"
-              className={`action-btn-card ${activeDrawer === 'more' ? 'action-btn-card--active' : ''}`}
-              onClick={() => setActiveDrawer('more')}
+              className={`action-btn-card ${activeDrawer === 'settings' ? 'action-btn-card--active' : ''}`}
+              onClick={() => setActiveDrawer('settings')}
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="1.5" fill="currentColor" />
-                <circle cx="19" cy="12" r="1.5" fill="currentColor" />
-                <circle cx="5" cy="12" r="1.5" fill="currentColor" />
+                <circle cx="12" cy="12" r="3" />
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
               </svg>
-              <span>More</span>
+              <span>Settings</span>
             </button>
           </div>
         </>
@@ -675,43 +621,8 @@ export default function App() {
         </div>
       )}
 
-      {/* ---------- View: Tools Tab ---------- */}
-      {navTab === 'tools' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <h2 className="section-label">Audio & Diagnostics Tools</h2>
-          <div className="info-card">
-            <div className="info-card-texts">
-              <span className="info-card-label">Active Tab</span>
-              <span className="info-card-value">
-                {tab.kind === 'video' ? `YouTube Video ID: ${tab.videoId}` : 'Non-video tab'}
-              </span>
-            </div>
-          </div>
-
-          {tab.kind === 'video' && (
-            <button
-              id="btn-start-audio"
-              type="button"
-              onClick={startAudioCaptureFromPopup}
-              className="btn-primary-cta"
-            >
-              {capturing ? '🟢 Live Audio Capture Active' : '🎙️ Start Tab Audio Stream'}
-            </button>
-          )}
-
-          <div className="info-card">
-            <div className="info-card-texts">
-              <span className="info-card-label">Recorded Session Cues</span>
-              <span className="info-card-value">
-                {sessionCueCount !== null ? `${sessionCueCount} cues accumulated` : '0 cues'}
-              </span>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* ---------- Modals / Drawers ---------- */}
-      
+
       {/* 1. Appearance Drawer */}
       {activeDrawer === 'appearance' && (
         <div className="drawer-backdrop" onClick={() => setActiveDrawer(null)}>
@@ -933,38 +844,8 @@ export default function App() {
         </div>
       )}
 
-      {/* 3. Vocabulary Drawer */}
-      {activeDrawer === 'vocabulary' && (
-        <div className="drawer-backdrop" onClick={() => setActiveDrawer(null)}>
-          <div className="drawer-content" onClick={(e) => e.stopPropagation()}>
-            <div className="drawer-header">
-              <h3 className="drawer-title">Phonetic & Idiom Normalization</h3>
-              <button className="btn-drawer-close" onClick={() => setActiveDrawer(null)}>✕</button>
-            </div>
-
-            <div style={{ fontSize: '12px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
-              LiveSub automatically repairs noisy Whisper speech-to-text outputs using Grok and Sarvam AI models.
-            </div>
-
-            <div className="info-card">
-              <div className="info-card-texts">
-                <span className="info-card-label">Hindi Idiom Normalization</span>
-                <span className="info-card-value">"दाल में कुछ काला है" → "Something is fishy"</span>
-              </div>
-            </div>
-
-            <div className="info-card">
-              <div className="info-card-texts">
-                <span className="info-card-label">Acoustic Misspelling Filter</span>
-                <span className="info-card-value">"भागध्याना" / "Can Barna" → "भाग जाना" / "कान भरना"</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 4. More & Developer Drawer */}
-      {activeDrawer === 'more' && (
+      {/* 3. Settings & Diagnostics Drawer */}
+      {activeDrawer === 'settings' && (
         <div className="drawer-backdrop" onClick={() => setActiveDrawer(null)}>
           <div className="drawer-content" onClick={(e) => e.stopPropagation()}>
             <div className="drawer-header">
@@ -972,6 +853,25 @@ export default function App() {
               <button className="btn-drawer-close" onClick={() => setActiveDrawer(null)}>✕</button>
             </div>
 
+            {/* Input Spoken Language */}
+            <div className="form-group">
+              <label className="form-label">Spoken Audio Language (Input)</label>
+              <select
+                id="select-source"
+                className="form-select"
+                value={settings.sourceLang}
+                onChange={(e) => update({ sourceLang: e.target.value as SourceLang })}
+              >
+                <option value="auto">🌐 Auto-detect (Recommended)</option>
+                <option value="hi">🇮🇳 Hindi (हिन्दी)</option>
+                <option value="en">🇺🇸 English</option>
+                <option value="mr">🇮🇳 Marathi (मराठी)</option>
+                <option value="ta">🇮🇳 Tamil (தமிழ்)</option>
+                <option value="te">🇮🇳 Telugu (తెలుగు)</option>
+              </select>
+            </div>
+
+            {/* Simulation Demo Mode */}
             <div className="toggle-row">
               <div>
                 <div style={{ fontWeight: 600, fontSize: '12.5px' }}>Simulation Demo Mode</div>
@@ -988,15 +888,19 @@ export default function App() {
               </button>
             </div>
 
-            <div className="info-card">
-              <div className="info-card-texts">
-                <span className="info-card-label">Backend STT Server</span>
-                <span className="info-card-value">
-                  <span style={{ color: '#16a34a', fontSize: '10px' }}>●</span> http://127.0.0.1:8765
-                </span>
-              </div>
-            </div>
+            {/* Manual Tab Audio Capture Button (useful if automatic permission requires user gesture) */}
+            {tab.kind === 'video' && (
+              <button
+                id="btn-reconnect-audio"
+                type="button"
+                className="btn-secondary"
+                onClick={startAudioCaptureFromPopup}
+              >
+                {capturing ? '🟢 Audio Streaming Active' : '🎙️ Re-connect Live Audio Stream'}
+              </button>
+            )}
 
+            {/* Reset All Settings */}
             <button
               id="btn-reset"
               type="button"
@@ -1008,35 +912,6 @@ export default function App() {
 
             <div style={{ textAlign: 'center', fontSize: '11px', color: 'var(--text-faint)', paddingTop: '4px' }}>
               LiveSub Extension v{browser.runtime.getManifest().version}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* 5. Detected Language Details Drawer */}
-      {activeDrawer === 'detected-lang' && (
-        <div className="drawer-backdrop" onClick={() => setActiveDrawer(null)}>
-          <div className="drawer-content" onClick={(e) => e.stopPropagation()}>
-            <div className="drawer-header">
-              <h3 className="drawer-title">Spoken Language Source</h3>
-              <button className="btn-drawer-close" onClick={() => setActiveDrawer(null)}>✕</button>
-            </div>
-
-            <div className="form-group">
-              <label className="form-label">Input Audio Language</label>
-              <select
-                id="select-source"
-                className="form-select"
-                value={settings.sourceLang}
-                onChange={(e) => update({ sourceLang: e.target.value as LiveSubSettings['sourceLang'] })}
-              >
-                <option value="auto">Auto-detect (Hindi 86% + English 14%)</option>
-                {LANGUAGES.map((l) => (
-                  <option key={l.code} value={l.code}>
-                    {l.label} ({l.native})
-                  </option>
-                ))}
-              </select>
             </div>
           </div>
         </div>
