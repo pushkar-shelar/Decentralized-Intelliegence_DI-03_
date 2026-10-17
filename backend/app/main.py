@@ -195,11 +195,14 @@ async def preprocess_video(req: PreProcessRequest):
 
             translation = None
             if unified_translator and req.target_lang:
-                translation = await unified_translator.translate(
+                norm_res = await unified_translator.normalize_and_translate(
                     text=text,
                     source_lang=detected_lang or "hi",
                     target_lang=req.target_lang,
                 )
+                if norm_res.get("corrected_text"):
+                    text = norm_res["corrected_text"]
+                translation = norm_res.get("translation")
 
             cues.append({
                 "id": f"pre-{req.video_id}-{idx}-{abs_start}",
@@ -272,12 +275,14 @@ async def audio_websocket_endpoint(websocket: WebSocket):
                     if unified_translator and target_lang and cue.get("text") and cue.get("is_final"):
                         if cue_lang.lower() != target_lang.lower():
                             try:
-                                translation = await unified_translator.translate(
+                                norm_res = await unified_translator.normalize_and_translate(
                                     text=cue["text"],
                                     source_lang=cue_lang,
                                     target_lang=target_lang,
                                 )
-                                cue["translation"] = translation
+                                if norm_res.get("corrected_text"):
+                                    cue["text"] = norm_res["corrected_text"]
+                                cue["translation"] = norm_res.get("translation")
                                 cue["translation_lang"] = target_lang
                             except Exception as e:
                                 print(f"[LiveSub WS] Translation error: {e}")

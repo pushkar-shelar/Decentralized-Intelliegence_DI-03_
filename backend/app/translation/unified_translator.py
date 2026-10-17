@@ -57,57 +57,80 @@ class UnifiedTranslator:
         clean = (code or "en").lower().split("-")[0]
         return self.SARVAM_CODE_MAP.get(clean, f"{clean}-IN")
 
+    async def normalize_and_translate(
+        self,
+        text: str,
+        source_lang: str = "hi",
+        target_lang: str = "en",
+    ) -> Dict[str, str]:
+        """
+        Takes raw ASR transcription (which may contain acoustic noise, phonetic misspellings,
+        or literal transliterations like 'Can Barna' or 'भागध्याना'),
+        corrects the intended native spoken words, and translates idiomatically.
+        Returns: {"corrected_text": str, "translation": str}
+        """
+        trimmed = (text or "").strip()
+        if not trimmed:
+            return {"corrected_text": "", "translation": ""}
+
+        src_clean = (source_lang or "hi").lower().split("-")[0]
+        tgt_clean = (target_lang or "en").lower().split("-")[0]
+
+        cache_key = f"{src_clean}->{tgt_clean}:{trimmed}"
+        if cache_key in self._cache:
+            cached = self._cache[cache_key]
+            if isinstance(cached, dict):
+                return cached
+            return {"corrected_text": trimmed, "translation": str(cached)}
+
+        # 1. Try Primary: Grok LLM with Noise & Misspelling Correction + Idiom Normalization
+        if self.grok_api_key and len(self.grok_api_key.strip()) > 5:
+            try:
+                res = await self._normalize_and_translate_with_grok(trimmed, src_clean, tgt_clean)
+                if res and res.get("translation"):
+                    self._cache[cache_key] = res
+                    return res
+            except Exception as e:
+                print(f"[UnifiedTranslator] Grok normalization failed, falling back: {e}")
+
+        # 2. Try Fallback: Sarvam Mayura
+        if self.sarvam_api_key and len(self.sarvam_api_key.strip()) > 5:
+            try:
+                trans = await self._translate_with_sarvam(trimmed, src_clean, tgt_clean)
+                if trans:
+                    result = {"corrected_text": trimmed, "translation": trans}
+                    self._cache[cache_key] = result
+                    return result
+            except Exception as e:
+                print(f"[UnifiedTranslator] Sarvam translation failed: {e}")
+
+        # Fallback: return original text
+        return {"corrected_text": trimmed, "translation": trimmed}
+
     async def translate(
         self,
         text: str,
         source_lang: str = "hi",
         target_lang: str = "en",
     ) -> str:
-        trimmed = (text or "").strip()
-        if not trimmed:
-            return ""
+        res = await self.normalize_and_translate(text, source_lang, target_lang)
+        return res.get("translation", text)
 
-        src_clean = (source_lang or "hi").lower().split("-")[0]
-        tgt_clean = (target_lang or "en").lower().split("-")[0]
-        if src_clean == tgt_clean:
-            return trimmed
-
-        cache_key = f"{src_clean}->{tgt_clean}:{trimmed}"
-        if cache_key in self._cache:
-            return self._cache[cache_key]
-
-        # 1. Try Primary: Groq LLM (High speed + Deep Idiom comprehension)
-        if self.grok_api_key and len(self.grok_api_key.strip()) > 5:
-            try:
-                translated = await self._translate_with_grok(trimmed, src_clean, tgt_clean)
-                if translated:
-                    self._cache[cache_key] = translated
-                    return translated
-            except Exception as e:
-                print(f"[UnifiedTranslator] Grok translation failed, falling back to Sarvam: {e}")
-
-        # 2. Try Fallback: Sarvam Mayura
-        if self.sarvam_api_key and len(self.sarvam_api_key.strip()) > 5:
-            try:
-                translated = await self._translate_with_sarvam(trimmed, src_clean, tgt_clean)
-                if translated:
-                    self._cache[cache_key] = translated
-                    return translated
-            except Exception as e:
-                print(f"[UnifiedTranslator] Sarvam translation failed: {e}")
-
-        # Final fallback: return original text
-        return trimmed
-
-    async def _translate_with_grok(self, text: str, src: str, tgt: str) -> Optional[str]:
+    async def _normalize_and_translate_with_grok(self, text: str, src: str, tgt: str) -> Optional[Dict[str, str]]:
         target_name = self._normalize_lang_name(tgt)
         source_name = self._normalize_lang_name(src)
 
         system_prompt = (
-            f"You are an expert culturally aware subtitle translator translating from {source_name} to {target_name}.\n"
-            f"Translate Indian idioms, proverbs (muhavre), metaphors, and colloquial speech into their natural {target_name} equivalent.\n"
-            f"Do not translate idioms literally. Preserve humor, sarcasm, tone, and double meanings.\n"
-            f"Output ONLY the translated subtitle text without any markdown, quotes, explanations, or preamble."
+            f"You are an expert culturally aware subtitle engine translating from {source_name} to {target_name}.\n"
+            f"The input is raw acoustic Speech-To-Text (ASR) transcription from Whisper which often contains acoustic noise, phonetic misspellings, or literal acoustic corruptions (e.g. 'भागध्याना' or 'Bhangdhyana' for 'भाग जाना', 'Can Barna' or 'feed the canal' for 'कान भरना' / gossip, 'पीट दिखाना' for 'पीठ दिखाना', 'आकाश छूना' as 'ah gosh', 'यूट्यूग' for 'यूट्यूब').\n\n"
+            f"Your task:\n"
+            f"1. FIRST: Correct and recover the intended spoken words and idioms in their proper native script ({source_name}).\n"
+            f"2. SECOND: Translate the true idiomatic meaning into natural, colloquial {target_name} without literal translation errors.\n\n"
+            f"Respond ONLY with a JSON object in this exact format:\n"
+            f"{{\n"
+            f'  "corrected_text": "<proper corrected native script>",\n'
+            f'  "translation": "<natural idiomatic {target_name} translation>"\n'
+            f"}}"
         )
 
         headers = {
@@ -115,16 +138,17 @@ class UnifiedTranslator:
             "Content-Type": "application/json",
         }
 
-        # Try fast models in order: openai/gpt-oss-120b, qwen/qwen3.8-27b
-        for model in ["openai/gpt-oss-120b", "qwen/qwen3.8-27b"]:
+        # Try fast models in order: qwen/qwen3.8-27b, openai/gpt-oss-120b
+        for model in ["qwen/qwen3.8-27b", "openai/gpt-oss-120b"]:
             payload = {
                 "model": model,
                 "messages": [
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": text},
                 ],
-                "temperature": 0.2,
-                "max_tokens": 150,
+                "temperature": 0.1,
+                "max_tokens": 180,
+                "response_format": {"type": "json_object"},
             }
 
             async with httpx.AsyncClient(timeout=6.0) as client:
@@ -133,9 +157,16 @@ class UnifiedTranslator:
                     data = res.json()
                     choices = data.get("choices", [])
                     if choices:
-                        content = choices[0].get("message", {}).get("content", "").strip()
-                        if content:
-                            return content
+                        raw_content = choices[0].get("message", {}).get("content", "").strip()
+                        try:
+                            parsed = json.loads(raw_content)
+                            if "translation" in parsed:
+                                return {
+                                    "corrected_text": parsed.get("corrected_text", text).strip(),
+                                    "translation": parsed.get("translation", "").strip(),
+                                }
+                        except Exception:
+                            return {"corrected_text": text, "translation": raw_content}
                 else:
                     print(f"[UnifiedTranslator] Grok model {model} returned HTTP {res.status_code}: {res.text}")
 
