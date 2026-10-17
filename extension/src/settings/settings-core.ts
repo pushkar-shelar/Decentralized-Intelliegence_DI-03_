@@ -31,8 +31,6 @@ export interface LiveSubSettings {
   bgOpacity: number;
   /** Distance from the bottom of the player, % of player height. */
   position: number;
-  /** Show demo cues (Phase 1 only, until real cue sources exist). */
-  demoMode: boolean;
 }
 
 export const LIMITS = {
@@ -49,7 +47,6 @@ export const DEFAULT_SETTINGS: Readonly<LiveSubSettings> = Object.freeze({
   fontSize: 21,
   bgOpacity: 0.75,
   position: 8,
-  demoMode: false,
 });
 
 const LANG_CODES = new Set<string>(LANGUAGES.map((l) => l.code));
@@ -87,6 +84,5 @@ export function mergeSettings(raw: unknown): LiveSubSettings {
     fontSize: num(r.fontSize, d.fontSize, LIMITS.fontSize),
     bgOpacity: num(r.bgOpacity, d.bgOpacity, LIMITS.bgOpacity),
     position: num(r.position, d.position, LIMITS.position),
-    demoMode: typeof r.demoMode === 'boolean' ? r.demoMode : d.demoMode,
   };
 }

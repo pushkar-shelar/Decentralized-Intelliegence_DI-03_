@@ -17,7 +17,6 @@ describe('mergeSettings', () => {
       fontSize: 32,
       bgOpacity: 0.8,
       position: 15,
-      demoMode: false,
     };
     expect(mergeSettings(custom)).toEqual(custom);
   });

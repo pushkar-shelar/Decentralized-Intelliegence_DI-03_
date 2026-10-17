@@ -318,18 +318,14 @@ export default function App() {
   const isLive = settings.enabled && tab.kind === 'video';
   const statusLabel = !settings.enabled
     ? 'Paused'
-    : settings.demoMode
-      ? 'Demo Mode'
-      : isLive
-        ? 'Active (Live)'
-        : 'Ready';
+    : isLive
+      ? 'Active (Live)'
+      : 'Ready';
   const statusClass = !settings.enabled
     ? 'status-pill--off'
-    : settings.demoMode
-      ? 'status-pill--idle'
-      : isLive
-        ? 'status-pill--active'
-        : 'status-pill--idle';
+    : isLive
+      ? 'status-pill--active'
+      : 'status-pill--idle';
 
   return (
     <div className="popup-container">
@@ -817,7 +813,7 @@ export default function App() {
                 id="btn-export-sub"
                 type="button"
                 className="btn-secondary"
-                disabled={exporting || tab.kind !== 'video' || (sessionCueCount === 0 && !settings.demoMode)}
+                disabled={exporting || tab.kind !== 'video' || sessionCueCount === 0}
                 onClick={handleExportDownload}
               >
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -832,7 +828,7 @@ export default function App() {
                 id="btn-copy-sub"
                 type="button"
                 className="btn-secondary"
-                disabled={exporting || tab.kind !== 'video' || (sessionCueCount === 0 && !settings.demoMode)}
+                disabled={exporting || tab.kind !== 'video' || sessionCueCount === 0}
                 onClick={handleCopySubtitles}
               >
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -873,23 +869,6 @@ export default function App() {
                 <option value="ta">🇮🇳 Tamil (தமிழ்)</option>
                 <option value="te">🇮🇳 Telugu (తెలుగు)</option>
               </select>
-            </div>
-
-            {/* Simulation Demo Mode */}
-            <div className="toggle-row">
-              <div>
-                <div style={{ fontWeight: 600, fontSize: '12.5px' }}>Simulation Demo Mode</div>
-                <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Generate cues tracking video clock</div>
-              </div>
-              <button
-                id="toggle-demo"
-                type="button"
-                className={`toggle-switch ${settings.demoMode ? 'is-checked' : ''}`}
-                onClick={() => update({ demoMode: !settings.demoMode })}
-                aria-label="Toggle Demo Mode"
-              >
-                <span className="toggle-thumb" />
-              </button>
             </div>
 
             {/* Manual Tab Audio Capture Button (useful if automatic permission requires user gesture) */}

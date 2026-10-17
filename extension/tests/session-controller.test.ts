@@ -59,28 +59,21 @@ describe('SessionController', () => {
     vi.restoreAllMocks();
   });
 
-  it('starts in demo mode when demoMode setting is enabled', async () => {
-    const settings = createStore<LiveSubSettings>({
-      ...DEFAULT_SETTINGS,
-      demoMode: true,
-    });
+  it('initializes real session cleanly on video change', async () => {
+    const settings = createStore<LiveSubSettings>({ ...DEFAULT_SETTINGS });
 
     const controller = new SessionController(settings);
     await controller.onVideoChange('vid-001');
 
     expect(controller.current).not.toBeNull();
     expect(controller.current?.videoId).toBe('vid-001');
-    expect(controller.mode).toBe('demo');
-    expect((globalThis as any).document.documentElement.dataset.livesubSource).toBe('demo');
+    expect(controller.mode).toBe('checking');
 
     controller.dispose();
   });
 
   it('blocks audio capture while checking or active on caption path', async () => {
-    const settings = createStore<LiveSubSettings>({
-      ...DEFAULT_SETTINGS,
-      demoMode: false,
-    });
+    const settings = createStore<LiveSubSettings>({ ...DEFAULT_SETTINGS });
 
     const mockTranslator = new MockTranslationService();
     const controller = new SessionController(settings, mockTranslator);
@@ -100,10 +93,7 @@ describe('SessionController', () => {
   });
 
   it('resets session cleanly when video changes without leaking previous session', async () => {
-    const settings = createStore<LiveSubSettings>({
-      ...DEFAULT_SETTINGS,
-      demoMode: true,
-    });
+    const settings = createStore<LiveSubSettings>({ ...DEFAULT_SETTINGS });
 
     const controller = new SessionController(settings);
 
@@ -128,10 +118,7 @@ describe('SessionController', () => {
   });
 
   it('prevents older asynchronous navigation races from attaching to new video', async () => {
-    const settings = createStore<LiveSubSettings>({
-      ...DEFAULT_SETTINGS,
-      demoMode: true,
-    });
+    const settings = createStore<LiveSubSettings>({ ...DEFAULT_SETTINGS });
 
     const controller = new SessionController(settings);
 
@@ -148,10 +135,7 @@ describe('SessionController', () => {
   });
 
   it('suppresses STT cues received during ad playback and accepts them during normal playback', async () => {
-    const settings = createStore<LiveSubSettings>({
-      ...DEFAULT_SETTINGS,
-      demoMode: false,
-    });
+    const settings = createStore<LiveSubSettings>({ ...DEFAULT_SETTINGS });
 
     const controller = new SessionController(settings);
     await controller.onVideoChange('ad-test-video');

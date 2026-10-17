@@ -19,7 +19,7 @@ import { buildSessionExport, type LiveSubSessionExport } from '../export/session
 
 const LOG = '[LiveSub Session]';
 
-export type SubtitleSourceMode = 'checking' | 'captions' | 'audio' | 'unavailable' | 'demo';
+export type SubtitleSourceMode = 'checking' | 'captions' | 'audio' | 'unavailable';
 
 /** Everything that belongs to ONE active video session. Destroyed wholesale on navigation. */
 export interface Session {
@@ -78,7 +78,7 @@ export class SessionController {
    * Called when timedtext payload is intercepted from YouTube network traffic.
    */
   onTimedText(payload: unknown, _url?: string, lang?: string): void {
-    if (!this.session || this.session.mode === 'demo') return;
+    if (!this.session) return;
     const cues = parseCaptionData(payload, lang || 'en');
     if (cues.length > 0 && this.session.cueStore instanceof CueStore) {
       this.session.cueStore.loadCues(cues);
@@ -92,7 +92,7 @@ export class SessionController {
    * Called when player caption metadata is broadcasted.
    */
   onCaptionTracks(rawTracks: unknown): void {
-    if (!this.session || this.session.mode === 'demo') return;
+    if (!this.session) return;
     const tracks = parseCaptionTracks(rawTracks);
     if (tracks.length > 0) {
       this.session.availableTracks = tracks;
@@ -123,72 +123,6 @@ export class SessionController {
     tracker.start();
 
     const currentSettings = this.settings.get();
-
-const DEMO_INTERVAL = 4;
-const DEMO_VISIBLE = 3.5;
-const SAMPLE_LINES: ReadonlyArray<readonly [string, string]> = [
-  ['LiveSub is following the video clock.', 'LiveSub वीडियो की घड़ी के साथ चल रहा है।'],
-  ['Pause the video and this line freezes.', 'वीडियो रोकें और यह पंक्ति रुक जाएगी।'],
-  ['Seek anywhere — the right cue appears instantly.', 'कहीं भी जाएँ — सही उपशीर्षक तुरंत दिखेगा।'],
-  ['Try 2× speed: cues change twice as fast.', '2× गति आज़माएँ: उपशीर्षक दोगुनी तेज़ी से बदलेंगे।'],
-  ['Real captions and speech arrive in later phases.', 'असली कैप्शन और भाषण अगले चरणों में आएँगे।'],
-];
-
-function generateDemoCues(count = 10): Cue[] {
-  const cues: Cue[] = [];
-  for (let i = 0; i < count; i++) {
-    const start = i * DEMO_INTERVAL;
-    const end = Number((start + DEMO_VISIBLE).toFixed(3));
-    const sample = SAMPLE_LINES[i % SAMPLE_LINES.length] ?? SAMPLE_LINES[0]!;
-    const [en, hi] = sample;
-    const text = `#${i + 1} · ${en}`;
-    cues.push({
-      id: `demo-${i + 1}`,
-      start,
-      end,
-      lang: 'en',
-      text,
-      translation: hi,
-      translation_lang: 'hi',
-      source: 'demo',
-      is_final: true,
-      first_shown_at: null,
-      revisions: [{ at: start, text }],
-    });
-  }
-  return cues;
-}
-
-    // Developer demo mode branch
-    if (currentSettings.demoMode) {
-      const demoStore = new CueStore();
-      demoStore.loadCues(generateDemoCues(10));
-      const unmount = mountOverlay(
-        els.player,
-        createElement(SubtitleOverlay, {
-          video: els.video,
-          tracker,
-          provider: demoStore,
-          settings: this.settings,
-        }),
-      );
-
-      this.session = {
-        id,
-        videoId,
-        els,
-        video: els.video,
-        tracker,
-        cueStore: demoStore,
-        mode: 'demo',
-        unmount,
-        dispose: () => {},
-      };
-      document.documentElement.dataset.livesubSession = id;
-      document.documentElement.dataset.livesubSource = 'demo';
-      console.info(LOG, 'session started (demo mode)', { id, videoId });
-      return;
-    }
 
     // Real Caption & STT Path
     const cueStore = new CueStore();
@@ -405,7 +339,6 @@ function generateDemoCues(count = 10): Cue[] {
       seekDebounceTimer = Number(setTimeout(() => {
         if (
           this.session === session &&
-          session.mode !== 'demo' &&
           session.cueStore instanceof CueStore &&
           !session.cueStore.getActiveCue(video.currentTime)
         ) {
