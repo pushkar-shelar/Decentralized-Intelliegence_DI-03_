@@ -47,7 +47,7 @@ unified_translator = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global whisper_engine, silero_vad, stream_resolver, unified_translator
+    global whisper_engine, whisperx_engine, silero_vad, stream_resolver, unified_translator
     print("[LiveSub Backend] Initializing models and VAD...")
 
     # Load Silero VAD
@@ -401,85 +401,126 @@ async def audio_websocket_endpoint(websocket: WebSocket):
                             continue
 
                         full_bytes = b"".join(batch_pcm_chunks)
-                        samples = np.frombuffer(full_bytes, dtype=np.int16)
-                        audio_16k_float = samples.astype(np.float32) / 32768.0
+                        if len(full_bytes) % 2 != 0:
+                            full_bytes = full_bytes[:len(full_bytes) - (len(full_bytes) % 2)]
 
-                        print(f"[LiveSub WS] Processing full {len(audio_16k_float)/16000:.1f}s audio batch with Whisper...", flush=True)
+                        samples = np.frombuffer(full_bytes, dtype=np.int16)
+                        if len(samples) < 8000:
+                            await websocket.send_text(json.dumps({"type": "batch_complete", "total_cues": 0}))
+                            continue
+
+                        audio_16k_float = samples.astype(np.float32) / 32768.0
+                        duration_sec = len(audio_16k_float) / 16000.0
+
+                        print(f"[LiveSub WS] Processing full {duration_sec:.1f}s audio batch with Whisper...", flush=True)
 
                         src_lang = batch_source_lang if batch_source_lang and batch_source_lang != "auto" else None
                         if src_lang == "ur":
                             src_lang = "hi"
 
-                        if whisper_engine and whisper_engine.is_ready():
-                            segments, info = whisper_engine.model.transcribe(
-                                audio_16k_float,
-                                language=src_lang,
-                                beam_size=5,
-                                word_timestamps=True,
-                                vad_filter=True,
-                                condition_on_previous_text=False,
-                                repetition_penalty=1.2,
-                            )
+                        try:
+                            if whisper_engine and whisper_engine.is_ready():
+                                segments, info = whisper_engine.model.transcribe(
+                                    audio_16k_float,
+                                    language=src_lang,
+                                    beam_size=5,
+                                    word_timestamps=True,
+                                    vad_filter=True,
+                                    vad_parameters=dict(min_silence_duration_ms=500),
+                                    condition_on_previous_text=False,
+                                    repetition_penalty=1.2,
+                                )
 
-                            detected_lang = info.language or "en"
-                            if detected_lang == "ur":
-                                detected_lang = "hi"
+                                detected_lang = info.language or "en"
+                                if detected_lang == "ur":
+                                    detected_lang = "hi"
 
-                            print(f"[LiveSub WS] Audio language detected: {detected_lang} (confidence: {info.language_probability:.2f})", flush=True)
+                                print(f"[LiveSub WS] Audio language detected: {detected_lang} (confidence: {info.language_probability:.2f})", flush=True)
 
-                            cue_idx = 1
-                            for seg in segments:
-                                text = seg.text.strip()
-                                if not text:
-                                    continue
+                                cue_idx = 1
+                                for seg in segments:
+                                    text = seg.text.strip()
+                                    if not text:
+                                        continue
 
-                                seg_start = round(seg.start, 2)
-                                seg_end = round(seg.end, 2)
-                                if hasattr(seg, "words") and seg.words and len(seg.words) > 0:
-                                    seg_start = round(seg.words[0].start, 2)
-                                    seg_end = round(seg.words[-1].end, 2)
+                                    seg_start = round(seg.start, 2)
+                                    seg_end = round(seg.end, 2)
+                                    if hasattr(seg, "words") and seg.words and len(seg.words) > 0:
+                                        seg_start = round(seg.words[0].start, 2)
+                                        seg_end = round(seg.words[-1].end, 2)
 
-                                translation = None
-                                if unified_translator and batch_target_lang and detected_lang.lower() != batch_target_lang.lower():
+                                    translation = None
+                                    if unified_translator and batch_target_lang and detected_lang.lower() != batch_target_lang.lower():
+                                        try:
+                                            norm_res = await unified_translator.normalize_and_translate(
+                                                text=text,
+                                                source_lang=detected_lang,
+                                                target_lang=batch_target_lang,
+                                            )
+                                            if norm_res.get("corrected_text"):
+                                                text = norm_res["corrected_text"]
+                                            translation = norm_res.get("translation")
+                                        except Exception as e:
+                                            print(f"[LiveSub WS] Translation error: {e}", flush=True)
+
+                                    # Censor profanity in text and translation
+                                    clean_text = censor_text(text)
+                                    clean_translation = censor_text(translation) if translation else None
+
+                                    cue = {
+                                        "id": f"cue-{cue_idx:04d}",
+                                        "start": seg_start,
+                                        "end": seg_end,
+                                        "text": clean_text,
+                                        "translation": clean_translation,
+                                        "lang": detected_lang,
+                                        "translation_lang": batch_target_lang,
+                                        "source": "batch-audio",
+                                        "is_final": True,
+                                    }
+
+                                    # Stream message one by one to frontend in real time
+                                    await websocket.send_text(json.dumps({
+                                        "type": "cue_update",
+                                        "cue": cue,
+                                    }))
+
+                                    # Log to whisper logs
                                     try:
-                                        norm_res = await unified_translator.normalize_and_translate(
-                                            text=text,
-                                            source_lang=detected_lang,
-                                            target_lang=batch_target_lang,
+                                        log_stt_output(
+                                            text=clean_text,
+                                            start=cue.get("start"),
+                                            end=cue.get("end"),
+                                            language=detected_lang,
+                                            source="Whisper Batch STT",
+                                            status="FINAL",
                                         )
-                                        if norm_res.get("corrected_text"):
-                                            text = norm_res["corrected_text"]
-                                        translation = norm_res.get("translation")
-                                    except Exception as e:
-                                        print(f"[LiveSub WS] Translation error: {e}", flush=True)
+                                    except Exception:
+                                        pass
 
-                                cue = {
-                                    "id": f"cue-{cue_idx:04d}",
-                                    "start": seg_start,
-                                    "end": seg_end,
-                                    "text": text,
-                                    "translation": translation,
-                                    "lang": detected_lang,
-                                    "translation_lang": batch_target_lang,
-                                    "source": "batch-audio",
-                                    "is_final": True,
-                                }
+                                    print(f"[LiveSub WS] Cue #{cue_idx} [{cue['start']}s -> {cue['end']}s] [{cue['lang']}]: {cue['text']} --> [{cue['translation_lang']}]: {cue['translation']}", flush=True)
+                                    cue_idx += 1
 
-                                # Stream message one by one to frontend in real time
                                 await websocket.send_text(json.dumps({
-                                    "type": "cue_update",
-                                    "cue": cue,
+                                    "type": "batch_complete",
+                                    "total_cues": cue_idx - 1,
+                                    "detected_language": detected_lang,
                                 }))
-                                print(f"[LiveSub WS] [{cue['start']}s -> {cue['end']}s] [{cue['lang']}]: {cue['text']} --> [{cue['translation_lang']}]: {cue['translation']}", flush=True)
-
-                                cue_idx += 1
-
+                                print(f"[LiveSub WS] Batch processing complete: {cue_idx - 1} subtitle messages sent.", flush=True)
+                            else:
+                                print("[LiveSub WS] Whisper engine not ready for batch processing!", flush=True)
+                                await websocket.send_text(json.dumps({
+                                    "type": "batch_complete",
+                                    "total_cues": 0,
+                                    "error": "Whisper engine not ready"
+                                }))
+                        except Exception as ex:
+                            print(f"[LiveSub WS] Batch processing error: {ex}", flush=True)
                             await websocket.send_text(json.dumps({
                                 "type": "batch_complete",
-                                "total_cues": cue_idx - 1,
-                                "detected_language": detected_lang,
+                                "total_cues": 0,
+                                "error": str(ex)
                             }))
-                            print(f"[LiveSub WS] Batch processing complete: {cue_idx - 1} subtitle messages sent.", flush=True)
                     elif data.get("type") == "config":
                         if data.get("language"):
                             preferred_lang = data.get("language")

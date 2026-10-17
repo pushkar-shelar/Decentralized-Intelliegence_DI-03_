@@ -46,7 +46,7 @@ export const ProcessingView: React.FC<ProcessingViewProps> = ({
     return 'pending';
   };
 
-  const recentCues = liveCues.slice(-3);
+  const recentCues = liveCues.slice(-20);
   const detectedLangLabel = detectedSourceLang && detectedSourceLang !== 'auto' ? getLanguageName(detectedSourceLang) : 'Detecting...';
 
   return (
@@ -128,7 +128,7 @@ export const ProcessingView: React.FC<ProcessingViewProps> = ({
               <Mic size={12} color="var(--color-primary)" />
               <span>Live Generated Subtitles ({liveCues.length} cues received)</span>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '220px', overflowY: 'auto', paddingRight: '4px' }}>
               {recentCues.map((c) => (
                 <div key={c.id} style={{ fontSize: '12px' }}>
                   <span style={{ color: 'var(--color-text-secondary)', fontFamily: 'monospace', marginRight: '6px' }}>

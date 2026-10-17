@@ -143,8 +143,8 @@ export async function processAudioStreamViaWebSocket(params: {
 
       // 2. Stream the 16kHz audio buffer in 64KB binary chunks
       const CHUNK_BYTES = 65536; // 64KB = 32768 samples
-      const rawBuffer = fullPcm.buffer;
-      const totalBytes = rawBuffer.byteLength;
+      const rawBytes = new Uint8Array(fullPcm.buffer, fullPcm.byteOffset, fullPcm.byteLength);
+      const totalBytes = rawBytes.byteLength;
 
       for (let offset = 0; offset < totalBytes; offset += CHUNK_BYTES) {
         if (isFinished || signal?.aborted) return;
@@ -154,7 +154,7 @@ export async function processAudioStreamViaWebSocket(params: {
         }
 
         const end = Math.min(offset + CHUNK_BYTES, totalBytes);
-        const slice = rawBuffer.slice(offset, end);
+        const slice = rawBytes.subarray(offset, end);
         ws.send(slice);
 
         const uploadPct = Math.round((end / totalBytes) * 20); // 0-20% upload
