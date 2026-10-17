@@ -5,3 +5,308 @@
 [06:39:39] [FINAL] [Whisper STT] [hi] [0.00s -> 4.42s]: हेलो दोस्तों स्वागत है आप सबका हमारे इस यूटुब चैनल में
 [06:39:39] [FINAL] [Whisper STT] [hi] [4.42s -> 9.24s]: तो आज के इस वीडियो में हम देखेंगे मुहावरे और उनके अर्थ
 [06:39:39] [FINAL] [Whisper STT] [hi] [11.06s -> 22.71s]: आकाश छूना, तरक्की करना, पीट दिखाना, भाग जाना
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: elARvhP77Oo] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 06:43:23 ===
+--------------------------------------------------------------------------------
+[06:43:27] [FINAL] [Whisper STT] [hi] [0.00s -> 4.32s]: हेलो दोस्तो, स्वागत है आप सबका हमारे इस YouTube चैनल में
+[06:43:27] [FINAL] [Whisper STT] [hi] [4.32s -> 9.24s]: तो आज के इस वीडियो में हम देखेंगे मुहावरे और उनके अर्थ
+[06:43:27] [FINAL] [Whisper STT] [hi] [11.06s -> 56.36s]: आकाश छूना, तरक्की करना, पीत दिखाना, भाग जाना, कां भरना, चुगली करना, गोध लेना, दत्तक बनाना, जुलम ढाना, अत्याचार करना
+[06:43:27] [FINAL] [Whisper STT] [hi] [59.85s -> 117.74s]: जासा देना, धोखा देना, तोपी उचालना, निरादर करना, ऊट परना, आक्रमन करना, खून पीना, सोशन करना, आखे खुलना, सचेत होना, इमान बेचना, बेईमानी करना
+
+--------------------------------------------------------------------------------
+=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 06:43:38 ===
+--------------------------------------------------------------------------------
+[06:43:43] [PARTIAL] [Whisper STT] [en] [0.00s -> 0.60s]: Hello, Dosto.
+[06:43:43] [PARTIAL] [Whisper Live STT] [en] [1.36s -> 2.38s]: Hello, Dosto.
+[06:43:44] [PARTIAL] [Whisper STT] [hi] [0.00s -> 2.02s]: हेलो दोस्तो सुआगत है आप सब
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: Nm558YCGT5Q] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 06:46:01 ===
+--------------------------------------------------------------------------------
+[06:46:21] [FINAL] [Whisper STT] [hi] [21.39s -> 25.31s]: अरे ओ, बंसी, तुम्हारी कड़ाई का धूआ फिर से मेरे दुकान में आ रहा है
+[06:46:21] [FINAL] [Whisper STT] [hi] [25.31s -> 26.99s]: हाँ, तो मैं क्या करूँ?
+[06:46:21] [FINAL] [Whisper STT] [hi] [27.31s -> 30.15s]: बाजार है, यहाँ सब अपना-पना काम कर रहे है
+[06:46:21] [FINAL] [Whisper STT] [hi] [30.15s -> 32.43s]: यह तुम्हारा कार्यशाला नहीं है
+[06:46:21] [FINAL] [Whisper STT] [hi] [32.43s -> 34.45s]: तो क्या तुम्हारे बाप की जमीन है
+[06:46:21] [FINAL] [Whisper STT] [hi] [34.99s -> 37.87s]: ए, बाप पे जाना नहीं, बाप पे नहीं जाना
+[06:46:21] [FINAL] [Whisper STT] [hi] [37.87s -> 41.15s]: मेरा दुकान छोले-भट्योरे के खुश्मू से ही चलता है
+[06:46:21] [FINAL] [Whisper STT] [hi] [41.63s -> 43.91s]: तुम्हारे लिए हवा का रुख नहीं मोड सकता मैं
+[06:46:21] [FINAL] [Whisper STT] [hi] [46.03s -> 46.95s]: ए, बी
+[06:46:21] [FINAL] [Whisper STT] [hi] [47.53s -> 49.61s]: अरे, तुम लोग क्या फिर से शुरू हो गए?
+[06:46:21] [FINAL] [Whisper STT] [hi] [49.85s -> 51.69s]: बंसी भाई, प्लेट लगाओ यार
+[06:46:21] [FINAL] [Whisper STT] [hi] [51.69s -> 55.65s]: मोहन गुसे में वापस मूर्ति की ओर मुर जाता है
+[06:46:21] [FINAL] [Whisper STT] [hi] [55.65s -> 59.17s]: वो रंग भरने के लिए जैसे ही ब्रश उठाता है
+[06:46:21] [FINAL] [Whisper STT] [hi] [59.17s -> 62.73s]: अचानक उसकी आखों के आगे धुनला पंछा जाता है
+[06:46:21] [FINAL] [Whisper STT] [hi] [62.73s -> 64.51s]: और हाथ काप उड़ते है
+[06:46:21] [FINAL] [Whisper STT] [hi] [64.51s -> 67.23s]: ये ये अचानक क्या हो गया
+[06:46:21] [FINAL] [Whisper STT] [hi] [67.23s -> 69.93s]: सब कुछ, सब कुछ धूंदला क्यों दिख रहा है
+[06:46:21] [FINAL] [Whisper STT] [hi] [74.09s -> 75.47s]: क्या हो मोहन भीया
+[06:46:21] [FINAL] [Whisper STT] [hi] [76.47s -> 77.37s]: अरे मोहन
+[06:46:21] [FINAL] [Whisper STT] [hi] [77.37s -> 78.71s]: समभालो खुद को
+[06:46:21] [FINAL] [Whisper STT] [hi] [78.71s -> 80.93s]: देखो, इनका हात काप रहा है
+[06:46:21] [FINAL] [Whisper STT] [hi] [82.45s -> 82.97s]: शायद
+[06:46:21] [FINAL] [Whisper STT] [hi] [82.97s -> 85.23s]: शायद इस पंसी के ठेले के धूए
+[06:46:21] [FINAL] [Whisper STT] [hi] [85.23s -> 86.79s]: और मिर्च की
+[06:46:21] [FINAL] [Whisper STT] [hi] [87.71s -> 89.49s]: धंसक से आखे जल रही है
+[06:46:21] [FINAL] [Whisper STT] [hi] [90.23s -> 90.75s]: लो
+[06:46:21] [FINAL] [Whisper STT] [hi] [90.75s -> 94.55s]: अब अपनी आखों की कम्जूरी का इल्जाम भी मेरे सिर पर मढ़ दो
+[06:46:21] [FINAL] [Whisper STT] [hi] [94.55s -> 97.77s]: अरे शांत हो जाओ, यह भी कोई समय है लड़ाई करने का
+[06:46:21] [FINAL] [Whisper STT] [hi] [97.77s -> 101.25s]: और नहीं तो क्या, मुझे तो इस बात की फिकर है कि
+[06:46:21] [FINAL] [Whisper STT] [hi] [101.25s -> 103.15s]: अब नवरातरी कैसे होगी
+[06:46:21] [FINAL] [Whisper STT] [hi] [104.05s -> 105.71s]: हाँ, इन्हें डॉक्टर के पास ले जाओ
+[06:46:21] [FINAL] [Whisper STT] [hi] [105.71s -> 107.55s]: मैं इनके घर पर फोन लगाती हूँ
+
+--------------------------------------------------------------------------------
+=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 06:46:21 ===
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: Nm558YCGT5Q] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 06:46:21 ===
+--------------------------------------------------------------------------------
+[06:46:31] [FINAL] [Whisper STT] [hi] [21.39s -> 25.31s]: अरे ओ, बंसी, तुम्हारी कड़ाई का धूआ फिर से मेरे दुकान में आ रहा है
+[06:46:31] [FINAL] [Whisper STT] [hi] [25.31s -> 26.99s]: हाँ, तो मैं क्या करूँ?
+[06:46:31] [FINAL] [Whisper STT] [hi] [27.31s -> 30.15s]: बाजार है, यहाँ सब अपना-पना काम कर रहे है
+[06:46:31] [FINAL] [Whisper STT] [hi] [30.15s -> 32.43s]: यह तुम्हारा कार्यशाला नहीं है
+[06:46:31] [FINAL] [Whisper STT] [hi] [32.43s -> 34.45s]: तो क्या तुम्हारे बाप की जमीन है
+[06:46:31] [FINAL] [Whisper STT] [hi] [34.99s -> 37.87s]: ए, बाप पे जाना नहीं, बाप पे नहीं जाना
+[06:46:31] [FINAL] [Whisper STT] [hi] [37.87s -> 41.15s]: मेरा दुकान छोले-भट्योरे के खुश्मू से ही चलता है
+[06:46:31] [FINAL] [Whisper STT] [hi] [41.63s -> 43.91s]: तुम्हारे लिए हवा का रुख नहीं मोड सकता मैं
+[06:46:31] [FINAL] [Whisper STT] [hi] [46.03s -> 46.95s]: ए, बी
+[06:46:31] [FINAL] [Whisper STT] [hi] [47.53s -> 49.61s]: अरे, तुम लोग क्या फिर से शुरू हो गए?
+[06:46:31] [FINAL] [Whisper STT] [hi] [49.85s -> 51.69s]: बंसी भाई, प्लेट लगाओ यार
+[06:46:31] [FINAL] [Whisper STT] [hi] [51.69s -> 55.65s]: मोहन गुसे में वापस मूर्ति की ओर मुर जाता है
+[06:46:31] [FINAL] [Whisper STT] [hi] [55.65s -> 59.17s]: वो रंग भरने के लिए जैसे ही ब्रश उठाता है
+[06:46:31] [FINAL] [Whisper STT] [hi] [59.17s -> 62.73s]: अचानक उसकी आखों के आगे धुनला पंछा जाता है
+[06:46:31] [FINAL] [Whisper STT] [hi] [62.73s -> 64.51s]: और हाथ काप उड़ते है
+[06:46:31] [FINAL] [Whisper STT] [hi] [64.51s -> 67.23s]: ये ये अचानक क्या हो गया
+[06:46:31] [FINAL] [Whisper STT] [hi] [67.23s -> 69.93s]: सब कुछ, सब कुछ धूंदला क्यों दिख रहा है
+[06:46:31] [FINAL] [Whisper STT] [hi] [74.09s -> 75.47s]: क्या हो मोहन भीया
+[06:46:31] [FINAL] [Whisper STT] [hi] [76.47s -> 77.37s]: अरे मोहन
+[06:46:31] [FINAL] [Whisper STT] [hi] [77.37s -> 78.71s]: समभालो खुद को
+[06:46:31] [FINAL] [Whisper STT] [hi] [78.71s -> 80.93s]: देखो, इनका हात काप रहा है
+[06:46:31] [FINAL] [Whisper STT] [hi] [82.45s -> 82.97s]: शायद
+[06:46:31] [FINAL] [Whisper STT] [hi] [82.97s -> 85.23s]: शायद इस पंसी के ठेले के धूए
+[06:46:31] [FINAL] [Whisper STT] [hi] [85.23s -> 86.79s]: और मिर्च की
+[06:46:31] [FINAL] [Whisper STT] [hi] [87.71s -> 89.49s]: धंसक से आखे जल रही है
+[06:46:31] [FINAL] [Whisper STT] [hi] [90.23s -> 90.75s]: लो
+[06:46:31] [FINAL] [Whisper STT] [hi] [90.75s -> 94.55s]: अब अपनी आखों की कम्जूरी का इल्जाम भी मेरे सिर पर मढ़ दो
+[06:46:31] [FINAL] [Whisper STT] [hi] [94.55s -> 97.77s]: अरे शांत हो जाओ, यह भी कोई समय है लड़ाई करने का
+[06:46:31] [FINAL] [Whisper STT] [hi] [97.77s -> 101.25s]: और नहीं तो क्या, मुझे तो इस बात की फिकर है कि
+[06:46:31] [FINAL] [Whisper STT] [hi] [101.25s -> 103.15s]: अब नवरातरी कैसे होगी
+[06:46:31] [FINAL] [Whisper STT] [hi] [104.05s -> 105.71s]: हाँ, इन्हें डॉक्टर के पास ले जाओ
+[06:46:31] [FINAL] [Whisper STT] [hi] [105.71s -> 107.55s]: मैं इनके घर पर फोन लगाती हूँ
+[06:46:31] [PARTIAL] [Whisper STT] [hi] [0.00s -> 0.94s]: अफिर ठीक से देखिया न
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: AETFvQonfV8] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 06:49:54 ===
+--------------------------------------------------------------------------------
+[06:50:04] [FINAL] [Whisper STT] [hi] [2.00s -> 11.56s]: श्रीगुरू चरन सरोज रजि निझमन मुकुरू सुधा
+[06:50:04] [FINAL] [Whisper STT] [hi] [13.13s -> 48.17s]: बरनव जोदाय कुफल चारिं बुधिहीन सुमिरोप भिका
+[06:50:04] [FINAL] [Whisper STT] [hi] [55.53s -> 66.62s]: जैहनों, जयकपीस्ति हुलोक उजागर
+[06:50:04] [FINAL] [Whisper STT] [hi] [66.62s -> 72.00s]: रामदूत अतुलित बलधामा
+[06:50:04] [FINAL] [Whisper STT] [hi] [72.00s -> 77.26s]: अंजनि पूत्र पवन सुतनामा
+[06:50:04] [FINAL] [Whisper STT] [hi] [90.38s -> 103.98s]: मति के संचन बरन के सा
+[06:50:04] [FINAL] [Whisper STT] [hi] [103.98s -> 108.90s]: हाथ भज्र ओधा जाविराज
+[06:50:04] [FINAL] [Whisper STT] [hi] [114.73s -> 119.71s]: संकर्सुवन के सिरी तंदल
+
+--------------------------------------------------------------------------------
+=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 06:50:04 ===
+--------------------------------------------------------------------------------
+[06:50:10] [PARTIAL] [Whisper STT] [ur] [0.00s -> 1.36s]: چینے سے
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: 4Vz6L8B73i4] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 06:51:23 ===
+--------------------------------------------------------------------------------
+[06:52:16] [FINAL] [Whisper STT] [en] [0.00s -> 4.88s]: If you let people have their phones out, the IQ of your employees is lower.
+[06:52:16] [FINAL] [Whisper STT] [en] [5.06s -> 11.38s]: Because there was a study done, when the phone was visible to you, scores were significantly decreased.
+[06:52:16] [FINAL] [Whisper STT] [en] [11.62s -> 12.84s]: Like my attention decreased?
+[06:52:16] [FINAL] [Whisper STT] [en] [13.20s -> 13.42s]: Yes.
+[06:52:16] [FINAL] [Whisper STT] [en] [13.66s -> 16.14s]: Raj, it was also general fluid intelligence.
+[06:52:16] [FINAL] [Whisper STT] [en] [16.44s -> 17.38s]: That means you're dumber.
+[06:52:16] [FINAL] [Whisper STT] [en] [17.68s -> 22.68s]: This is the scary reality of how attention works in the brain.
+[06:52:16] [FINAL] [Whisper STT] [en] [22.82s -> 27.38s]: People who hold their phone or put their phone out on the table when they're talking to people and they first meet you,
+[06:52:16] [FINAL] [Whisper STT] [en] [27.38s -> 32.14s]: you seem less trustworthy, less capable, less intelligent, all of these different things.
+[06:52:16] [FINAL] [Whisper STT] [en] [33.78s -> 40.86s]: I'm a cognitive neuroscientist. Study how we can train the brain to be better. Every single time
+[06:52:16] [FINAL] [Whisper STT] [en] [40.86s -> 45.56s]: you switch your attention, you pay for it in time and you pay for it in energy. If you don't believe
+[06:52:16] [FINAL] [Whisper STT] [en] [45.56s -> 50.60s]: me, we can test it out. Grab a piece of paper. You have some paper and a pen. Now on the top line
+[06:52:16] [FINAL] [Whisper STT] [en] [50.60s -> 55.74s]: I want you to write, I am a great multitasker. And then on the bottom line, I want you to write
+[06:52:16] [FINAL] [Whisper STT] [en] [55.74s -> 66.44s]: the numbers 1 through 20. I want you to go as fast as you can, okay? Go. 17.72. Now turn this paper
+[06:52:16] [FINAL] [Whisper STT] [en] [66.44s -> 71.18s]: around, draw two more lines. You're going to do this one more time but the way in which you will
+[06:52:16] [FINAL] [Whisper STT] [en] [71.18s -> 75.72s]: arrive will be very different. Okay. You're going to alternate. You're going to go back and forth
+[06:52:16] [FINAL] [Whisper STT] [en] [75.72s -> 88.53s]: until you finish both lines. Okay. Go. So you went from 17.72 to 41.35. More than double. Every single
+[06:52:16] [FINAL] [Whisper STT] [en] [88.53s -> 93.71s]: time you switch your attention there's a payment a biological payment this is what makes the people
+[06:52:16] [FINAL] [Whisper STT] [en] [93.71s -> 97.47s]: that are ultra successful different from everybody else they just choose differently
+[06:52:16] [FINAL] [Whisper STT] [en] [98.17s -> 101.53s]: a lot of people think that ultra successful people have better ideas
+[06:52:16] [FINAL] [Whisper STT] [en] [101.53s -> 105.47s]: they have more ideas so what should i do how can someone become
+[06:52:16] [FINAL] [Whisper STT] [en] [105.47s -> 110.25s]: a person who gets incredible ideas all the time be bored and do nothing
+[06:52:16] [FINAL] [Whisper STT] [en] [110.25s -> 116.33s]: and you get ideas you have to let those ideas come to you by cultivating the space for them
+[06:52:16] [FINAL] [Whisper STT] [en] [117.01s -> 119.97s]: I'm gonna show you a city map explain me
+
+--------------------------------------------------------------------------------
+=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 06:52:16 ===
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: 4Vz6L8B73i4] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 06:52:16 ===
+--------------------------------------------------------------------------------
+[06:52:21] [FINAL] [Whisper STT] [en] [0.00s -> 4.88s]: If you let people have their phones out, the IQ of your employees is lower.
+[06:52:21] [FINAL] [Whisper STT] [en] [5.06s -> 11.38s]: Because there was a study done, when the phone was visible to you, scores were significantly decreased.
+[06:52:21] [FINAL] [Whisper STT] [en] [11.62s -> 12.84s]: Like my attention decreased?
+[06:52:21] [FINAL] [Whisper STT] [en] [13.20s -> 13.42s]: Yes.
+[06:52:21] [FINAL] [Whisper STT] [en] [13.66s -> 16.14s]: Raj, it was also general fluid intelligence.
+[06:52:21] [FINAL] [Whisper STT] [en] [16.44s -> 17.38s]: That means you're dumber.
+[06:52:21] [FINAL] [Whisper STT] [en] [17.68s -> 22.68s]: This is the scary reality of how attention works in the brain.
+[06:52:21] [FINAL] [Whisper STT] [en] [22.82s -> 27.38s]: People who hold their phone or put their phone out on the table when they're talking to people and they first meet you,
+[06:52:21] [FINAL] [Whisper STT] [en] [27.38s -> 32.14s]: you seem less trustworthy, less capable, less intelligent, all of these different things.
+[06:52:21] [FINAL] [Whisper STT] [en] [33.78s -> 40.86s]: I'm a cognitive neuroscientist. Study how we can train the brain to be better. Every single time
+[06:52:21] [FINAL] [Whisper STT] [en] [40.86s -> 45.56s]: you switch your attention, you pay for it in time and you pay for it in energy. If you don't believe
+[06:52:21] [FINAL] [Whisper STT] [en] [45.56s -> 50.60s]: me, we can test it out. Grab a piece of paper. You have some paper and a pen. Now on the top line
+[06:52:21] [FINAL] [Whisper STT] [en] [50.60s -> 55.74s]: I want you to write, I am a great multitasker. And then on the bottom line, I want you to write
+[06:52:21] [FINAL] [Whisper STT] [en] [55.74s -> 66.44s]: the numbers 1 through 20. I want you to go as fast as you can, okay? Go. 17.72. Now turn this paper
+[06:52:21] [FINAL] [Whisper STT] [en] [66.44s -> 71.18s]: around, draw two more lines. You're going to do this one more time but the way in which you will
+[06:52:21] [FINAL] [Whisper STT] [en] [71.18s -> 75.72s]: arrive will be very different. Okay. You're going to alternate. You're going to go back and forth
+[06:52:21] [FINAL] [Whisper STT] [en] [75.72s -> 88.53s]: until you finish both lines. Okay. Go. So you went from 17.72 to 41.35. More than double. Every single
+[06:52:21] [FINAL] [Whisper STT] [en] [88.53s -> 93.71s]: time you switch your attention there's a payment a biological payment this is what makes the people
+[06:52:21] [FINAL] [Whisper STT] [en] [93.71s -> 97.47s]: that are ultra successful different from everybody else they just choose differently
+[06:52:21] [FINAL] [Whisper STT] [en] [98.17s -> 101.53s]: a lot of people think that ultra successful people have better ideas
+[06:52:21] [FINAL] [Whisper STT] [en] [101.53s -> 105.47s]: they have more ideas so what should i do how can someone become
+[06:52:21] [FINAL] [Whisper STT] [en] [105.47s -> 110.25s]: a person who gets incredible ideas all the time be bored and do nothing
+[06:52:21] [FINAL] [Whisper STT] [en] [110.25s -> 116.33s]: and you get ideas you have to let those ideas come to you by cultivating the space for them
+[06:52:21] [FINAL] [Whisper STT] [en] [117.01s -> 119.97s]: I'm gonna show you a city map explain me
+[06:52:22] [PARTIAL] [Whisper STT] [en] [0.00s -> 0.94s]: IQ of your...
+[06:52:22] [PARTIAL] [Whisper Live STT] [en] [3.38s -> 4.40s]: IQ of your...
+[06:52:23] [FINAL] [Whisper STT] [en] [0.00s -> 0.98s]: IQ of your.
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: 02RRZsuhc6U] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 06:56:19 ===
+--------------------------------------------------------------------------------
+[06:56:37] [FINAL] [Whisper STT] [en] [0.00s -> 3.82s]: I have got a good lesson from you that we should not use always what.
+[06:56:37] [FINAL] [Whisper STT] [en] [3.92s -> 5.70s]: But if it is positive, we can say always.
+[06:56:37] [FINAL] [Whisper STT] [en] [5.82s -> 6.50s]: You always smile.
+[06:56:37] [FINAL] [Whisper STT] [en] [6.62s -> 7.18s]: That's very good.
+[06:56:37] [FINAL] [Whisper STT] [en] [7.38s -> 8.44s]: Yeah, that's very good.
+[06:56:37] [FINAL] [Whisper STT] [en] [8.60s -> 9.62s]: You always smile.
+[06:56:37] [FINAL] [Whisper STT] [en] [9.74s -> 10.20s]: That's very good.
+[06:56:37] [FINAL] [Whisper STT] [en] [10.36s -> 11.14s]: We always cry.
+[06:56:37] [FINAL] [Whisper STT] [en] [11.60s -> 12.16s]: That's not.
+[06:56:37] [FINAL] [Whisper STT] [en] [12.20s -> 12.58s]: Not that.
+[06:56:37] [FINAL] [Whisper STT] [en] [12.88s -> 15.62s]: The other person will say how we'll respond generally?
+[06:56:37] [FINAL] [Whisper STT] [en] [15.80s -> 16.64s]: We focus on the content.
+[06:56:37] [FINAL] [Whisper STT] [en] [16.86s -> 18.78s]: We will talk about the line below or not below.
+[06:56:37] [FINAL] [Whisper STT] [en] [19.06s -> 19.60s]: I'm looking at the line below.
+[06:56:37] [FINAL] [Whisper STT] [en] [20.22s -> 20.62s]: I don't give your number.
+[06:56:37] [FINAL] [Whisper STT] [en] [21.22s -> 21.74s]: I don't do this.
+[06:56:37] [FINAL] [Whisper STT] [en] [21.96s -> 23.14s]: That is the content focus.
+[06:56:37] [FINAL] [Whisper STT] [en] [24.14s -> 27.02s]: But what made us sad is his tone.
+[06:56:37] [FINAL] [Whisper STT] [en] [27.02s -> 29.88s]: the sad part is not that line
+[06:56:37] [FINAL] [Whisper STT] [en] [29.88s -> 31.06s]: you don't look at it
+[06:56:37] [FINAL] [Whisper STT] [en] [31.06s -> 32.18s]: that is not the problem
+[06:56:37] [FINAL] [Whisper STT] [en] [32.18s -> 33.26s]: why do we feel bad?
+[06:56:37] [FINAL] [Whisper STT] [en] [34.20s -> 35.52s]: because our tone is high
+[06:56:37] [FINAL] [Whisper STT] [en] [57.02s -> 57.74s]: and take medicines.
+[06:56:37] [FINAL] [Whisper STT] [en] [57.76s -> 58.56s]: Okay, fever?
+[06:56:37] [FINAL] [Whisper STT] [en] [58.82s -> 59.40s]: Dawa le lo.
+[06:56:37] [FINAL] [Whisper STT] [en] [59.54s -> 60.00s]: Dawa le lo.
+[06:56:37] [FINAL] [Whisper STT] [en] [60.14s -> 60.74s]: I know dava le lo.
+[06:56:37] [FINAL] [Whisper STT] [en] [60.84s -> 61.04s]: It's like,
+[06:56:37] [FINAL] [Whisper STT] [en] [61.32s -> 61.78s]: yeah,
+[06:56:37] [FINAL] [Whisper STT] [en] [61.92s -> 62.84s]: dawa to meh lel hoonga
+[06:56:37] [FINAL] [Whisper STT] [en] [62.84s -> 63.96s]: lekin tumhaari dua...
+[06:56:37] [FINAL] [Whisper STT] [en] [63.96s -> 65.04s]: Arei kya hai dua ka hai?
+[06:56:37] [FINAL] [Whisper STT] [en] [65.06s -> 65.50s]: Dua ka hai?
+[06:56:37] [FINAL] [Whisper STT] [en] [65.64s -> 65.98s]: Dua ka hai?
+[06:56:37] [FINAL] [Whisper STT] [en] [67.90s -> 68.72s]: Hello everyone.
+[06:56:37] [FINAL] [Whisper STT] [en] [69.06s -> 69.60s]: It's gonna be
+[06:56:37] [FINAL] [Whisper STT] [en] [69.60s -> 71.38s]: an interesting conversation
+[06:56:37] [FINAL] [Whisper STT] [en] [71.38s -> 72.12s]: and talks
+[06:56:37] [FINAL] [Whisper STT] [en] [72.12s -> 73.00s]: because today
+[06:56:37] [FINAL] [Whisper STT] [en] [73.00s -> 75.44s]: I have a very special guest
+[06:56:37] [FINAL] [Whisper STT] [en] [75.44s -> 76.26s]: in this podcast
+[06:56:37] [FINAL] [Whisper STT] [en] [77.16s -> 77.98s]: Miss Suman.
+[06:56:37] [FINAL] [Whisper STT] [en] [78.20s -> 78.44s]: Right?
+[06:56:37] [FINAL] [Whisper STT] [en] [78.64s -> 79.22s]: Suman ma'am.
+[06:56:37] [FINAL] [Whisper STT] [en] [79.32s -> 80.12s]: Especially she's
+[06:56:37] [FINAL] [Whisper STT] [en] [80.12s -> 81.14s]: a soft skills trainer
+[06:56:37] [FINAL] [Whisper STT] [en] [81.14s -> 81.72s]: coach
+[06:56:37] [FINAL] [Whisper STT] [en] [81.72s -> 83.10s]: and she is also
+[06:56:37] [FINAL] [Whisper STT] [en] [83.10s -> 83.78s]: a life coach
+[06:56:37] [FINAL] [Whisper STT] [en] [83.78s -> 84.64s]: and yes
+[06:56:37] [FINAL] [Whisper STT] [en] [84.64s -> 85.14s]: spiritual
+[06:56:37] [FINAL] [Whisper STT] [en] [85.14s -> 89.78s]: spiritual coach as well little bit right you know because she was giving me a spirituality
+[06:56:37] [FINAL] [Whisper STT] [en] [89.78s -> 95.26s]: lessons and i was learning a lot so today in this podcast we're going to discuss on communication
+[06:56:37] [FINAL] [Whisper STT] [en] [95.26s -> 99.26s]: and comm skills because communication is case plays wider role to develop your personality
+[06:56:37] [FINAL] [Whisper STT] [en] [99.26s -> 103.78s]: and to develop a relationship and your business so first of all what do you think about it
+[06:56:37] [FINAL] [Whisper STT] [en] [104.30s -> 109.60s]: uh about the spiritual course communication okay you can just stay in court about
+[06:56:37] [FINAL] [Whisper STT] [en] [109.60s -> 113.84s]: spirituality please okay so first thank you so much for introducing me and I'm
+[06:56:37] [FINAL] [Whisper STT] [en] [113.84s -> 118.06s]: someone a soft skill trainer and I would just correct one thing I have not a
+[06:56:37] [FINAL] [Whisper STT] [en] [118.06s -> 118.72s]: spiritual course
+
+--------------------------------------------------------------------------------
+=== Look-Ahead Video Pre-Process [Video ID: 02RRZsuhc6U] (Window: 0.0s - 120.0s) | Started at: 2026-10-17 06:56:37 ===
+--------------------------------------------------------------------------------
+[06:56:44] [FINAL] [Whisper STT] [en] [0.00s -> 3.82s]: I have got a good lesson from you that we should not use always what.
+[06:56:44] [FINAL] [Whisper STT] [en] [3.92s -> 5.70s]: But if it is positive, we can say always.
+[06:56:44] [FINAL] [Whisper STT] [en] [5.82s -> 6.50s]: You always smile.
+[06:56:44] [FINAL] [Whisper STT] [en] [6.62s -> 7.18s]: That's very good.
+[06:56:44] [FINAL] [Whisper STT] [en] [7.38s -> 8.44s]: Yeah, that's very good.
+[06:56:44] [FINAL] [Whisper STT] [en] [8.60s -> 9.62s]: You always smile.
+[06:56:44] [FINAL] [Whisper STT] [en] [9.74s -> 10.20s]: That's very good.
+[06:56:44] [FINAL] [Whisper STT] [en] [10.36s -> 11.14s]: We always cry.
+[06:56:44] [FINAL] [Whisper STT] [en] [11.60s -> 12.16s]: That's not.
+[06:56:44] [FINAL] [Whisper STT] [en] [12.20s -> 12.58s]: Not that.
+[06:56:44] [FINAL] [Whisper STT] [en] [12.88s -> 15.62s]: The other person will say how we'll respond generally?
+[06:56:44] [FINAL] [Whisper STT] [en] [15.80s -> 16.64s]: We focus on the content.
+[06:56:44] [FINAL] [Whisper STT] [en] [16.86s -> 18.78s]: We will talk about the line below or not below.
+[06:56:44] [FINAL] [Whisper STT] [en] [19.06s -> 19.60s]: I'm looking at the line below.
+[06:56:44] [FINAL] [Whisper STT] [en] [20.22s -> 20.62s]: I don't give your number.
+[06:56:44] [FINAL] [Whisper STT] [en] [21.22s -> 21.74s]: I don't do this.
+[06:56:44] [FINAL] [Whisper STT] [en] [21.96s -> 23.14s]: That is the content focus.
+[06:56:44] [FINAL] [Whisper STT] [en] [24.14s -> 27.02s]: But what made us sad is his tone.
+[06:56:44] [FINAL] [Whisper STT] [en] [27.02s -> 29.88s]: the sad part is not that line
+[06:56:44] [FINAL] [Whisper STT] [en] [29.88s -> 31.06s]: you don't look at it
+[06:56:44] [FINAL] [Whisper STT] [en] [31.06s -> 32.18s]: that is not the problem
+[06:56:44] [FINAL] [Whisper STT] [en] [32.18s -> 33.26s]: why do we feel bad?
+[06:56:44] [FINAL] [Whisper STT] [en] [34.20s -> 35.52s]: because our tone is high
+[06:56:44] [FINAL] [Whisper STT] [en] [57.02s -> 57.74s]: and take medicines.
+[06:56:44] [FINAL] [Whisper STT] [en] [57.76s -> 58.56s]: Okay, fever?
+[06:56:44] [FINAL] [Whisper STT] [en] [58.82s -> 59.40s]: Dawa le lo.
+[06:56:44] [FINAL] [Whisper STT] [en] [59.54s -> 60.00s]: Dawa le lo.
+[06:56:44] [FINAL] [Whisper STT] [en] [60.14s -> 60.74s]: I know dava le lo.
+[06:56:44] [FINAL] [Whisper STT] [en] [60.84s -> 61.04s]: It's like,
+[06:56:44] [FINAL] [Whisper STT] [en] [61.32s -> 61.78s]: yeah,
+[06:56:44] [FINAL] [Whisper STT] [en] [61.92s -> 62.84s]: dawa to meh lel hoonga
+[06:56:44] [FINAL] [Whisper STT] [en] [62.84s -> 63.96s]: lekin tumhaari dua...
+[06:56:44] [FINAL] [Whisper STT] [en] [63.96s -> 65.04s]: Arei kya hai dua ka hai?
+[06:56:44] [FINAL] [Whisper STT] [en] [65.06s -> 65.50s]: Dua ka hai?
+[06:56:44] [FINAL] [Whisper STT] [en] [65.64s -> 65.98s]: Dua ka hai?
+[06:56:44] [FINAL] [Whisper STT] [en] [67.90s -> 68.72s]: Hello everyone.
+[06:56:44] [FINAL] [Whisper STT] [en] [69.06s -> 69.60s]: It's gonna be
+[06:56:44] [FINAL] [Whisper STT] [en] [69.60s -> 71.38s]: an interesting conversation
+[06:56:44] [FINAL] [Whisper STT] [en] [71.38s -> 72.12s]: and talks
+[06:56:44] [FINAL] [Whisper STT] [en] [72.12s -> 73.00s]: because today
+[06:56:44] [FINAL] [Whisper STT] [en] [73.00s -> 75.44s]: I have a very special guest
+[06:56:44] [FINAL] [Whisper STT] [en] [75.44s -> 76.26s]: in this podcast
+[06:56:44] [FINAL] [Whisper STT] [en] [77.16s -> 77.98s]: Miss Suman.
+[06:56:44] [FINAL] [Whisper STT] [en] [78.20s -> 78.44s]: Right?
+[06:56:44] [FINAL] [Whisper STT] [en] [78.64s -> 79.22s]: Suman ma'am.
+[06:56:44] [FINAL] [Whisper STT] [en] [79.32s -> 80.12s]: Especially she's
+[06:56:44] [FINAL] [Whisper STT] [en] [80.12s -> 81.14s]: a soft skills trainer
+[06:56:44] [FINAL] [Whisper STT] [en] [81.14s -> 81.72s]: coach
+[06:56:44] [FINAL] [Whisper STT] [en] [81.72s -> 83.10s]: and she is also
+[06:56:44] [FINAL] [Whisper STT] [en] [83.10s -> 83.78s]: a life coach
+[06:56:44] [FINAL] [Whisper STT] [en] [83.78s -> 84.64s]: and yes
+[06:56:44] [FINAL] [Whisper STT] [en] [84.64s -> 85.14s]: spiritual
+[06:56:44] [FINAL] [Whisper STT] [en] [85.14s -> 89.78s]: spiritual coach as well little bit right you know because she was giving me a spirituality
+[06:56:44] [FINAL] [Whisper STT] [en] [89.78s -> 95.26s]: lessons and i was learning a lot so today in this podcast we're going to discuss on communication
+[06:56:44] [FINAL] [Whisper STT] [en] [95.26s -> 99.26s]: and comm skills because communication is case plays wider role to develop your personality
+[06:56:44] [FINAL] [Whisper STT] [en] [99.26s -> 103.78s]: and to develop a relationship and your business so first of all what do you think about it
+[06:56:44] [FINAL] [Whisper STT] [en] [104.30s -> 109.60s]: uh about the spiritual course communication okay you can just stay in court about
+[06:56:44] [FINAL] [Whisper STT] [en] [109.60s -> 113.84s]: spirituality please okay so first thank you so much for introducing me and I'm
+[06:56:44] [FINAL] [Whisper STT] [en] [113.84s -> 118.06s]: someone a soft skill trainer and I would just correct one thing I have not a
+[06:56:44] [FINAL] [Whisper STT] [en] [118.06s -> 118.72s]: spiritual course
+
+--------------------------------------------------------------------------------
+=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 06:56:44 ===
+--------------------------------------------------------------------------------
+[06:56:51] [FINAL] [Whisper STT] [en] [0.00s -> 0.78s]: vehicles are
