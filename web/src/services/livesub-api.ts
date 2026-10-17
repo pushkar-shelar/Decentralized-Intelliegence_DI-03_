@@ -1,4 +1,5 @@
 import type { SubtitleCue } from '../types/cue';
+import type { SmartAudioChunk } from './audio-extractor';
 
 export interface BackendHealth {
   status: string;
@@ -22,33 +23,48 @@ export interface StreamingProgress {
 export type ProgressCallback = (progress: StreamingProgress) => void;
 export type CueCallback = (cue: SubtitleCue) => void;
 
-const BACKEND_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8765';
-const BACKEND_WS_URL = import.meta.env.VITE_BACKEND_WS_URL || 'ws://localhost:8765/api/ws/audio';
-
 /**
  * Checks LiveSub backend connectivity and model availability.
+ * Avoids IPv6 localhost resolution failures by probing relative path and IPv4 127.0.0.1.
  */
 export async function checkBackendHealth(): Promise<{ online: boolean; details?: BackendHealth }> {
+  // 1. Try relative URL via Vite proxy
   try {
-    const res = await fetch(`${BACKEND_BASE_URL}/api/health`, {
-      method: 'GET',
+    const res = await fetch('/api/health', {
       headers: { Accept: 'application/json' },
-      signal: AbortSignal.timeout(3500),
+      signal: AbortSignal.timeout(2000),
     });
-    if (!res.ok) return { online: false };
-    const data = await res.json();
-    return { online: true, details: data };
+    if (res.ok) {
+      const data = await res.json();
+      return { online: true, details: data };
+    }
+  } catch {
+    // try fallback
+  }
+
+  // 2. Direct IPv4 check
+  try {
+    const res = await fetch('http://127.0.0.1:8765/api/health', {
+      headers: { Accept: 'application/json' },
+      signal: AbortSignal.timeout(2500),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return { online: true, details: data };
+    }
   } catch {
     return { online: false };
   }
+
+  return { online: false };
 }
 
 /**
- * Streams 16kHz Int16 PCM chunks through the existing LiveSub WebSocket pipeline.
- * Collects finalized subtitle cues with original text, translations, timestamps, and speaker tags.
+ * Streams smart 20-second PCM audio chunks to the existing LiveSub backend.
+ * Paces requests smoothly without flooding the WebSocket in milliseconds.
  */
 export async function processAudioStreamViaWebSocket(params: {
-  chunks: Int16Array[];
+  chunks: SmartAudioChunk[] | Int16Array[];
   durationSec: number;
   sourceLang?: string;
   targetLang?: string;
@@ -63,7 +79,8 @@ export async function processAudioStreamViaWebSocket(params: {
       return reject(new Error('Processing was cancelled by the user.'));
     }
 
-    const ws = new WebSocket(BACKEND_WS_URL);
+    const wsUrl = 'ws://127.0.0.1:8765/api/ws/audio';
+    const ws = new WebSocket(wsUrl);
     const cuesMap = new Map<string, SubtitleCue>();
     let isFinished = false;
     let chunksSent = 0;
@@ -104,30 +121,35 @@ export async function processAudioStreamViaWebSocket(params: {
         }),
       );
 
-      // 2. Stream audio chunks
-      streamChunks();
+      // 2. Stream smart 20s audio chunks
+      streamSmartChunks();
     };
 
-    const streamChunks = async () => {
-      let currentVideoTime = 0.0;
+    const streamSmartChunks = async () => {
+      // Create a 400ms silence packet (6400 samples) to trigger VAD sentence finalization
+      const silenceBuffer = new Int16Array(6400);
 
       for (let i = 0; i < totalChunks; i++) {
         if (isFinished || signal?.aborted) return;
         if (ws.readyState !== WebSocket.OPEN) {
           cleanup();
-          return reject(new Error('WebSocket connection lost while streaming audio.'));
+          return reject(new Error('WebSocket connection closed while streaming. Ensure the LiveSub backend server is running on port 8765.'));
         }
 
-        const chunk = chunks[i]!;
-        const chunkDurationSec = chunk.length / 16000;
+        const rawChunk = chunks[i]!;
+        // Handle both SmartAudioChunk and plain Int16Array
+        const isSmart = 'pcm' in rawChunk;
+        const pcmData: Int16Array = isSmart ? rawChunk.pcm : rawChunk;
+        const chunkStartSec = isSmart ? rawChunk.startSec : (i * (durationSec / totalChunks));
+        const chunkDurationSec = isSmart ? rawChunk.durationSec : (pcmData.length / 16000);
 
-        // Send chunk metadata
+        // 1. Send metadata for this 20-second chunk
         const meta = {
           type: 'chunk_meta',
           perfNow: performance.now(),
           durationMs: chunkDurationSec * 1000,
           anchor: {
-            videoTime: currentVideoTime,
+            videoTime: chunkStartSec,
             rate: 1.0,
             paused: false,
           },
@@ -136,18 +158,30 @@ export async function processAudioStreamViaWebSocket(params: {
         };
 
         ws.send(JSON.stringify(meta));
-        ws.send(chunk.buffer);
+
+        // 2. Send the audio PCM buffer
+        ws.send(pcmData.buffer);
+
+        // 3. Send silence padding to signal sentence boundary to VAD
+        ws.send(silenceBuffer.buffer);
 
         chunksSent++;
-        currentVideoTime += chunkDurationSec;
+        const pct = Math.min(92, Math.round(((i + 1) / totalChunks) * 88));
 
-        // Pacing delay (5-10ms) allows server VAD and Whisper to process in fast-stream mode
-        if (i % 2 === 0) {
-          await new Promise((r) => setTimeout(r, 8));
-        }
+        onProgress?.({
+          stage: 'transcribing',
+          percent: pct,
+          chunksProcessed: chunksSent,
+          totalChunks,
+          currentTimeSec: Math.min(durationSec, chunkStartSec + chunkDurationSec),
+          durationSec,
+        });
+
+        // Smart pacing: wait ~700ms between 20-second chunks so Whisper has comfortable inference time
+        await new Promise((r) => setTimeout(r, 750));
       }
 
-      // Allow trailing VAD hangover to finalize last speech sentence
+      // Allow trailing VAD hangover to finalize any pending sentence
       await new Promise((r) => setTimeout(r, 1200));
 
       isFinished = true;
@@ -184,13 +218,13 @@ export async function processAudioStreamViaWebSocket(params: {
       resolve(finalCues);
     };
 
-    async function translateFallback(text: string, sourceLang: string, tgtLang: string): Promise<string> {
+    async function translateFallback(text: string, srcLang: string, tgtLang: string): Promise<string> {
       try {
-        const sl = encodeURIComponent(sourceLang || 'auto');
+        const sl = encodeURIComponent(srcLang || 'auto');
         const tl = encodeURIComponent(tgtLang);
         const q = encodeURIComponent(text.trim());
         const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=${tl}&dt=t&q=${q}`, {
-          signal: AbortSignal.timeout(4000),
+          signal: AbortSignal.timeout(3500),
         });
         if (!res.ok) return text;
         const data = await res.json();
@@ -225,27 +259,14 @@ export async function processAudioStreamViaWebSocket(params: {
           cuesMap.set(cue.id, cue);
           onCue?.(cue);
 
-          const currentTimeSec = (chunksSent / totalChunks) * durationSec;
-          const pct = Math.min(95, Math.round(10 + (chunksSent / totalChunks) * 85));
-
           onProgress?.({
             stage: cue.translation ? 'translating' : 'transcribing',
-            percent: pct,
+            percent: Math.min(95, Math.round(((chunksSent) / totalChunks) * 90)),
             chunksProcessed: chunksSent,
             totalChunks,
-            currentTimeSec,
+            currentTimeSec: cue.end,
             durationSec,
             lastCue: cue,
-          });
-        } else if (msg.type === 'audio_ack') {
-          const pct = Math.min(95, Math.round(5 + (msg.chunk_index / totalChunks) * 85));
-          onProgress?.({
-            stage: 'streaming',
-            percent: pct,
-            chunksProcessed: msg.chunk_index,
-            totalChunks,
-            currentTimeSec: (msg.chunk_index / totalChunks) * durationSec,
-            durationSec,
           });
         }
       } catch {

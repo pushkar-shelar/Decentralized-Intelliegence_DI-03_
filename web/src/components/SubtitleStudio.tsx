@@ -283,7 +283,7 @@ export const SubtitleStudio: React.FC<SubtitleStudioProps> = ({
           <div id="studio-player-box" className="video-player-container" style={{ borderRadius: 'var(--radius-lg)' }}>
             <video
               ref={videoRef}
-              src={videoUrl}
+              src={videoUrl || undefined}
               onTimeUpdate={handleTimeUpdate}
               onLoadedMetadata={handleLoadedMetadata}
               onPlay={() => setIsPlaying(true)}

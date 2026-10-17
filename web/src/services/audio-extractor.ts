@@ -1,16 +1,28 @@
 /**
- * Web Audio API based audio extractor and 16kHz Int16 PCM chunker.
- * Natively supports MP4, WebM, MOV, MKV, MP3, AAC, WAV in all modern browsers.
+ * Web Audio API based audio extractor and smart 20-second chunker.
+ * Automatically trims video audio to 2 minutes max (120s) and divides it into
+ * ~20-second speech chunks by finding natural pause boundaries.
  */
+
+export interface SmartAudioChunk {
+  index: number;
+  startSec: number;
+  endSec: number;
+  durationSec: number;
+  pcm: Int16Array;
+}
 
 export interface ExtractedAudioResult {
   durationSec: number;
   sampleRate: number;
   totalSamples: number;
-  chunks: Int16Array[];
+  chunks: SmartAudioChunk[];
 }
 
 export type ExtractionProgressCallback = (progress: number, stage: string) => void;
+
+export const MAX_AUDIO_DURATION_SEC = 120.0; // Trim any video to 2 minutes max
+export const TARGET_CHUNK_DURATION_SEC = 20.0; // 20 seconds target chunk size
 
 /**
  * Resamples and converts Float32 audio to 16,000 Hz Mono Int16 PCM.
@@ -65,20 +77,95 @@ function floatToInt16(sample: number): number {
 }
 
 /**
- * Splits continuous Int16 PCM array into 200ms chunks (3200 samples @ 16kHz).
+ * Calculates RMS volume energy of a small window.
  */
-export function chunkPcm(pcm: Int16Array, chunkSize = 3200): Int16Array[] {
-  const chunks: Int16Array[] = [];
-  const total = pcm.length;
-  for (let offset = 0; offset < total; offset += chunkSize) {
-    const end = Math.min(offset + chunkSize, total);
-    chunks.push(pcm.slice(offset, end));
+function calculateWindowEnergy(pcm: Int16Array, start: number, length: number): number {
+  const end = Math.min(start + length, pcm.length);
+  if (end <= start) return 0;
+  let sum = 0;
+  for (let i = start; i < end; i++) {
+    const norm = pcm[i]! / 32768;
+    sum += norm * norm;
   }
+  return sum / (end - start);
+}
+
+/**
+ * Smartly divides continuous 16kHz PCM audio into ~20-second chunks by finding
+ * natural speech pause boundaries (energy minima) within a ±1.5s window around each 20s mark.
+ */
+export function createSmart20sChunks(
+  pcm16k: Int16Array,
+  sampleRate = 16000,
+  targetChunkSec = 20.0,
+): SmartAudioChunk[] {
+  const totalSamples = pcm16k.length;
+  if (totalSamples === 0) return [];
+
+  const targetSamples = Math.round(targetChunkSec * sampleRate); // 320,000 samples @ 16kHz
+  const searchWindow = Math.round(1.5 * sampleRate); // ±1.5s search window (24,000 samples)
+  const stepWindow = Math.round(0.08 * sampleRate); // 80ms window for energy calculation
+
+  const chunks: SmartAudioChunk[] = [];
+  let currentStart = 0;
+  let chunkIdx = 0;
+
+  while (currentStart < totalSamples) {
+    const remaining = totalSamples - currentStart;
+
+    // If remaining audio is less than 24 seconds, consume the rest as the final chunk
+    if (remaining <= targetSamples + searchWindow) {
+      const pcmSlice = pcm16k.slice(currentStart, totalSamples);
+      const startSec = currentStart / sampleRate;
+      const endSec = totalSamples / sampleRate;
+      chunks.push({
+        index: chunkIdx++,
+        startSec: Number(startSec.toFixed(2)),
+        endSec: Number(endSec.toFixed(2)),
+        durationSec: Number((endSec - startSec).toFixed(2)),
+        pcm: pcmSlice,
+      });
+      break;
+    }
+
+    // Nominal boundary at 20s from currentStart
+    const nominalCut = currentStart + targetSamples;
+
+    // Search around nominalCut ± searchWindow for lowest energy (natural speech pause)
+    const searchStart = Math.max(currentStart + targetSamples - searchWindow, currentStart + Math.round(10 * sampleRate));
+    const searchEnd = Math.min(nominalCut + searchWindow, totalSamples - Math.round(5 * sampleRate));
+
+    let minEnergy = Infinity;
+    let bestCut = nominalCut;
+
+    for (let pos = searchStart; pos < searchEnd; pos += stepWindow) {
+      const energy = calculateWindowEnergy(pcm16k, pos, stepWindow);
+      if (energy < minEnergy) {
+        minEnergy = energy;
+        bestCut = pos;
+      }
+    }
+
+    const pcmSlice = pcm16k.slice(currentStart, bestCut);
+    const startSec = currentStart / sampleRate;
+    const endSec = bestCut / sampleRate;
+
+    chunks.push({
+      index: chunkIdx++,
+      startSec: Number(startSec.toFixed(2)),
+      endSec: Number(endSec.toFixed(2)),
+      durationSec: Number((endSec - startSec).toFixed(2)),
+      pcm: pcmSlice,
+    });
+
+    currentStart = bestCut;
+  }
+
   return chunks;
 }
 
 /**
- * Extracts and prepares 16kHz PCM audio chunks from an uploaded video file.
+ * Extracts audio from video, trims to max 2 minutes (120s), and creates smart ~20-second chunks.
  */
 export async function extractAudioFromVideo(
   file: File,
@@ -90,7 +177,6 @@ export async function extractAudioFromVideo(
 
   onProgress?.(0.35, 'Decoding audio track...');
 
-  // Use AudioContext to decode native audio streams from the video container
   const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
   if (!AudioCtx) {
     throw new Error('Web Audio API is not supported in this browser.');
@@ -101,7 +187,7 @@ export async function extractAudioFromVideo(
 
   try {
     audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
-  } catch (err) {
+  } catch {
     await audioCtx.close();
     throw new Error(
       'Could not extract audio track. Ensure the video contains audio in a supported format (AAC, MP3, Opus, PCM).',
@@ -113,26 +199,32 @@ export async function extractAudioFromVideo(
     throw new Error('The uploaded video contains no audio track or an empty audio stream.');
   }
 
-  onProgress?.(0.65, 'Resampling to 16kHz Mono PCM...');
+  onProgress?.(0.6, 'Trimming to 2 minutes max...');
 
-  const channelL = audioBuffer.getChannelData(0);
-  const channelR = audioBuffer.numberOfChannels > 1 ? audioBuffer.getChannelData(1) : null;
+  // Trim to maximum 2 minutes (120 seconds) as required
+  const originalDurationSec = audioBuffer.duration;
+  const targetDurationSec = Math.min(originalDurationSec, MAX_AUDIO_DURATION_SEC);
+  const maxSamples = Math.floor(targetDurationSec * audioBuffer.sampleRate);
+
+  const channelL = audioBuffer.getChannelData(0).subarray(0, maxSamples);
+  const channelR = audioBuffer.numberOfChannels > 1 ? audioBuffer.getChannelData(1).subarray(0, maxSamples) : null;
+
+  onProgress?.(0.75, 'Resampling to 16kHz Mono PCM...');
 
   const pcm16k = resampleTo16kMono(channelL, channelR, audioBuffer.sampleRate, 16000);
 
-  onProgress?.(0.9, 'Creating streaming audio chunks...');
+  onProgress?.(0.9, 'Dividing into smart 20-second sentence chunks...');
 
-  const chunks = chunkPcm(pcm16k, 3200); // 200ms @ 16kHz
-  const durationSec = audioBuffer.duration;
+  const smartChunks = createSmart20sChunks(pcm16k, 16000, TARGET_CHUNK_DURATION_SEC);
 
   await audioCtx.close();
 
-  onProgress?.(1.0, 'Audio extraction complete');
+  onProgress?.(1.0, `Prepared ${smartChunks.length} chunks (20s each, trimmed to ${targetDurationSec.toFixed(1)}s)`);
 
   return {
-    durationSec,
+    durationSec: targetDurationSec,
     sampleRate: 16000,
     totalSamples: pcm16k.length,
-    chunks,
+    chunks: smartChunks,
   };
 }

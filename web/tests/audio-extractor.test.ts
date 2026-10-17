@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { resampleTo16kMono, chunkPcm } from '../src/services/audio-extractor';
+import { resampleTo16kMono, createSmart20sChunks } from '../src/services/audio-extractor';
 
-describe('Audio Extractor & PCM Resampler (Website)', () => {
+describe('Audio Extractor & Smart 20s Chunker (Website)', () => {
   it('correctly resamples 48,000 Hz stereo audio to 16,000 Hz mono Int16 PCM', () => {
     // 48,000 samples @ 48kHz = 1 second
     const channelL = new Float32Array(48000);
@@ -18,7 +18,6 @@ describe('Audio Extractor & PCM Resampler (Website)', () => {
     expect(pcm16k.length).toBe(16000);
     expect(pcm16k).toBeInstanceOf(Int16Array);
 
-    // Sine wave peak around 32767
     let maxAmp = 0;
     for (let i = 0; i < pcm16k.length; i++) {
       if (Math.abs(pcm16k[i]!) > maxAmp) {
@@ -28,15 +27,25 @@ describe('Audio Extractor & PCM Resampler (Website)', () => {
     expect(maxAmp).toBeGreaterThan(30000);
   });
 
-  it('chunks continuous Int16 PCM array into 3200-sample (200ms) blocks', () => {
-    const pcm = new Int16Array(8000); // 8000 samples = 500ms
-    const chunks = chunkPcm(pcm, 3200);
+  it('divides a 60-second audio stream into ~20-second smart chunks', () => {
+    // 60 seconds @ 16kHz = 960,000 samples
+    const pcm = new Int16Array(60 * 16000);
+    // Introduce an artificial dip/silence at 20.5s and 40.2s
+    for (let i = 0; i < pcm.length; i++) {
+      pcm[i] = 10000;
+    }
+    // silence at ~20.5s (sample 328,000 to 330,000)
+    for (let i = 328000; i < 330000; i++) {
+      pcm[i] = 0;
+    }
 
-    // 3200 + 3200 + 1600 = 3 chunks
+    const chunks = createSmart20sChunks(pcm, 16000, 20.0);
+
     expect(chunks.length).toBe(3);
-    expect(chunks[0]!.length).toBe(3200);
-    expect(chunks[1]!.length).toBe(3200);
-    expect(chunks[2]!.length).toBe(1600);
+    expect(chunks[0]!.startSec).toBe(0);
+    expect(chunks[0]!.endSec).toBeGreaterThan(18.0);
+    expect(chunks[0]!.endSec).toBeLessThan(22.0);
+    expect(chunks[2]!.endSec).toBe(60.0);
   });
 
   it('handles empty audio gracefully without throwing', () => {
@@ -45,7 +54,7 @@ describe('Audio Extractor & PCM Resampler (Website)', () => {
     const pcm = resampleTo16kMono(emptyL, emptyR, 44100, 16000);
     expect(pcm.length).toBe(0);
 
-    const chunks = chunkPcm(pcm, 3200);
+    const chunks = createSmart20sChunks(pcm, 16000, 20.0);
     expect(chunks.length).toBe(0);
   });
 });
