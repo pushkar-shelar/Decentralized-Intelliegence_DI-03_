@@ -1,4 +1,4 @@
-import { useEffect, useState, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useState } from 'react';
 import { browser } from 'wxt/browser';
 import {
   downloadJsonFile,
@@ -16,14 +16,43 @@ import {
   LIMITS,
   loadSettings,
   saveSettings,
-  type DisplayMode,
+  type LangCode,
   type LiveSubSettings,
 } from '../../src/settings/settings';
 import { parseVideoId } from '../../src/youtube/video-id';
+import './popup.css';
 
 type TabStatus = { kind: 'loading' } | { kind: 'video'; videoId: string } | { kind: 'other' };
 type ExportFormat = 'srt' | 'vtt' | 'json';
 type ExportScope = 'all' | 'playback';
+type ActiveNavTab = 'subtitles' | 'transcript' | 'tools';
+type ActiveDrawer = null | 'appearance' | 'vocabulary' | 'export' | 'more' | 'detected-lang';
+
+interface RawCue {
+  id: string;
+  start: number;
+  end: number;
+  text: string;
+  translation?: string;
+  lang?: string;
+  speaker?: string;
+}
+
+const LANGUAGE_FLAGS: Record<string, string> = {
+  en: '🇺🇸',
+  hi: '🇮🇳',
+  mr: '🇮🇳',
+  ta: '🇮🇳',
+  te: '🇮🇳',
+};
+
+const LANGUAGE_NAMES: Record<string, string> = {
+  en: 'English (US)',
+  hi: 'Hindi (हिन्दी)',
+  mr: 'Marathi (मराठी)',
+  ta: 'Tamil (தமிழ்)',
+  te: 'Telugu (తెలుగు)',
+};
 
 function formatClock(t: number): string {
   const total = Math.max(0, Math.floor(t));
@@ -31,20 +60,6 @@ function formatClock(t: number): string {
   const s = total % 60;
   return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
 }
-
-const DISPLAY_MODES: Array<{ value: DisplayMode; label: string }> = [
-  { value: 'original', label: 'Original' },
-  { value: 'translated', label: 'Translated' },
-  { value: 'dual', label: 'Dual' },
-];
-
-const PREVIEW_TEXT: Record<string, string> = {
-  en: 'Today we will make paneer tikka',
-  hi: 'आज हम पनीर टिक्का बनाएंगे',
-  mr: 'आज आपण पनीर टिक्का बनवूया',
-  ta: 'இன்று நாம் பனீர் டிக்கா செய்வோம்',
-  te: 'ఈ రోజు మనం పనీர் టిక్కా చేద్దాం',
-};
 
 export default function App() {
   const [settings, setSettings] = useState<LiveSubSettings>(DEFAULT_SETTINGS);
@@ -54,6 +69,13 @@ export default function App() {
   const [sessionCueCount, setSessionCueCount] = useState<number | null>(null);
   const [videoTitle, setVideoTitle] = useState<string | null>(null);
   const [currentTime, setCurrentTime] = useState<number>(0);
+  const [sessionCues, setSessionCues] = useState<RawCue[]>([]);
+  
+  // Navigation & Drawer state
+  const [navTab, setNavTab] = useState<ActiveNavTab>('subtitles');
+  const [activeDrawer, setActiveDrawer] = useState<ActiveDrawer>(null);
+
+  // Export State
   const [exportFormat, setExportFormat] = useState<ExportFormat>('srt');
   const [exportMode, setExportMode] = useState<ExportTextMode>('both');
   const [exportScope, setExportScope] = useState<ExportScope>('all');
@@ -62,8 +84,6 @@ export default function App() {
   const [exportMessage, setExportMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    // The popup is the only writer of settings, so it doesn't subscribe to its own storage echoes
-    // (stale echoes during a slider drag would make the thumb jump back).
     void loadSettings().then(setSettings);
     void browser.tabs.query({ active: true, currentWindow: true }).then(([active]) => {
       const tabId = active?.id ?? null;
@@ -87,9 +107,17 @@ export default function App() {
               }
             }
           })
-          .catch(() => {
-            // Content script not ready or inactive
-          });
+          .catch(() => {});
+
+        // Fetch recent cues for transcript view
+        browser.tabs
+          .sendMessage(tabId, { type: 'LIVESUB_EXPORT_SESSION' })
+          .then((res: any) => {
+            if (res?.ok && res.data?.cues) {
+              setSessionCues(res.data.cues);
+            }
+          })
+          .catch(() => {});
       }
     });
   }, []);
@@ -120,8 +148,8 @@ export default function App() {
 
   const update = (patch: Partial<LiveSubSettings>) => {
     const next = { ...settings, ...patch };
-    setSettings(next); // optimistic
-    void saveSettings(next); // full snapshot → last write always wins with complete state
+    setSettings(next);
+    void saveSettings(next);
   };
 
   const handleExportDownload = async () => {
@@ -260,7 +288,7 @@ export default function App() {
 
         await navigator.clipboard.writeText(textToCopy);
         setCopied(true);
-        setExportMessage(`Copied ${count} cues as ${exportFormat.toUpperCase()} to clipboard!`);
+        setExportMessage(`Copied ${count} cues as ${exportFormat.toUpperCase()}!`);
         setTimeout(() => setCopied(false), 2500);
       } else {
         setExportMessage('No cues available to copy.');
@@ -272,188 +300,478 @@ export default function App() {
     }
   };
 
+  const isLive = settings.enabled && tab.kind === 'video';
+  const statusLabel = !settings.enabled
+    ? 'Paused'
+    : isLive
+      ? 'Active (Live)'
+      : 'Ready';
+  const statusClass = !settings.enabled
+    ? 'status-pill--off'
+    : isLive
+      ? 'status-pill--active'
+      : 'status-pill--idle';
+
   return (
-    <main className={`app ${settings.enabled ? '' : 'app--disabled'}`}>
-      <header className="header">
-        <div className="brand">
-          <div className="brand__logo" aria-hidden="true">
-            <span />
-            <span />
+    <div className="popup-container">
+      {/* ---------- Header ---------- */}
+      <header className="popup-header">
+        <div className="brand-section">
+          <div className="brand-icon-box">
+            <div className="brand-icon-waves" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+              <span />
+              <span />
+            </div>
           </div>
-          <div>
-            <h1 className="brand__name">LiveSub</h1>
-            <p className="brand__tag">Real-time multilingual subtitles</p>
-          </div>
+          <h1 className="brand-title">LiveSub</h1>
         </div>
-        <Toggle
-          id="toggle-enabled"
-          checked={settings.enabled}
-          onChange={(enabled) => update({ enabled })}
-          label="Enable LiveSub"
-        />
-      </header>
 
-      <StatusChip tab={tab} enabled={settings.enabled} />
-
-      {tab.kind === 'video' && (
-        <div style={{ padding: '0 16px 10px 16px' }}>
+        <div className="header-actions">
+          <div className={`status-pill ${statusClass}`}>
+            <span className="status-pill-dot" />
+            <span>{statusLabel}</span>
+          </div>
           <button
-            id="btn-start-audio"
+            id="btn-settings-gear"
             type="button"
-            onClick={startAudioCaptureFromPopup}
-            style={{
-              width: '100%',
-              padding: '10px 14px',
-              background: capturing ? '#059669' : '#4f46e5',
-              color: '#ffffff',
-              border: 'none',
-              borderRadius: '8px',
-              fontSize: '13px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px',
-              boxShadow: '0 2px 8px rgba(79, 70, 229, 0.25)',
-              transition: 'all 0.2s ease',
-            }}
+            className="btn-icon-gear"
+            title="Settings & Diagnostics"
+            onClick={() => setActiveDrawer('more')}
           >
-            {capturing ? '🟢 Live Audio Subtitles Streaming' : '🎙️ Start Live Audio Subtitles'}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="3" />
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+            </svg>
           </button>
         </div>
-      )}
+      </header>
 
-      <Preview settings={settings} />
+      {/* ---------- Top Segmented Control ---------- */}
+      <nav className="nav-segmented" role="tablist">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={navTab === 'subtitles'}
+          className={`nav-tab-btn ${navTab === 'subtitles' ? 'nav-tab-btn--active' : ''}`}
+          onClick={() => setNavTab('subtitles')}
+        >
+          Subtitles
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={navTab === 'transcript'}
+          className={`nav-tab-btn ${navTab === 'transcript' ? 'nav-tab-btn--active' : ''}`}
+          onClick={() => setNavTab('transcript')}
+        >
+          Transcript
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={navTab === 'tools'}
+          className={`nav-tab-btn ${navTab === 'tools' ? 'nav-tab-btn--active' : ''}`}
+          onClick={() => setNavTab('tools')}
+        >
+          Tools
+        </button>
+      </nav>
 
-      <Section title="Languages">
-        <div className="row row--split">
-          <Field label="Spoken" htmlFor="select-source">
-            <select
-              id="select-source"
-              className="select"
-              value={settings.sourceLang}
-              onChange={(e) => update({ sourceLang: e.target.value as LiveSubSettings['sourceLang'] })}
+      {/* ---------- Main View: Subtitles Tab ---------- */}
+      {navTab === 'subtitles' && (
+        <>
+          {/* Subtitle Mode */}
+          <section className="section-block">
+            <h2 className="section-label">Subtitle Mode</h2>
+            <div className="mode-grid" role="radiogroup" aria-label="Subtitle Mode">
+              {/* Dual Mode Card */}
+              <button
+                id="mode-dual"
+                type="button"
+                role="radio"
+                aria-checked={settings.displayMode === 'dual'}
+                className={`mode-card ${settings.displayMode === 'dual' ? 'mode-card--active' : ''}`}
+                onClick={() => update({ displayMode: 'dual' })}
+              >
+                <div className="mode-card-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M12 3a9 9 0 0 1 9 9" strokeWidth="3" />
+                    <circle cx="12" cy="12" r="3" fill="currentColor" />
+                  </svg>
+                </div>
+                <div className="mode-card-title">Dual</div>
+                <div className="mode-card-subtitle">Original + Translation</div>
+              </button>
+
+              {/* Original Only Card */}
+              <button
+                id="mode-original"
+                type="button"
+                role="radio"
+                aria-checked={settings.displayMode === 'original'}
+                className={`mode-card ${settings.displayMode === 'original' ? 'mode-card--active' : ''}`}
+                onClick={() => update({ displayMode: 'original' })}
+              >
+                <div className="mode-card-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                  </svg>
+                </div>
+                <div className="mode-card-title">Original Only</div>
+                <div className="mode-card-subtitle">Spoken audio</div>
+              </button>
+
+              {/* Translation Only Card */}
+              <button
+                id="mode-translated"
+                type="button"
+                role="radio"
+                aria-checked={settings.displayMode === 'translated'}
+                className={`mode-card ${settings.displayMode === 'translated' ? 'mode-card--active' : ''}`}
+                onClick={() => update({ displayMode: 'translated' })}
+              >
+                <div className="mode-card-icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M5 8l6 6" />
+                    <path d="M4 14l6-6 2-3" />
+                    <path d="M2 5h12" />
+                    <path d="M7 2h1" />
+                    <path d="M22 22l-5-10-5 10" />
+                    <path d="M14 18h6" />
+                  </svg>
+                </div>
+                <div className="mode-card-title">Translation Only</div>
+                <div className="mode-card-subtitle">Target only</div>
+              </button>
+            </div>
+          </section>
+
+          {/* Target Language */}
+          <section className="section-block">
+            <h2 className="section-label">Target Language</h2>
+            <div className="lang-selector-wrap">
+              <div className="lang-selector-card">
+                <div className="lang-selector-content">
+                  <span className="lang-flag">{LANGUAGE_FLAGS[settings.targetLang] ?? '🌐'}</span>
+                  <div>
+                    <div className="lang-name">{LANGUAGE_NAMES[settings.targetLang] ?? settings.targetLang}</div>
+                  </div>
+                </div>
+                <div className="lang-chevron">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="6 9 12 15 18 9" />
+                  </svg>
+                </div>
+              </div>
+              <select
+                id="select-target"
+                className="lang-native-select"
+                value={settings.targetLang}
+                onChange={(e) => update({ targetLang: e.target.value as LangCode })}
+                aria-label="Select Target Language"
+              >
+                {LANGUAGES.map((l) => (
+                  <option key={l.code} value={l.code}>
+                    {LANGUAGE_FLAGS[l.code] ?? ''} {l.label} ({l.native})
+                  </option>
+                ))}
+              </select>
+            </div>
+          </section>
+
+          {/* Telemetry & Source Cards */}
+          <div className="info-card-list">
+            {/* Detected Language Card */}
+            <div
+              className="info-card"
+              role="button"
+              tabIndex={0}
+              onClick={() => setActiveDrawer('detected-lang')}
             >
-              <option value="auto">Auto-detect</option>
-              {LANGUAGES.map((l) => (
-                <option key={l.code} value={l.code}>
-                  {l.label} · {l.native}
-                </option>
-              ))}
-            </select>
-          </Field>
-          <span className="arrow" aria-hidden="true">
-            →
-          </span>
-          <Field label="Translate to" htmlFor="select-target">
-            <select
-              id="select-target"
-              className="select"
-              value={settings.targetLang}
-              onChange={(e) => update({ targetLang: e.target.value as LiveSubSettings['targetLang'] })}
+              <div className="info-card-left">
+                <div className="info-badge-icon info-badge-icon--purple">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M12 2v20M17 5v14M7 9v6M22 10v4M2 11v2" />
+                  </svg>
+                </div>
+                <div className="info-card-texts">
+                  <span className="info-card-label">Detected Language</span>
+                  <span className="info-card-value">Hindi (86%) + English (14%)</span>
+                </div>
+              </div>
+              <div className="info-card-arrow">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </div>
+            </div>
+
+            {/* Source Card */}
+            <div
+              className="info-card"
+              role="button"
+              tabIndex={0}
+              onClick={startAudioCaptureFromPopup}
+              title="Click to toggle tab audio streaming"
             >
-              {LANGUAGES.map((l) => (
-                <option key={l.code} value={l.code}>
-                  {l.label} · {l.native}
-                </option>
-              ))}
-            </select>
-          </Field>
-        </div>
-      </Section>
-
-      <Section title="Display">
-        <div className="segmented" role="radiogroup" aria-label="Display mode">
-          {DISPLAY_MODES.map((m) => (
-            <button
-              key={m.value}
-              id={`mode-${m.value}`}
-              type="button"
-              role="radio"
-              aria-checked={settings.displayMode === m.value}
-              className={`segmented__item ${settings.displayMode === m.value ? 'is-active' : ''}`}
-              onClick={() => update({ displayMode: m.value })}
-            >
-              {m.label}
-            </button>
-          ))}
-          <span
-            className="segmented__thumb"
-            style={{ '--index': DISPLAY_MODES.findIndex((m) => m.value === settings.displayMode) } as CSSProperties}
-            aria-hidden="true"
-          />
-        </div>
-      </Section>
-
-      <Section title="Style">
-        <Slider
-          id="slider-font"
-          label="Font size"
-          value={settings.fontSize}
-          min={LIMITS.fontSize.min}
-          max={LIMITS.fontSize.max}
-          step={1}
-          format={(v) => `${v}px`}
-          onChange={(fontSize) => update({ fontSize })}
-        />
-        <Slider
-          id="slider-bg"
-          label="Background"
-          value={settings.bgOpacity}
-          min={LIMITS.bgOpacity.min}
-          max={LIMITS.bgOpacity.max}
-          step={0.05}
-          format={(v) => `${Math.round(v * 100)}%`}
-          onChange={(bgOpacity) => update({ bgOpacity })}
-        />
-        <Slider
-          id="slider-position"
-          label="Height"
-          value={settings.position}
-          min={LIMITS.position.min}
-          max={LIMITS.position.max}
-          step={1}
-          format={(v) => `${v}%`}
-          onChange={(position) => update({ position })}
-        />
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '8px' }}>
-          <div>
-            <div style={{ fontWeight: 600, fontSize: '12px' }}>Simulation Demo Mode</div>
-            <div style={{ fontSize: '11px', color: 'var(--muted)' }}>Shows generated cues following video clock</div>
-          </div>
-          <Toggle
-            id="toggle-demo"
-            checked={settings.demoMode}
-            onChange={(demoMode) => update({ demoMode })}
-            label="Toggle Simulation Demo"
-          />
-        </div>
-      </Section>
-
-      <Section title="Subtitle Export">
-        <div className="eval-card">
-          <div className="eval-card__info">
-            <div className="label-strong">Session Subtitle Export</div>
-            <div className="hint">
-              {tab.kind === 'video'
-                ? sessionCueCount != null && sessionCueCount > 0
-                  ? `${sessionCueCount} cue${sessionCueCount === 1 ? '' : 's'} recorded · Target: ${settings.targetLang.toUpperCase()}`
-                  : settings.demoMode
-                    ? `10 demo cues ready · Target: ${settings.targetLang.toUpperCase()}`
-                    : 'Cues will accumulate automatically as video plays'
-                : 'Open a YouTube video to record session cues'}
+              <div className="info-card-left">
+                <div className="info-badge-icon info-badge-icon--green">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <rect x="2" y="3" width="20" height="14" rx="2" />
+                    <line x1="8" y1="21" x2="16" y2="21" />
+                    <line x1="12" y1="17" x2="12" y2="21" />
+                  </svg>
+                </div>
+                <div className="info-card-texts">
+                  <span className="info-card-label">Source</span>
+                  <span className="info-card-value">
+                    <span style={{ color: '#16a34a', fontSize: '10px' }}>●</span>{' '}
+                    {capturing ? 'STT (Live Audio)' : 'STT (Live Audio)'}
+                  </span>
+                </div>
+              </div>
+              <div className="info-card-arrow">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </div>
             </div>
           </div>
 
-          <div className="row row--split" style={{ gap: '8px' }}>
-            <div className="eval-format" style={{ flex: 1 }}>
-              <label htmlFor="select-export-format" className="field__label">
-                Format
-              </label>
+          {/* Primary Action Button */}
+          <button
+            id="toggle-enabled"
+            type="button"
+            className={`btn-primary-cta ${settings.enabled ? '' : 'btn-primary-cta--paused'}`}
+            onClick={() => update({ enabled: !settings.enabled })}
+          >
+            {settings.enabled ? (
+              <>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <rect x="5" y="5" width="14" height="14" rx="2" />
+                </svg>
+                <span>Stop Subtitles</span>
+              </>
+            ) : (
+              <>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="5 3 19 12 5 21 5 3" />
+                </svg>
+                <span>Start Subtitles</span>
+              </>
+            )}
+          </button>
+
+          {/* Bottom Action Grid */}
+          <div className="action-grid">
+            <button
+              type="button"
+              className={`action-btn-card ${activeDrawer === 'appearance' ? 'action-btn-card--active' : ''}`}
+              onClick={() => setActiveDrawer('appearance')}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="13.5" cy="6.5" r=".5" fill="currentColor" />
+                <circle cx="17.5" cy="10.5" r=".5" fill="currentColor" />
+                <circle cx="8.5" cy="7.5" r=".5" fill="currentColor" />
+                <circle cx="6.5" cy="12.5" r=".5" fill="currentColor" />
+                <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.563-2.512 5.563-5.563C22 6.5 17.5 2 12 2z" />
+              </svg>
+              <span>Appearance</span>
+            </button>
+
+            <button
+              type="button"
+              className={`action-btn-card ${activeDrawer === 'vocabulary' ? 'action-btn-card--active' : ''}`}
+              onClick={() => setActiveDrawer('vocabulary')}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+              </svg>
+              <span>Vocabulary</span>
+            </button>
+
+            <button
+              type="button"
+              className={`action-btn-card ${activeDrawer === 'export' ? 'action-btn-card--active' : ''}`}
+              onClick={() => setActiveDrawer('export')}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              <span>Export</span>
+            </button>
+
+            <button
+              type="button"
+              className={`action-btn-card ${activeDrawer === 'more' ? 'action-btn-card--active' : ''}`}
+              onClick={() => setActiveDrawer('more')}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+                <circle cx="19" cy="12" r="1.5" fill="currentColor" />
+                <circle cx="5" cy="12" r="1.5" fill="currentColor" />
+              </svg>
+              <span>More</span>
+            </button>
+          </div>
+        </>
+      )}
+
+      {/* ---------- View: Transcript Tab ---------- */}
+      {navTab === 'transcript' && (
+        <div className="transcript-container">
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h2 className="section-label">Real-time Transcript</h2>
+            <button
+              type="button"
+              className="btn-secondary"
+              style={{ padding: '4px 8px', fontSize: '11px', flex: 'none' }}
+              onClick={handleCopySubtitles}
+            >
+              {copied ? '✓ Copied' : 'Copy All'}
+            </button>
+          </div>
+
+          {sessionCues.length === 0 ? (
+            <div className="transcript-empty">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+              <div>No transcript recorded for this video yet. Play the video to stream subtitles live.</div>
+            </div>
+          ) : (
+            sessionCues.map((c, i) => (
+              <div key={c.id || i} className="transcript-item">
+                <div className="transcript-meta">
+                  <span className={`transcript-badge ${c.speaker === 'SPEAKER 01' ? 'transcript-badge--speaker1' : 'transcript-badge--speaker0'}`}>
+                    {c.speaker || 'SPEAKER 00'}
+                  </span>
+                  <span>{formatClock(c.start)} - {formatClock(c.end)}</span>
+                </div>
+                <div className="transcript-text">{c.text}</div>
+                {c.translation && <div className="transcript-trans">{c.translation}</div>}
+              </div>
+            ))
+          )}
+        </div>
+      )}
+
+      {/* ---------- View: Tools Tab ---------- */}
+      {navTab === 'tools' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <h2 className="section-label">Audio & Diagnostics Tools</h2>
+          <div className="info-card">
+            <div className="info-card-texts">
+              <span className="info-card-label">Active Tab</span>
+              <span className="info-card-value">
+                {tab.kind === 'video' ? `YouTube Video ID: ${tab.videoId}` : 'Non-video tab'}
+              </span>
+            </div>
+          </div>
+
+          {tab.kind === 'video' && (
+            <button
+              id="btn-start-audio"
+              type="button"
+              onClick={startAudioCaptureFromPopup}
+              className="btn-primary-cta"
+            >
+              {capturing ? '🟢 Live Audio Capture Active' : '🎙️ Start Tab Audio Stream'}
+            </button>
+          )}
+
+          <div className="info-card">
+            <div className="info-card-texts">
+              <span className="info-card-label">Recorded Session Cues</span>
+              <span className="info-card-value">
+                {sessionCueCount !== null ? `${sessionCueCount} cues accumulated` : '0 cues'}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ---------- Modals / Drawers ---------- */}
+      
+      {/* 1. Appearance Drawer */}
+      {activeDrawer === 'appearance' && (
+        <div className="drawer-backdrop" onClick={() => setActiveDrawer(null)}>
+          <div className="drawer-content" onClick={(e) => e.stopPropagation()}>
+            <div className="drawer-header">
+              <h3 className="drawer-title">Subtitle Appearance</h3>
+              <button className="btn-drawer-close" onClick={() => setActiveDrawer(null)}>✕</button>
+            </div>
+
+            <div className="slider-group">
+              <div className="slider-header">
+                <span className="slider-label">Font Size</span>
+                <span className="slider-val">{settings.fontSize}px</span>
+              </div>
+              <input
+                id="slider-font"
+                type="range"
+                min={LIMITS.fontSize.min}
+                max={LIMITS.fontSize.max}
+                value={settings.fontSize}
+                onChange={(e) => update({ fontSize: Number(e.target.value) })}
+              />
+            </div>
+
+            <div className="slider-group">
+              <div className="slider-header">
+                <span className="slider-label">Background Opacity</span>
+                <span className="slider-val">{Math.round(settings.bgOpacity * 100)}%</span>
+              </div>
+              <input
+                id="slider-bg"
+                type="range"
+                min={LIMITS.bgOpacity.min}
+                max={LIMITS.bgOpacity.max}
+                step={0.05}
+                value={settings.bgOpacity}
+                onChange={(e) => update({ bgOpacity: Number(e.target.value) })}
+              />
+            </div>
+
+            <div className="slider-group">
+              <div className="slider-header">
+                <span className="slider-label">Vertical Position</span>
+                <span className="slider-val">{settings.position}%</span>
+              </div>
+              <input
+                id="slider-position"
+                type="range"
+                min={LIMITS.position.min}
+                max={LIMITS.position.max}
+                value={settings.position}
+                onChange={(e) => update({ position: Number(e.target.value) })}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 2. Export Drawer */}
+      {activeDrawer === 'export' && (
+        <div className="drawer-backdrop" onClick={() => setActiveDrawer(null)}>
+          <div className="drawer-content" onClick={(e) => e.stopPropagation()}>
+            <div className="drawer-header">
+              <h3 className="drawer-title">Export Subtitles</h3>
+              <button className="btn-drawer-close" onClick={() => setActiveDrawer(null)}>✕</button>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Export Format</label>
               <select
                 id="select-export-format"
-                className="select"
+                className="form-select"
                 value={exportFormat}
                 onChange={(e) => setExportFormat(e.target.value as ExportFormat)}
               >
@@ -464,13 +782,11 @@ export default function App() {
             </div>
 
             {exportFormat !== 'json' && (
-              <div className="eval-format" style={{ flex: 1 }}>
-                <label htmlFor="select-export-mode" className="field__label">
-                  Text Mode
-                </label>
+              <div className="form-group">
+                <label className="form-label">Text Mode</label>
                 <select
                   id="select-export-mode"
-                  className="select"
+                  className="form-select"
                   value={exportMode}
                   onChange={(e) => setExportMode(e.target.value as ExportTextMode)}
                 >
@@ -480,216 +796,164 @@ export default function App() {
                 </select>
               </div>
             )}
-          </div>
 
-          <div className="eval-format" style={{ marginTop: '4px' }}>
-            <label htmlFor="select-export-scope" className="field__label">
-              Export Range
-            </label>
-            <select
-              id="select-export-scope"
-              className="select"
-              value={exportScope}
-              onChange={(e) => setExportScope(e.target.value as ExportScope)}
-            >
-              <option value="all">Complete Session (All recorded cues)</option>
-              <option value="playback">
-                Up to Current Playback ({formatClock(currentTime)})
-              </option>
-            </select>
-          </div>
-
-          <div className="row row--actions" style={{ marginTop: '6px' }}>
-            <button
-              id="btn-export-sub"
-              type="button"
-              className="btn btn--primary"
-              disabled={exporting || tab.kind !== 'video' || (sessionCueCount === 0 && !settings.demoMode)}
-              onClick={handleExportDownload}
-            >
-              <svg className="btn__icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-                <path d="M8.5 1.5a.5.5 0 0 0-1 0v7.793L5.354 7.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 9.293V1.5z" />
-                <path d="M2 13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V11a.5.5 0 0 0-1 0v2.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V11a.5.5 0 0 0-1 0v2.5z" />
-              </svg>
-              {exporting ? 'Exporting…' : `Export .${exportFormat}`}
-            </button>
-            <button
-              id="btn-copy-sub"
-              type="button"
-              className="btn btn--secondary"
-              disabled={exporting || tab.kind !== 'video' || (sessionCueCount === 0 && !settings.demoMode)}
-              onClick={handleCopySubtitles}
-            >
-              <svg className="btn__icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
-                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z" />
-                <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z" />
-              </svg>
-              {copied ? '✓ Copied!' : `Copy ${exportFormat.toUpperCase()}`}
-            </button>
-          </div>
-          {exportMessage && (
-            <div className="eval-status" role="status">
-              {exportMessage}
+            <div className="form-group">
+              <label className="form-label">Time Range</label>
+              <select
+                id="select-export-scope"
+                className="form-select"
+                value={exportScope}
+                onChange={(e) => setExportScope(e.target.value as ExportScope)}
+              >
+                <option value="all">Complete Session (All Cues)</option>
+                <option value="playback">Up to Current Playback ({formatClock(currentTime)})</option>
+              </select>
             </div>
-          )}
-        </div>
-      </Section>
 
-      <Section title="Developer">
-        <div className="row row--between">
-          <div>
-            <div className="label-strong">Demo cues</div>
-            <div className="hint">Sample subtitles driven by video time (Phase 1)</div>
+            <div className="export-actions">
+              <button
+                id="btn-export-sub"
+                type="button"
+                className="btn-secondary"
+                disabled={exporting || tab.kind !== 'video' || (sessionCueCount === 0 && !settings.demoMode)}
+                onClick={handleExportDownload}
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                {exporting ? 'Exporting…' : `Save .${exportFormat}`}
+              </button>
+
+              <button
+                id="btn-copy-sub"
+                type="button"
+                className="btn-secondary"
+                disabled={exporting || tab.kind !== 'video' || (sessionCueCount === 0 && !settings.demoMode)}
+                onClick={handleCopySubtitles}
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                </svg>
+                {copied ? '✓ Copied' : 'Copy'}
+              </button>
+            </div>
+
+            {exportMessage && <div className="export-toast">{exportMessage}</div>}
           </div>
-          <Toggle
-            id="toggle-demo"
-            small
-            checked={settings.demoMode}
-            onChange={(demoMode) => update({ demoMode })}
-            label="Demo cues"
-          />
-        </div>
-      </Section>
-
-      <footer className="footer">
-        <button id="btn-reset" type="button" className="link" onClick={() => update({ ...DEFAULT_SETTINGS })}>
-          Reset to defaults
-        </button>
-        <span className="version">v{browser.runtime.getManifest().version} · Phase 1</span>
-      </footer>
-    </main>
-  );
-}
-
-function StatusChip({ tab, enabled }: { tab: TabStatus; enabled: boolean }) {
-  let state: 'live' | 'idle' | 'off' = 'idle';
-  let text = 'Checking current tab…';
-  if (!enabled) {
-    state = 'off';
-    text = 'Paused — subtitles hidden';
-  } else if (tab.kind === 'video') {
-    state = 'live';
-    text = `Active on video ${tab.videoId}`;
-  } else if (tab.kind === 'other') {
-    text = 'Open a YouTube video to start';
-  }
-  return (
-    <div className={`status status--${state}`} role="status">
-      <span className="status__dot" aria-hidden="true" />
-      {text}
-    </div>
-  );
-}
-
-function Preview({ settings }: { settings: LiveSubSettings }) {
-  const target = settings.targetLang;
-  const source = settings.sourceLang === 'auto' ? (target === 'hi' ? 'en' : 'hi') : settings.sourceLang;
-  const defaultText = 'Today we will make paneer tikka';
-  const original = PREVIEW_TEXT[source] ?? defaultText;
-  const translated = source === target ? null : (PREVIEW_TEXT[target] ?? null);
-
-  const lines: Array<{ kind: string; text: string }> = [];
-  if (settings.displayMode !== 'translated' || !translated) lines.push({ kind: 'original', text: original });
-  if (settings.displayMode !== 'original' && translated) lines.push({ kind: 'translation', text: translated });
-
-  // Preview frame is ~180px tall; scale font relative to the 720px reference the overlay uses.
-  const style = {
-    '--pv-font': `${(settings.fontSize * 0.42).toFixed(1)}px`,
-    '--pv-bg': settings.bgOpacity,
-    '--pv-bottom': `${settings.position}%`,
-  } as CSSProperties;
-
-  return (
-    <div className="preview" style={style} aria-label="Subtitle preview">
-      <div className="preview__scene" aria-hidden="true">
-        <span className="preview__orb preview__orb--a" />
-        <span className="preview__orb preview__orb--b" />
-      </div>
-      {settings.enabled && (
-        <div className="preview__subs">
-          {lines.map((l) => (
-            <span key={l.kind} className={`preview__line preview__line--${l.kind}`}>
-              {l.text}
-            </span>
-          ))}
         </div>
       )}
-      <div className="preview__bar" aria-hidden="true">
-        <span className="preview__progress" />
-      </div>
-    </div>
-  );
-}
 
-function Section({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <section className="card">
-      <h2 className="card__title">{title}</h2>
-      {children}
-    </section>
-  );
-}
+      {/* 3. Vocabulary Drawer */}
+      {activeDrawer === 'vocabulary' && (
+        <div className="drawer-backdrop" onClick={() => setActiveDrawer(null)}>
+          <div className="drawer-content" onClick={(e) => e.stopPropagation()}>
+            <div className="drawer-header">
+              <h3 className="drawer-title">Phonetic & Idiom Normalization</h3>
+              <button className="btn-drawer-close" onClick={() => setActiveDrawer(null)}>✕</button>
+            </div>
 
-function Field({ label, htmlFor, children }: { label: string; htmlFor: string; children: ReactNode }) {
-  return (
-    <div className="field">
-      <label className="field__label" htmlFor={htmlFor}>
-        {label}
-      </label>
-      {children}
-    </div>
-  );
-}
+            <div style={{ fontSize: '12px', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+              LiveSub automatically repairs noisy Whisper speech-to-text outputs using Grok and Sarvam AI models.
+            </div>
 
-function Toggle(props: {
-  id: string;
-  checked: boolean;
-  onChange: (v: boolean) => void;
-  label: string;
-  small?: boolean;
-}) {
-  return (
-    <button
-      id={props.id}
-      type="button"
-      role="switch"
-      aria-checked={props.checked}
-      aria-label={props.label}
-      className={`toggle ${props.small ? 'toggle--small' : ''} ${props.checked ? 'is-on' : ''}`}
-      onClick={() => props.onChange(!props.checked)}
-    >
-      <span className="toggle__knob" />
-    </button>
-  );
-}
+            <div className="info-card">
+              <div className="info-card-texts">
+                <span className="info-card-label">Hindi Idiom Normalization</span>
+                <span className="info-card-value">"दाल में कुछ काला है" → "Something is fishy"</span>
+              </div>
+            </div>
 
-function Slider(props: {
-  id: string;
-  label: string;
-  value: number;
-  min: number;
-  max: number;
-  step: number;
-  format: (v: number) => string;
-  onChange: (v: number) => void;
-}) {
-  const pct = ((props.value - props.min) / (props.max - props.min)) * 100;
-  return (
-    <div className="slider">
-      <div className="slider__head">
-        <label htmlFor={props.id}>{props.label}</label>
-        <output htmlFor={props.id}>{props.format(props.value)}</output>
-      </div>
-      <input
-        id={props.id}
-        type="range"
-        min={props.min}
-        max={props.max}
-        step={props.step}
-        value={props.value}
-        style={{ '--pct': `${pct}%` } as CSSProperties}
-        onChange={(e) => props.onChange(Number(e.target.value))}
-      />
+            <div className="info-card">
+              <div className="info-card-texts">
+                <span className="info-card-label">Acoustic Misspelling Filter</span>
+                <span className="info-card-value">"भागध्याना" / "Can Barna" → "भाग जाना" / "कान भरना"</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 4. More & Developer Drawer */}
+      {activeDrawer === 'more' && (
+        <div className="drawer-backdrop" onClick={() => setActiveDrawer(null)}>
+          <div className="drawer-content" onClick={(e) => e.stopPropagation()}>
+            <div className="drawer-header">
+              <h3 className="drawer-title">Settings & Diagnostics</h3>
+              <button className="btn-drawer-close" onClick={() => setActiveDrawer(null)}>✕</button>
+            </div>
+
+            <div className="toggle-row">
+              <div>
+                <div style={{ fontWeight: 600, fontSize: '12.5px' }}>Simulation Demo Mode</div>
+                <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>Generate cues tracking video clock</div>
+              </div>
+              <button
+                id="toggle-demo"
+                type="button"
+                className={`toggle-switch ${settings.demoMode ? 'is-checked' : ''}`}
+                onClick={() => update({ demoMode: !settings.demoMode })}
+                aria-label="Toggle Demo Mode"
+              >
+                <span className="toggle-thumb" />
+              </button>
+            </div>
+
+            <div className="info-card">
+              <div className="info-card-texts">
+                <span className="info-card-label">Backend STT Server</span>
+                <span className="info-card-value">
+                  <span style={{ color: '#16a34a', fontSize: '10px' }}>●</span> http://127.0.0.1:8765
+                </span>
+              </div>
+            </div>
+
+            <button
+              id="btn-reset"
+              type="button"
+              className="btn-secondary"
+              onClick={() => update({ ...DEFAULT_SETTINGS })}
+            >
+              Reset All Settings to Defaults
+            </button>
+
+            <div style={{ textAlign: 'center', fontSize: '11px', color: 'var(--text-faint)', paddingTop: '4px' }}>
+              LiveSub Extension v{browser.runtime.getManifest().version}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 5. Detected Language Details Drawer */}
+      {activeDrawer === 'detected-lang' && (
+        <div className="drawer-backdrop" onClick={() => setActiveDrawer(null)}>
+          <div className="drawer-content" onClick={(e) => e.stopPropagation()}>
+            <div className="drawer-header">
+              <h3 className="drawer-title">Spoken Language Source</h3>
+              <button className="btn-drawer-close" onClick={() => setActiveDrawer(null)}>✕</button>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">Input Audio Language</label>
+              <select
+                id="select-source"
+                className="form-select"
+                value={settings.sourceLang}
+                onChange={(e) => update({ sourceLang: e.target.value as LiveSubSettings['sourceLang'] })}
+              >
+                <option value="auto">Auto-detect (Hindi 86% + English 14%)</option>
+                {LANGUAGES.map((l) => (
+                  <option key={l.code} value={l.code}>
+                    {l.label} ({l.native})
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
