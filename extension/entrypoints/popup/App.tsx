@@ -318,14 +318,18 @@ export default function App() {
   const isLive = settings.enabled && tab.kind === 'video';
   const statusLabel = !settings.enabled
     ? 'Paused'
-    : isLive
-      ? 'Active (Live)'
-      : 'Ready';
+    : settings.demoMode
+      ? 'Demo Mode'
+      : isLive
+        ? 'Active (Live)'
+        : 'Ready';
   const statusClass = !settings.enabled
     ? 'status-pill--off'
-    : isLive
-      ? 'status-pill--active'
-      : 'status-pill--idle';
+    : settings.demoMode
+      ? 'status-pill--idle'
+      : isLive
+        ? 'status-pill--active'
+        : 'status-pill--idle';
 
   return (
     <div className="popup-container">
