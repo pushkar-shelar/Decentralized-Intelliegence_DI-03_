@@ -952,6 +952,21 @@ export default function App() {
               </select>
             </div>
 
+            {/* Profanity Filter Toggle */}
+            <div className="form-group" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px 0' }}>
+              <div>
+                <label className="form-label" style={{ marginBottom: 0 }}>Profanity Filter</label>
+                <div style={{ fontSize: '11px', color: 'var(--text-faint)' }}>Censor swear words with *** on subtitles</div>
+              </div>
+              <input
+                id="toggle-profanity"
+                type="checkbox"
+                checked={settings.profanityFilter !== false}
+                onChange={(e) => update({ profanityFilter: e.target.checked })}
+                style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: 'var(--primary)' }}
+              />
+            </div>
+
             {/* Manual Tab Audio Capture Button (useful if automatic permission requires user gesture) */}
             {tab.kind === 'video' && (
               <button

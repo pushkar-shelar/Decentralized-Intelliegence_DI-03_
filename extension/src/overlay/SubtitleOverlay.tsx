@@ -6,6 +6,7 @@ import type { LiveSubSettings } from '../settings/settings-core';
 import type { PlayerStateTracker } from '../youtube/player-state';
 import { tokenizeSubtitleText } from '../learning/word-tokenizer';
 import { LearningPopup } from '../learning/LearningPopup';
+import { censorText } from '../profanity/profanity-filter';
 
 export interface SubtitleOverlayProps {
   video: HTMLVideoElement;
@@ -120,6 +121,7 @@ export function SubtitleOverlay({ video, tracker, provider, settings: settingsSt
   );
   const cues = useActiveCues(video, provider);
 
+  // State for interactive vocabulary learning popup
   const [selectedWord, setSelectedWord] = useState<{
     word: string;
     sentence: string;
@@ -146,8 +148,17 @@ export function SubtitleOverlay({ video, tracker, provider, settings: settingsSt
     <>
       <div className="ls-stage" style={style} data-view-mode={ui.viewMode}>
         {cues.map((cue) => {
-          const original = cue.text;
-          const translation = cue.translation ?? null;
+          // Profanity layer: filter offensive words before rendering on YouTube
+          const applyCensor = settings.profanityFilter !== false;
+          const rawOriginal = cue.text || '';
+          const rawTranslation = cue.translation ?? null;
+
+          const original = applyCensor ? censorText(rawOriginal) : rawOriginal;
+          const translation = rawTranslation ? (applyCensor ? censorText(rawTranslation) : rawTranslation) : null;
+          const speakerLabel = cue.speaker
+            ? (applyCensor ? censorText(formatSpeakerDisplay(cue.speaker)) : formatSpeakerDisplay(cue.speaker))
+            : null;
+
           const lines: Array<{ kind: 'original' | 'translation'; text: string }> = [];
           if (settings.displayMode === 'original') {
             lines.push({ kind: 'original', text: original });
@@ -166,10 +177,18 @@ export function SubtitleOverlay({ video, tracker, provider, settings: settingsSt
           }
 
           return (
-            <div className="ls-cue" key={cue.id} lang={cue.lang} data-source={cue.source}>
-              {cue.speaker && (
+            <div
+              className="ls-cue"
+              key={cue.id}
+              lang={cue.lang}
+              data-source={cue.source}
+              style={{
+                backgroundColor: `rgba(0, 0, 0, ${settings.bgOpacity})`,
+              }}
+            >
+              {speakerLabel && (
                 <span className="ls-speaker-badge" data-speaker={cue.speaker}>
-                  {formatSpeakerDisplay(cue.speaker)}
+                  {speakerLabel}
                 </span>
               )}
               {lines.map((line) => {
@@ -181,6 +200,9 @@ export function SubtitleOverlay({ video, tracker, provider, settings: settingsSt
                     key={line.kind}
                     className={`ls-line ls-${line.kind}`}
                     lang={lineLang}
+                    style={{
+                      fontSize: `${(settings.fontSize * scale * (line.kind === 'translation' ? 0.92 : 1)).toFixed(1)}px`,
+                    }}
                   >
                     {tokens.map((token, idx) => {
                       if (!token.isWord) {

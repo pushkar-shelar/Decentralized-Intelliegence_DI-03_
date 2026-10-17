@@ -31,6 +31,8 @@ export interface LiveSubSettings {
   bgOpacity: number;
   /** Distance from the bottom of the player, % of player height. */
   position: number;
+  /** Whether profanity / curse words are censored before display. */
+  profanityFilter: boolean;
 }
 
 export const LIMITS = {
@@ -47,6 +49,7 @@ export const DEFAULT_SETTINGS: Readonly<LiveSubSettings> = Object.freeze({
   fontSize: 21,
   bgOpacity: 0.75,
   position: 8,
+  profanityFilter: true,
 });
 
 const LANG_CODES = new Set<string>(LANGUAGES.map((l) => l.code));
@@ -84,5 +87,6 @@ export function mergeSettings(raw: unknown): LiveSubSettings {
     fontSize: num(r.fontSize, d.fontSize, LIMITS.fontSize),
     bgOpacity: num(r.bgOpacity, d.bgOpacity, LIMITS.bgOpacity),
     position: num(r.position, d.position, LIMITS.position),
+    profanityFilter: typeof r.profanityFilter === 'boolean' ? r.profanityFilter : d.profanityFilter,
   };
 }
