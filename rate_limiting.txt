@@ -1,0 +1,6 @@
+================================================================================
+LiveSub API Rate Limiting Event Log
+================================================================================
+[2026-10-17 11:12:01] [Test Service] Rate limit exceeded (HTTP 429): Sample rate limit reached for testing
+[2026-10-17 11:12:43] [PyTest Service] Rate limit exceeded (HTTP 429): Too Many Requests - limit: 30000 TPM
+[2026-10-17 11:13:15] [PyTest Service] Rate limit exceeded (HTTP 429): Too Many Requests - limit: 30000 TPM

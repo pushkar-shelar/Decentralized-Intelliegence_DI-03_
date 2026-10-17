@@ -2,6 +2,7 @@ import os
 import json
 import httpx
 from typing import Optional, Dict
+from backend.app.translation.rate_limit_logger import log_rate_limit
 
 class UnifiedTranslator:
     """
@@ -91,6 +92,9 @@ class UnifiedTranslator:
                     self._cache[cache_key] = res
                     return res
             except Exception as e:
+                err_str = str(e).lower()
+                if "429" in err_str or "rate limit" in err_str or "too many requests" in err_str or "quota" in err_str:
+                    log_rate_limit("Groq / Grok API", str(e))
                 print(f"[UnifiedTranslator] Grok normalization failed, falling back: {e}")
 
         # 2. Try Fallback: Sarvam Mayura
@@ -102,6 +106,9 @@ class UnifiedTranslator:
                     self._cache[cache_key] = result
                     return result
             except Exception as e:
+                err_str = str(e).lower()
+                if "429" in err_str or "rate limit" in err_str or "too many requests" in err_str or "quota" in err_str:
+                    log_rate_limit("Sarvam AI API", str(e))
                 print(f"[UnifiedTranslator] Sarvam translation failed: {e}")
 
         # Fallback: return original text
@@ -171,6 +178,9 @@ class UnifiedTranslator:
                                 }
                         except Exception:
                             return {"corrected_text": text, "translation": raw_content}
+                elif res.status_code == 429 or "rate limit" in res.text.lower() or "too many requests" in res.text.lower() or "quota" in res.text.lower():
+                    log_rate_limit(f"Groq / Grok API ({model})", res.text, status_code=res.status_code)
+                    print(f"[UnifiedTranslator] Grok model {model} rate limited (HTTP {res.status_code}): {res.text}")
                 else:
                     print(f"[UnifiedTranslator] Grok model {model} returned HTTP {res.status_code}: {res.text}")
 
@@ -201,6 +211,9 @@ class UnifiedTranslator:
             if res.status_code == 200:
                 data = res.json()
                 return data.get("translated_text", "").strip()
+            elif res.status_code == 429 or "rate limit" in res.text.lower() or "too many requests" in res.text.lower() or "quota" in res.text.lower():
+                log_rate_limit("Sarvam AI API", res.text, status_code=res.status_code)
+                print(f"[UnifiedTranslator] Sarvam rate limited (HTTP {res.status_code}): {res.text}")
             else:
                 print(f"[UnifiedTranslator] Sarvam returned HTTP {res.status_code}: {res.text}")
 

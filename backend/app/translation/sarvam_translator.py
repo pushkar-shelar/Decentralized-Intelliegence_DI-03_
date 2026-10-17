@@ -1,6 +1,7 @@
 import os
 import httpx
 from typing import Optional, Dict
+from backend.app.translation.rate_limit_logger import log_rate_limit
 
 class SarvamTranslator:
     """
@@ -88,9 +89,15 @@ class SarvamTranslator:
                     if translated:
                         self._cache[cache_key] = translated
                         return translated
+                elif res.status_code == 429 or "rate limit" in res.text.lower() or "too many requests" in res.text.lower() or "quota" in res.text.lower():
+                    log_rate_limit("Sarvam AI API", res.text, status_code=res.status_code)
+                    print(f"[SarvamTranslator] Rate limit exceeded HTTP {res.status_code}: {res.text}")
                 else:
                     print(f"[SarvamTranslator] HTTP {res.status_code}: {res.text}")
         except Exception as e:
+            err_str = str(e).lower()
+            if "429" in err_str or "rate limit" in err_str or "too many requests" in err_str or "quota" in err_str:
+                log_rate_limit("Sarvam AI API", str(e))
             print(f"[SarvamTranslator] Request error: {e}")
 
         return trimmed
