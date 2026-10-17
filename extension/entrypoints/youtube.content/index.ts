@@ -52,6 +52,11 @@ export default defineContentScript({
         controller.onSttCue(message.cue);
         return;
       }
+      if (message?.type === 'LIVESUB_SETTINGS_UPDATE' && message.settings) {
+        settings.set(message.settings);
+        sendResponse({ ok: true });
+        return true;
+      }
       if (message?.type === 'LIVESUB_EXPORT_SESSION') {
         const data = controller.exportSession();
         sendResponse({ ok: !!data, data });

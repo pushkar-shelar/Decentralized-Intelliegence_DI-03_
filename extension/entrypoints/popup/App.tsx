@@ -150,6 +150,9 @@ export default function App() {
     const next = { ...settings, ...patch };
     setSettings(next);
     void saveSettings(next);
+    if (activeTabId) {
+      browser.tabs.sendMessage(activeTabId, { type: 'LIVESUB_SETTINGS_UPDATE', settings: next }).catch(() => {});
+    }
   };
 
   const handleExportDownload = async () => {
@@ -709,6 +712,33 @@ export default function App() {
               <button className="btn-drawer-close" onClick={() => setActiveDrawer(null)}>✕</button>
             </div>
 
+            {/* Interactive Real-Time Live Preview */}
+            <div className="appearance-preview-box">
+              <div
+                className="appearance-preview-cue"
+                style={{
+                  background: `rgba(0, 0, 0, ${settings.bgOpacity})`,
+                  marginBottom: `${Math.max(0, (settings.position - LIMITS.position.min) * 0.8)}px`,
+                }}
+              >
+                <span
+                  className="appearance-preview-line-orig"
+                  style={{ fontSize: `${(settings.fontSize * 0.42).toFixed(1)}px` }}
+                >
+                  आज हम पनीर टिक्का बनाएंगे
+                </span>
+                {settings.displayMode !== 'original' && (
+                  <span
+                    className="appearance-preview-line-trans"
+                    style={{ fontSize: `${(settings.fontSize * 0.38).toFixed(1)}px` }}
+                  >
+                    Today we will make paneer tikka
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* Font Size Control */}
             <div className="slider-group">
               <div className="slider-header">
                 <span className="slider-label">Font Size</span>
@@ -722,8 +752,21 @@ export default function App() {
                 value={settings.fontSize}
                 onChange={(e) => update({ fontSize: Number(e.target.value) })}
               />
+              <div className="preset-chips-row">
+                {[16, 21, 30, 38].map((size) => (
+                  <button
+                    key={size}
+                    type="button"
+                    className={`preset-chip-btn ${settings.fontSize === size ? 'preset-chip-btn--active' : ''}`}
+                    onClick={() => update({ fontSize: size })}
+                  >
+                    {size === 21 ? 'Default (21px)' : `${size}px`}
+                  </button>
+                ))}
+              </div>
             </div>
 
+            {/* Background Opacity Control */}
             <div className="slider-group">
               <div className="slider-header">
                 <span className="slider-label">Background Opacity</span>
@@ -738,8 +781,26 @@ export default function App() {
                 value={settings.bgOpacity}
                 onChange={(e) => update({ bgOpacity: Number(e.target.value) })}
               />
+              <div className="preset-chips-row">
+                {[
+                  { label: 'Clear (0%)', val: 0 },
+                  { label: 'Glass (40%)', val: 0.4 },
+                  { label: 'Std (75%)', val: 0.75 },
+                  { label: 'Solid (100%)', val: 1.0 },
+                ].map((item) => (
+                  <button
+                    key={item.label}
+                    type="button"
+                    className={`preset-chip-btn ${Math.abs(settings.bgOpacity - item.val) < 0.04 ? 'preset-chip-btn--active' : ''}`}
+                    onClick={() => update({ bgOpacity: item.val })}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
+            {/* Vertical Position Control */}
             <div className="slider-group">
               <div className="slider-header">
                 <span className="slider-label">Vertical Position</span>
@@ -753,6 +814,23 @@ export default function App() {
                 value={settings.position}
                 onChange={(e) => update({ position: Number(e.target.value) })}
               />
+              <div className="preset-chips-row">
+                {[
+                  { label: 'Bottom (6%)', val: 6 },
+                  { label: 'Default (8%)', val: 8 },
+                  { label: 'Lifted (16%)', val: 16 },
+                  { label: 'High (25%)', val: 25 },
+                ].map((item) => (
+                  <button
+                    key={item.label}
+                    type="button"
+                    className={`preset-chip-btn ${settings.position === item.val ? 'preset-chip-btn--active' : ''}`}
+                    onClick={() => update({ position: item.val })}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
