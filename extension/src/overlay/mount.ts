@@ -34,7 +34,15 @@ export function mountOverlay(player: HTMLElement, node: ReactNode): () => void {
   const root = createRoot(container);
   root.render(node);
 
+  // Self-healing: if YouTube DOM swap detaches the host element, re-attach it automatically
+  const reattachTimer = window.setInterval(() => {
+    if (!host.isConnected && player.isConnected) {
+      player.append(host);
+    }
+  }, 500);
+
   return () => {
+    window.clearInterval(reattachTimer);
     root.unmount();
     host.remove();
   };

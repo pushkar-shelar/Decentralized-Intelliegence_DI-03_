@@ -286,15 +286,17 @@ function generateDemoCues(count = 10): Cue[] {
     // Start video anchor streaming to offscreen audio engine
     this.startAnchorStreaming(session);
 
+    // Request fresh caption tracks from main-world hook for this video
+    window.postMessage({ type: 'LIVESUB_REQUEST_TRACKS' }, '*');
+
     // Fast Look-Ahead Pre-Buffering: Request backend to download & pre-process first 120s of audio
-    this.requestLookAheadPreprocess(session);
+    this.requestLookAheadPreprocess(session, 0.0, 120.0);
 
     // If after 1.5 seconds no captions are found and settings are enabled, activate audio path
     setTimeout(() => {
       if (
         this.session === session &&
-        session.cueStore instanceof CueStore &&
-        session.cueStore.length === 0 &&
+        session.mode !== 'captions' &&
         !session.audioCaptureActive
       ) {
         this.initiateAudioCapture(session);
@@ -307,6 +309,12 @@ function generateDemoCues(count = 10): Cue[] {
    */
   onSttCue(cue: Cue): void {
     if (!this.session) return;
+    // Strictly drop ad transcriptions to avoid polluting main video subtitles
+    if (this.session.tracker.snapshot.isAd) {
+      console.info(LOG, `[Ad Subtitle Suppressed] Dropping STT cue during advertisement: "${cue.text}"`);
+      return;
+    }
+
     console.info(LOG, `[STT Cue Received] [${cue.lang}] (${cue.start}s - ${cue.end}s): ${cue.text}`);
     if (this.session.cueStore instanceof CueStore) {
       this.session.cueStore.upsertCue(cue);
@@ -322,33 +330,82 @@ function generateDemoCues(count = 10): Cue[] {
   }
 
   private startAnchorStreaming(session: Session): void {
-    const { video } = session;
+    const { video, tracker } = session;
+    let wasAd = tracker.snapshot.isAd;
+    let lastMainVideoTime = video.currentTime;
 
     const emitAnchor = (isSeek = false) => {
       if (this.session !== session) return;
       const settings = this.settings.get();
+      const currentIsAd = tracker.snapshot.isAd;
+      if (!currentIsAd) {
+        lastMainVideoTime = video.currentTime;
+      }
+
       const anchor: VideoAnchor = {
         perfNow: performance.now(),
-        videoTime: video.currentTime,
+        videoTime: currentIsAd ? lastMainVideoTime : video.currentTime,
         rate: video.playbackRate,
         paused: video.paused,
         isSeek,
+        isAd: currentIsAd,
         sourceLang: settings.sourceLang,
         targetLang: settings.targetLang,
       };
       browser.runtime.sendMessage({ type: 'VIDEO_ANCHOR', anchor }).catch(() => {});
     };
 
+    // Track ad start and ad exit transitions
+    const unsubTracker = tracker.subscribe((state) => {
+      if (this.session !== session) return;
+      if (!wasAd && state.isAd) {
+        // Ad just started
+        wasAd = true;
+        console.info(LOG, 'Advertisement started; pausing live subtitle capture at', lastMainVideoTime);
+        emitAnchor(false);
+      } else if (wasAd && !state.isAd) {
+        // Ad just ended! Resume playback from where the user left off.
+        wasAd = false;
+        console.info(LOG, 'Advertisement finished; resuming subtitles at', video.currentTime);
+        // Fire seek anchor with isAd: false to reset backend utterance buffer and re-anchor
+        emitAnchor(true);
+        // Re-evaluate subtitle overlay immediately
+        session.translator?.onTime(video.currentTime);
+        // If no cues exist for resumed position, request lookahead pre-process
+        if (session.cueStore instanceof CueStore && !session.cueStore.getActiveCue(video.currentTime)) {
+          this.requestLookAheadPreprocess(session, Math.floor(video.currentTime), 120.0);
+        }
+      }
+    });
+
+    let seekDebounceTimer: number | null = null;
+
     // Emit anchors on video state changes
     video.addEventListener('seeking', () => emitAnchor(true));
-    video.addEventListener('seeked', () => emitAnchor(true));
+    video.addEventListener('seeked', () => {
+      emitAnchor(true);
+      // Re-evaluate subtitle display immediately upon seek
+      session.translator?.onTime(video.currentTime);
+
+      // Debounce lookahead pre-process to avoid hammering the backend on fast scrubbing
+      if (seekDebounceTimer !== null) clearTimeout(seekDebounceTimer);
+      seekDebounceTimer = Number(setTimeout(() => {
+        if (
+          this.session === session &&
+          session.mode !== 'captions' &&
+          session.cueStore instanceof CueStore &&
+          !session.cueStore.getActiveCue(video.currentTime)
+        ) {
+          this.requestLookAheadPreprocess(session, Math.floor(video.currentTime), 120.0);
+        }
+      }, 350));
+    });
     video.addEventListener('pause', () => emitAnchor());
     video.addEventListener('play', () => {
       emitAnchor();
       if (
         this.session &&
-        this.session.cueStore instanceof CueStore &&
-        this.session.cueStore.length === 0 &&
+        session.mode !== 'captions' &&
         !this.session.audioCaptureActive
       ) {
         this.initiateAudioCapture(this.session);
@@ -367,8 +424,10 @@ function generateDemoCues(count = 10): Cue[] {
     browser.runtime
       .sendMessage({ type: 'REQUEST_TAB_AUDIO_CAPTURE' })
       .then((res: any) => {
-        if (!res?.success) {
-          console.error(LOG, 'Audio capture initiation failed:', res?.error);
+        if (res?.alreadyActive) {
+          console.info(LOG, 'Audio capture stream already active for this tab');
+        } else if (!res?.success) {
+          console.warn(LOG, 'Audio capture initiation notice:', res?.error);
         } else {
           console.info(LOG, 'Audio capture successfully initiated, streamId:', res.streamId);
         }
@@ -378,7 +437,7 @@ function generateDemoCues(count = 10): Cue[] {
       });
   }
 
-  private requestLookAheadPreprocess(session: Session): void {
+  private requestLookAheadPreprocess(session: Session, startSec = 0.0, durationSec = 120.0): void {
     if (!this.settings.get().enabled) return;
     const settings = this.settings.get();
 
@@ -389,15 +448,15 @@ function generateDemoCues(count = 10): Cue[] {
         video_id: session.videoId,
         target_lang: settings.targetLang,
         source_lang: settings.sourceLang,
-        start_sec: 0.0,
-        duration_sec: 120.0,
+        start_sec: startSec,
+        duration_sec: durationSec,
       }),
     })
       .then((res) => res.json())
       .then((data) => {
         if (data.ok && Array.isArray(data.cues) && data.cues.length > 0) {
           if (this.session === session && session.cueStore instanceof CueStore) {
-            console.info(LOG, `Loaded ${data.cues.length} lookahead pre-processed cues from backend`);
+            console.info(LOG, `Loaded ${data.cues.length} lookahead pre-processed cues from backend (${startSec}s - ${startSec + durationSec}s)`);
             session.cueStore.loadCues(data.cues);
             session.mode = 'audio';
             document.documentElement.dataset.livesubSource = 'pre-process';

@@ -20,29 +20,65 @@ export function watchNavigation(listener: VideoChangeListener): () => void {
     listener(id);
   };
 
-  const check = () => emit(parseVideoId(location.href));
+  const check = () => {
+    const videoId =
+      new URLSearchParams(location.search).get('v') ||
+      parseVideoId(location.href);
+    emit(videoId);
+  };
 
   const onStart = (e: Event) => {
-    // YouTube puts the destination in detail.url (relative). Skip clearing for same-video navigations (e.g. &t= jumps).
-    const url = (e as CustomEvent<{ url?: string }>).detail?.url;
+    // YouTube puts destination in detail.url or endpoint
+    const detail = (e as CustomEvent)?.detail;
+    const url = detail?.url;
+    const navVideoId = detail?.endpoint?.watchEndpoint?.videoId;
+    if (navVideoId && navVideoId === current) return;
     if (url) {
-      const nextId = parseVideoId(new URL(url, location.origin).href);
-      if (nextId !== null && nextId === current) return;
+      try {
+        const nextId = parseVideoId(new URL(url, location.origin).href);
+        if (nextId !== null && nextId === current) return;
+      } catch {
+        // Ignore
+      }
     }
     emit(null);
   };
 
+  const onMessage = (ev: MessageEvent) => {
+    if (ev.source !== window || !ev.data || typeof ev.data !== 'object') return;
+    if (ev.data.type === 'LIVESUB_NAVIGATE_FINISH') {
+      const id = ev.data.videoId || parseVideoId(ev.data.url || location.href);
+      if (id) emit(id);
+      else check();
+    }
+  };
+
+  // Listen on both window and document to catch SPA events across all YouTube versions
   document.addEventListener('yt-navigate-start', onStart);
+  window.addEventListener('yt-navigate-start', onStart);
+
   document.addEventListener('yt-navigate-finish', check);
+  window.addEventListener('yt-navigate-finish', check);
+
+  document.addEventListener('yt-page-data-updated', check);
+  window.addEventListener('yt-page-data-updated', check);
+
   window.addEventListener('popstate', check);
-  const poll = window.setInterval(check, 1000);
+  window.addEventListener('message', onMessage);
+
+  const poll = window.setInterval(check, 400);
 
   check();
 
   return () => {
     document.removeEventListener('yt-navigate-start', onStart);
+    window.removeEventListener('yt-navigate-start', onStart);
     document.removeEventListener('yt-navigate-finish', check);
+    window.removeEventListener('yt-navigate-finish', check);
+    document.removeEventListener('yt-page-data-updated', check);
+    window.removeEventListener('yt-page-data-updated', check);
     window.removeEventListener('popstate', check);
+    window.removeEventListener('message', onMessage);
     window.clearInterval(poll);
   };
 }

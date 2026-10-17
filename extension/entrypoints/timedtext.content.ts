@@ -80,11 +80,16 @@ export default defineContentScript({
     // 3. Helper to broadcast player captions metadata when player is ready
     function broadcastTracks() {
       try {
-        const ytData = (window as any).ytInitialPlayerResponse;
-        let tracks = ytData?.captions?.playerCaptionsTracklistRenderer?.captionTracks;
+        const player = document.getElementById('movie_player') as any;
+        const freshResponse = player?.getPlayerResponse?.();
+        let tracks = freshResponse?.captions?.playerCaptionsTracklistRenderer?.captionTracks;
 
         if (!Array.isArray(tracks) || tracks.length === 0) {
-          const player = document.getElementById('movie_player') as any;
+          const ytData = (window as any).ytInitialPlayerResponse;
+          tracks = ytData?.captions?.playerCaptionsTracklistRenderer?.captionTracks;
+        }
+
+        if (!Array.isArray(tracks) || tracks.length === 0) {
           const playerTracks = player?.getOption?.('captions', 'tracklist');
           if (Array.isArray(playerTracks) && playerTracks.length > 0) {
             tracks = playerTracks;
@@ -125,7 +130,18 @@ export default defineContentScript({
       }
     });
 
-    window.addEventListener('yt-navigate-finish', () => setTimeout(broadcastTracks, 300));
+    const onNavigate = (e: any) => {
+      const videoId =
+        new URLSearchParams(location.search).get('v') ||
+        e?.detail?.endpoint?.watchEndpoint?.videoId ||
+        e?.detail?.response?.endpoint?.watchEndpoint?.videoId;
+      window.postMessage({ type: 'LIVESUB_NAVIGATE_FINISH', videoId, url: location.href }, '*');
+      setTimeout(broadcastTracks, 300);
+      setTimeout(broadcastTracks, 1000);
+    };
+
+    window.addEventListener('yt-navigate-finish', onNavigate);
+    document.addEventListener('yt-navigate-finish', onNavigate);
     window.addEventListener('load', broadcastTracks);
   },
 });
