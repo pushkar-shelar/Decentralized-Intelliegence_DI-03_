@@ -55,12 +55,12 @@ export default defineContentScript({
       if (message?.type === 'LIVESUB_SETTINGS_UPDATE' && message.settings) {
         settings.set(message.settings);
         sendResponse({ ok: true });
-        return true;
+        return;
       }
       if (message?.type === 'LIVESUB_EXPORT_SESSION') {
         const data = controller.exportSession();
         sendResponse({ ok: !!data, data });
-        return true;
+        return;
       }
       if (message?.type === 'LIVESUB_GET_STATUS') {
         const session = controller.current;
@@ -79,7 +79,7 @@ export default defineContentScript({
           currentTime: session?.video?.currentTime ?? 0,
           duration: session?.video?.duration ?? 0,
         });
-        return true;
+        return;
       }
     };
     browser.runtime.onMessage.addListener(onRuntimeMessage);

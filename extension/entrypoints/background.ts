@@ -93,7 +93,7 @@ export default defineBackground(() => {
       const tabId = sender.tab?.id ?? msg.tabId;
       if (!tabId) {
         sendResponse({ success: false, error: 'No active tab ID available' });
-        return true;
+        return;
       }
 
       (async () => {
