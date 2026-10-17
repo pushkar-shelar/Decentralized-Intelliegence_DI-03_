@@ -150,9 +150,18 @@ export default function App() {
     const next = { ...settings, ...patch };
     setSettings(next);
     void saveSettings(next);
-    if (activeTabId) {
-      browser.tabs.sendMessage(activeTabId, { type: 'LIVESUB_SETTINGS_UPDATE', settings: next }).catch(() => {});
-    }
+    // 1. Send via background runtime broadcast
+    browser.runtime.sendMessage({ type: 'LIVESUB_SETTINGS_UPDATE', settings: next }).catch(() => {});
+    // 2. Also send directly to all YouTube tabs
+    chrome.tabs.query({ url: '*://*.youtube.com/*' }, (tabs) => {
+      for (const t of tabs) {
+        if (t.id) {
+          chrome.tabs.sendMessage(t.id, { type: 'LIVESUB_SETTINGS_UPDATE', settings: next }, () => {
+            if (chrome.runtime.lastError) {}
+          });
+        }
+      }
+    });
   };
 
   const handleExportDownload = async () => {

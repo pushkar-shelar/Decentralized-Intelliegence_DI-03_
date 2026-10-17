@@ -56,6 +56,18 @@ export default defineBackground(() => {
       return;
     }
 
+    if (msg.type === 'LIVESUB_SETTINGS_UPDATE') {
+      // Forward settings update to all open YouTube tabs
+      chrome.tabs.query({ url: '*://*.youtube.com/*' }, (tabs) => {
+        for (const tab of tabs) {
+          if (tab.id) {
+            chrome.tabs.sendMessage(tab.id, msg).catch(() => {});
+          }
+        }
+      });
+      return;
+    }
+
     if (msg.type === 'START_TAB_CAPTURE_WITH_STREAM_ID') {
       const { streamId, tabId } = msg;
       (async () => {

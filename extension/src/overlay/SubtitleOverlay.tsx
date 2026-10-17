@@ -152,7 +152,15 @@ export function SubtitleOverlay({ video, tracker, provider, settings: settingsSt
         }
 
         return (
-          <div className="ls-cue" key={cue.id} lang={cue.lang} data-source={cue.source}>
+          <div
+            className="ls-cue"
+            key={cue.id}
+            lang={cue.lang}
+            data-source={cue.source}
+            style={{
+              backgroundColor: `rgba(0, 0, 0, ${settings.bgOpacity})`,
+            }}
+          >
             {cue.speaker && (
               <span className="ls-speaker-badge" data-speaker={cue.speaker}>
                 {formatSpeakerDisplay(cue.speaker)}
@@ -163,6 +171,9 @@ export function SubtitleOverlay({ video, tracker, provider, settings: settingsSt
                 key={line.kind}
                 className={`ls-line ls-${line.kind}`}
                 lang={line.kind === 'translation' ? cue.translation_lang ?? undefined : cue.lang}
+                style={{
+                  fontSize: `${(settings.fontSize * scale * (line.kind === 'translation' ? 0.92 : 1)).toFixed(1)}px`,
+                }}
               >
                 {line.text}
               </span>
