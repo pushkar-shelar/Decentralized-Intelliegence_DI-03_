@@ -1,3 +1,4 @@
+import type { Cue } from '../shared/cue';
 import type { Store } from '../shared/store';
 import type { LiveSubSettings } from '../settings/settings-core';
 import type { CueStore } from '../timeline/cue-store';

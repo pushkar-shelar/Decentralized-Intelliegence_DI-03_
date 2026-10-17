@@ -116,6 +116,10 @@ class UnifiedTranslator:
         res = await self.normalize_and_translate(text, source_lang, target_lang)
         return res.get("translation", text)
 
+    async def _translate_with_grok(self, text: str, src: str, tgt: str) -> Optional[str]:
+        res = await self._normalize_and_translate_with_grok(text, src, tgt)
+        return res.get("translation") if res else None
+
     async def _normalize_and_translate_with_grok(self, text: str, src: str, tgt: str) -> Optional[Dict[str, str]]:
         target_name = self._normalize_lang_name(tgt)
         source_name = self._normalize_lang_name(src)

@@ -35,6 +35,7 @@ export interface Session {
   availableTracks?: CaptionTrack[];
   anchorTimer?: number | null;
   audioCaptureActive?: boolean;
+  trackerUnsub?: () => void;
   dispose: () => void;
 }
 
@@ -356,7 +357,7 @@ function generateDemoCues(count = 10): Cue[] {
     };
 
     // Track ad start and ad exit transitions
-    const unsubTracker = tracker.subscribe((state) => {
+    session.trackerUnsub = tracker.subscribe((state) => {
       if (this.session !== session) return;
       if (!wasAd && state.isAd) {
         // Ad just started
@@ -501,7 +502,7 @@ function generateDemoCues(count = 10): Cue[] {
     this.pending?.abort();
     this.pending = null;
     if (!this.session) return;
-    const { id, tracker, unmount, anchorTimer, audioCaptureActive, dispose } = this.session;
+    const { id, tracker, unmount, anchorTimer, audioCaptureActive, trackerUnsub, dispose } = this.session;
 
     if (anchorTimer !== null && anchorTimer !== undefined) {
       clearInterval(anchorTimer);
@@ -511,6 +512,7 @@ function generateDemoCues(count = 10): Cue[] {
       browser.runtime.sendMessage({ type: 'STOP_TAB_AUDIO_CAPTURE' }).catch(() => {});
     }
 
+    trackerUnsub?.();
     dispose?.();
     unmount();
     tracker.stop();

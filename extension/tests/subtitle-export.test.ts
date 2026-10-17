@@ -21,7 +21,6 @@ import {
 } from '../src/export/filename';
 import {
   buildSessionExport,
-  downloadTextFile,
   downloadSrtFile,
   downloadVttFile,
 } from '../src/export/session-export';
@@ -474,8 +473,8 @@ describe('Subtitle Export: Session Integration & Store Independence', () => {
 
     vi.stubGlobal('document', {
       createElement: vi.fn(() => ({
-        set href(val: string) {},
-        set download(val: string) {},
+        set href(_val: string) {},
+        set download(_val: string) {},
         style: {},
         click: clickMock,
       })),
