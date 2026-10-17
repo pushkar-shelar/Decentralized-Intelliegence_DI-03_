@@ -90,10 +90,23 @@ class WhisperEngine(BaseASREngine):
                         seg_end = s.words[-1].end
 
                     full_text_parts.append(text_part)
-                    seg_list.append(TranscriptionSegment(start=round(seg_start, 3), end=round(seg_end, 3), text=text_part))
+                    seg_obj = TranscriptionSegment(start=round(seg_start, 3), end=round(seg_end, 3), text=text_part)
+                    seg_list.append(seg_obj)
 
             full_text = " ".join(full_text_parts).strip()
             detected_lang = info.language or (language or "en")
+
+            # Log each Whisper STT output line to whispr_logs.txt
+            from backend.app.models.whisper_logger import log_stt_output
+            for s in seg_list:
+                log_stt_output(
+                    text=s.text,
+                    start=s.start,
+                    end=s.end,
+                    language=detected_lang,
+                    source="Whisper STT",
+                    status="FINAL" if is_final else "PARTIAL",
+                )
 
             return ASRResult(
                 text=full_text,

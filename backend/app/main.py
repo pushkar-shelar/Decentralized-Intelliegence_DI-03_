@@ -135,6 +135,8 @@ async def preprocess_video(req: PreProcessRequest):
         return {"ok": False, "error": "StreamResolver not initialized"}
 
     print(f"[PreProcess] Request received for video {req.video_id} (from {req.start_sec}s for {req.duration_sec}s)")
+    from backend.app.models.whisper_logger import start_new_log_run, log_stt_output
+    start_new_log_run(f"Look-Ahead Video Pre-Process [Video ID: {req.video_id}] (Window: {req.start_sec}s - {(req.start_sec or 0.0) + (req.duration_sec or 120.0)}s)")
     try:
         # 1. Fetch audio stream file
         wav_path = stream_resolver.fetch_video_audio(req.video_id)
@@ -230,6 +232,9 @@ async def audio_websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     print("[LiveSub WS] Audio client connected from extension", flush=True)
 
+    from backend.app.models.whisper_logger import start_new_log_run, log_stt_output
+    start_new_log_run("Live Tab Audio Streaming WebSocket")
+
     processor = StreamingSpeechProcessor(
         shrutam=shrutam_engine,
         whisper=whisper_engine,
@@ -291,6 +296,16 @@ async def audio_websocket_endpoint(websocket: WebSocket):
                     if cue.get("translation"):
                         log_msg += f" --> [{cue.get('translation_lang', 'en')}]: {cue['translation']}"
                     print(log_msg, flush=True)
+
+                    # Log to whispr_logs.txt on each STT output
+                    log_stt_output(
+                        text=cue["text"],
+                        start=cue.get("start"),
+                        end=cue.get("end"),
+                        language=cue.get("lang"),
+                        source="Whisper Live STT",
+                        status=status_str,
+                    )
 
                     await websocket.send_text(
                         json.dumps({

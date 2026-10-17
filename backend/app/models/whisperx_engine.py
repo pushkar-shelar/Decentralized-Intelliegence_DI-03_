@@ -120,12 +120,26 @@ class WhisperXEngine:
                 continue
 
             speaker = s.get("speaker", None)
-            output_segments.append({
+            seg_dict = {
                 "start": round(float(s.get("start", 0.0)), 3),
                 "end": round(float(s.get("end", 0.0)), 3),
                 "text": text,
                 "speaker": speaker,
                 "language": detected_lang,
-            })
+            }
+            output_segments.append(seg_dict)
+
+        # Log each WhisperX STT output line to whispr_logs.txt
+        from backend.app.models.whisper_logger import log_stt_output
+        for item in output_segments:
+            log_stt_output(
+                text=item["text"],
+                start=item["start"],
+                end=item["end"],
+                language=item["language"],
+                speaker=item.get("speaker"),
+                source="WhisperX STT",
+                status="FINAL",
+            )
 
         return output_segments
