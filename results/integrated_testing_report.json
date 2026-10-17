@@ -1,0 +1,387 @@
+{
+  "timestamp": "2026-10-17 05:30:25",
+  "total_test_cases": 15,
+  "passed": 15,
+  "failed": 0,
+  "avg_asr_latency_ms": 677.6,
+  "avg_translation_latency_ms": 776.6,
+  "avg_total_e2e_ms": 1454.2,
+  "avg_real_time_factor": 0.322,
+  "results": [
+    {
+      "test_id": 1,
+      "category": "Hindi Idiom",
+      "source_lang": "hi",
+      "target_lang": "en",
+      "audio_duration_sec": 4.75,
+      "ground_truth_speech": "दाल में कुछ काला है, मुझे उस पर शक हो रहा है।",
+      "transcription": "दाल में कुछ काला है, मुझे उस पर शक हो रहा है.",
+      "detected_language": "hi",
+      "word_timed_segments": [
+        {
+          "start": 0.0,
+          "end": 3.78,
+          "text": "दाल में कुछ काला है, मुझे उस पर शक हो रहा है."
+        }
+      ],
+      "translated_subtitles": "There's something fishy about it; I'm starting to suspect.",
+      "latency": {
+        "asr_ms": 690.9,
+        "translation_ms": 874.5,
+        "total_e2e_ms": 1565.4,
+        "real_time_factor": 0.33
+      },
+      "status": "PASS"
+    },
+    {
+      "test_id": 2,
+      "category": "Hindi Idiom",
+      "source_lang": "hi",
+      "target_lang": "en",
+      "audio_duration_sec": 5.14,
+      "ground_truth_speech": "आसमान से गिरा और खजूर में अटका, यह तो वही बात हुई।",
+      "transcription": "आस्मान से गिरा और खजूर में अटका ये तो वही बात हुई",
+      "detected_language": "hi",
+      "word_timed_segments": [
+        {
+          "start": 0.0,
+          "end": 4.2,
+          "text": "आस्मान से गिरा और खजूर में अटका ये तो वही बात हुई"
+        }
+      ],
+      "translated_subtitles": "It's like falling from a tree and landing on a thorn bush.",
+      "latency": {
+        "asr_ms": 691.7,
+        "translation_ms": 836.5,
+        "total_e2e_ms": 1528.2,
+        "real_time_factor": 0.297
+      },
+      "status": "PASS"
+    },
+    {
+      "test_id": 3,
+      "category": "Hindi Colloquial",
+      "source_lang": "hi",
+      "target_lang": "en",
+      "audio_duration_sec": 4.8,
+      "ground_truth_speech": "हेलो दोस्तों, स्वागत है आपका हमारे इस यूट्यूब चैनल में।",
+      "transcription": "हेलो दोस्तों, स्वागत है आपका हमारे इस यूट्यूग चैनल में",
+      "detected_language": "hi",
+      "word_timed_segments": [
+        {
+          "start": 0.0,
+          "end": 4.4,
+          "text": "हेलो दोस्तों, स्वागत है आपका हमारे इस यूट्यूग चैनल में"
+        }
+      ],
+      "translated_subtitles": "Hello friends, welcome to our YouTube channel.",
+      "latency": {
+        "asr_ms": 677.6,
+        "translation_ms": 781.6,
+        "total_e2e_ms": 1459.2,
+        "real_time_factor": 0.304
+      },
+      "status": "PASS"
+    },
+    {
+      "test_id": 4,
+      "category": "Hindi Idiom",
+      "source_lang": "hi",
+      "target_lang": "en",
+      "audio_duration_sec": 4.01,
+      "ground_truth_speech": "अरे भाई ज्यादा हवा में मत उड़ो, जमीन पर रहो।",
+      "transcription": "अरे भाई ज्यादा हवा में मत उलो, जमीन पर रहो",
+      "detected_language": "hi",
+      "word_timed_segments": [
+        {
+          "start": 0.0,
+          "end": 3.52,
+          "text": "अरे भाई ज्यादा हवा में मत उलो, जमीन पर रहो"
+        }
+      ],
+      "translated_subtitles": "Hey man, stop getting carried away and keep your feet on the ground.",
+      "latency": {
+        "asr_ms": 613.4,
+        "translation_ms": 877.5,
+        "total_e2e_ms": 1490.9,
+        "real_time_factor": 0.372
+      },
+      "status": "PASS"
+    },
+    {
+      "test_id": 5,
+      "category": "Hindi Conversational",
+      "source_lang": "hi",
+      "target_lang": "en",
+      "audio_duration_sec": 4.2,
+      "ground_truth_speech": "आज मौसम बहुत सुहावना है और बारिश होने वाली है।",
+      "transcription": "आज मौसम बहुत सुहावना है और बारिश होने वाली है",
+      "detected_language": "hi",
+      "word_timed_segments": [
+        {
+          "start": 0.0,
+          "end": 3.66,
+          "text": "आज मौसम बहुत सुहावना है और बारिश होने वाली है"
+        }
+      ],
+      "translated_subtitles": "The weather is very pleasant today, and it's about to rain.",
+      "latency": {
+        "asr_ms": 718.7,
+        "translation_ms": 556.8,
+        "total_e2e_ms": 1275.5,
+        "real_time_factor": 0.304
+      },
+      "status": "PASS"
+    },
+    {
+      "test_id": 6,
+      "category": "Marathi Colloquial",
+      "source_lang": "mr",
+      "target_lang": "en",
+      "audio_duration_sec": 6.02,
+      "ground_truth_speech": "नमस्कार मित्रांनो, आपल्या चॅनेलवर सर्वांचे मनापासून स्वागत आहे.",
+      "transcription": "नमस्कार मीत्रानो, आपल्या चैनेल वर सर्वांचे मना पासुन स्वागता हे.",
+      "detected_language": "mr",
+      "word_timed_segments": [
+        {
+          "start": 0.0,
+          "end": 5.42,
+          "text": "नमस्कार मीत्रानो, आपल्या चैनेल वर सर्वांचे मना पासुन स्वागता हे."
+        }
+      ],
+      "translated_subtitles": "Hello friends, a warm welcome to everyone on our channel.",
+      "latency": {
+        "asr_ms": 707.4,
+        "translation_ms": 437.4,
+        "total_e2e_ms": 1144.8,
+        "real_time_factor": 0.19
+      },
+      "status": "PASS"
+    },
+    {
+      "test_id": 7,
+      "category": "Marathi Idiom",
+      "source_lang": "mr",
+      "target_lang": "en",
+      "audio_duration_sec": 4.37,
+      "ground_truth_speech": "घरोघरी मातीच्या चुली असतात, कुठेही जा तेच दिसेल.",
+      "transcription": "घुरोगरी माती चा चुली अस्तात कुठे ही जात एज दिसेल।",
+      "detected_language": "mr",
+      "word_timed_segments": [
+        {
+          "start": 0.0,
+          "end": 4.06,
+          "text": "घुरोगरी माती चा चुली अस्तात कुठे ही जात एज दिसेल।"
+        }
+      ],
+      "translated_subtitles": "No matter where you go, you'll always find a place to light a fire in the red soil.",
+      "latency": {
+        "asr_ms": 694.0,
+        "translation_ms": 1119.1,
+        "total_e2e_ms": 1813.1,
+        "real_time_factor": 0.415
+      },
+      "status": "PASS"
+    },
+    {
+      "test_id": 8,
+      "category": "Marathi Conversational",
+      "source_lang": "mr",
+      "target_lang": "en",
+      "audio_duration_sec": 3.65,
+      "ground_truth_speech": "आज संध्याकाळी आपण जेवायला बाहेर जाऊया का?",
+      "transcription": "आज संध्याकली आपन जेवाईला बाहेर जाउया का?",
+      "detected_language": "mr",
+      "word_timed_segments": [
+        {
+          "start": 0.0,
+          "end": 3.16,
+          "text": "आज संध्याकली आपन जेवाईला बाहेर जाउया का?"
+        }
+      ],
+      "translated_subtitles": "How about we go out for dinner tonight?",
+      "latency": {
+        "asr_ms": 599.9,
+        "translation_ms": 649.1,
+        "total_e2e_ms": 1249.0,
+        "real_time_factor": 0.342
+      },
+      "status": "PASS"
+    },
+    {
+      "test_id": 9,
+      "category": "Tamil Conversational",
+      "source_lang": "ta",
+      "target_lang": "en",
+      "audio_duration_sec": 4.82,
+      "ground_truth_speech": "வணக்கம் நண்பர்களே, இந்த வீடியோவை பார்த்ததற்கு நன்றி.",
+      "transcription": "வணக்கம் நண்பர்களே இந்த வீடியோவை பார்த்ததற்கு நன்றி.",
+      "detected_language": "ta",
+      "word_timed_segments": [
+        {
+          "start": 0.0,
+          "end": 4.32,
+          "text": "வணக்கம் நண்பர்களே இந்த வீடியோவை பார்த்ததற்கு நன்றி."
+        }
+      ],
+      "translated_subtitles": "Hello friends, thanks for watching this video.",
+      "latency": {
+        "asr_ms": 710.0,
+        "translation_ms": 762.9,
+        "total_e2e_ms": 1472.9,
+        "real_time_factor": 0.306
+      },
+      "status": "PASS"
+    },
+    {
+      "test_id": 10,
+      "category": "Tamil Idiom",
+      "source_lang": "ta",
+      "target_lang": "en",
+      "audio_duration_sec": 4.25,
+      "ground_truth_speech": "காக்கைக்கும் தன் குஞ்சு பொன் குஞ்சு என்று சொல்வார்கள்.",
+      "transcription": "காக்கைக்கும் தன் குஞ்சு பொன் குஞ்சு என்று சொல்வார்கள்",
+      "detected_language": "ta",
+      "word_timed_segments": [
+        {
+          "start": 0.0,
+          "end": 3.78,
+          "text": "காக்கைக்கும் தன் குஞ்சு பொன் குஞ்சு என்று சொல்வார்கள்"
+        }
+      ],
+      "translated_subtitles": "They say a crow sees its own chick as a golden one.",
+      "latency": {
+        "asr_ms": 727.0,
+        "translation_ms": 1052.0,
+        "total_e2e_ms": 1779.0,
+        "real_time_factor": 0.419
+      },
+      "status": "PASS"
+    },
+    {
+      "test_id": 11,
+      "category": "Tamil Conversational",
+      "source_lang": "ta",
+      "target_lang": "en",
+      "audio_duration_sec": 3.96,
+      "ground_truth_speech": "நாளைக்கு நாம் அனைவரும் கடற்கரைக்கு செல்லலாம்.",
+      "transcription": "நாளைக்கு நாம் அனைவரும் கடர்க்கரைக்கு செல்லலாம்.",
+      "detected_language": "ta",
+      "word_timed_segments": [
+        {
+          "start": 0.0,
+          "end": 3.54,
+          "text": "நாளைக்கு நாம் அனைவரும் கடர்க்கரைக்கு செல்லலாம்."
+        }
+      ],
+      "translated_subtitles": "We can all go to the beach tomorrow.",
+      "latency": {
+        "asr_ms": 620.1,
+        "translation_ms": 538.1,
+        "total_e2e_ms": 1158.2,
+        "real_time_factor": 0.292
+      },
+      "status": "PASS"
+    },
+    {
+      "test_id": 12,
+      "category": "Telugu Conversational",
+      "source_lang": "te",
+      "target_lang": "en",
+      "audio_duration_sec": 4.32,
+      "ground_truth_speech": "అందరికీ నమస్కారం, మన ఛానల్ కి స్వాగతం.",
+      "transcription": "అందరి కి నమస్కారం మన చానల్ కి స్వాగతం.",
+      "detected_language": "te",
+      "word_timed_segments": [
+        {
+          "start": 0.0,
+          "end": 3.84,
+          "text": "అందరి కి నమస్కారం మన చానల్ కి స్వాగతం."
+        }
+      ],
+      "translated_subtitles": "Greetings everyone, welcome to our channel.",
+      "latency": {
+        "asr_ms": 787.9,
+        "translation_ms": 688.2,
+        "total_e2e_ms": 1476.1,
+        "real_time_factor": 0.342
+      },
+      "status": "PASS"
+    },
+    {
+      "test_id": 13,
+      "category": "Telugu Conversational",
+      "source_lang": "te",
+      "target_lang": "en",
+      "audio_duration_sec": 5.23,
+      "ground_truth_speech": "ఈ రోజు హైదరాబాద్ లో వాతావరణం చాలా ఆహ్లాదకరంగా ఉంది.",
+      "transcription": "ఇ రోజు హిదరాబాద్లో వాతావరణం చాలా ఆహలాదకరంగా ఉంది.",
+      "detected_language": "te",
+      "word_timed_segments": [
+        {
+          "start": 0.0,
+          "end": 4.76,
+          "text": "ఇ రోజు హిదరాబాద్లో వాతావరణం చాలా ఆహలాదకరంగా ఉంది."
+        }
+      ],
+      "translated_subtitles": "Today, the weather in Hyderabad is very pleasant.",
+      "latency": {
+        "asr_ms": 854.9,
+        "translation_ms": 740.3,
+        "total_e2e_ms": 1595.2,
+        "real_time_factor": 0.305
+      },
+      "status": "PASS"
+    },
+    {
+      "test_id": 14,
+      "category": "English to Hindi Idiom",
+      "source_lang": "en",
+      "target_lang": "hi",
+      "audio_duration_sec": 4.13,
+      "ground_truth_speech": "You definitely hit the nail on the head with that explanation.",
+      "transcription": "You definitely hit the nail on the head with that explanation.",
+      "detected_language": "en",
+      "word_timed_segments": [
+        {
+          "start": 0.0,
+          "end": 3.22,
+          "text": "You definitely hit the nail on the head with that explanation."
+        }
+      ],
+      "translated_subtitles": "तुम्हारी उस व्याख्या ने बिल्कुल सही निशाना लगाया।",
+      "latency": {
+        "asr_ms": 504.1,
+        "translation_ms": 1177.3,
+        "total_e2e_ms": 1681.4,
+        "real_time_factor": 0.407
+      },
+      "status": "PASS"
+    },
+    {
+      "test_id": 15,
+      "category": "English to Hindi Conversational",
+      "source_lang": "en",
+      "target_lang": "hi",
+      "audio_duration_sec": 5.4,
+      "ground_truth_speech": "Welcome back to the channel, today we are going to learn something amazing.",
+      "transcription": "Welcome back to the channel. Today we are going to learn something amazing.",
+      "detected_language": "en",
+      "word_timed_segments": [
+        {
+          "start": 0.0,
+          "end": 4.28,
+          "text": "Welcome back to the channel. Today we are going to learn something amazing."
+        }
+      ],
+      "translated_subtitles": "चैनल में फिर से आपका स्वागत है। आज हम कुछ अद्भुत सीखने वाले हैं।",
+      "latency": {
+        "asr_ms": 566.1,
+        "translation_ms": 557.9,
+        "total_e2e_ms": 1124.0,
+        "real_time_factor": 0.208
+      },
+      "status": "PASS"
+    }
+  ]
+}

@@ -1,0 +1,473 @@
+{
+  "timestamp": "2026-10-17 05:27:34",
+  "platform": "win32",
+  "python_version": "3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]",
+  "whisper_details": {
+    "is_ready": true,
+    "device": "cuda",
+    "compute_type": "float16",
+    "model_size": "large-v3-turbo",
+    "lid_benchmark": {
+      "detected_lang": "en",
+      "confidence": 0.367919921875,
+      "latency_ms": 482.8
+    }
+  },
+  "window_benchmarks": {
+    "window_benchmarks": [
+      {
+        "window_sec": 0.2,
+        "samples": 3200,
+        "latency_ms": 361.4,
+        "real_time_factor": 1.807,
+        "evaluation": "Too Slow for Real-Time"
+      },
+      {
+        "window_sec": 0.5,
+        "samples": 8000,
+        "latency_ms": 291.1,
+        "real_time_factor": 0.582,
+        "evaluation": "Acceptable"
+      },
+      {
+        "window_sec": 1.0,
+        "samples": 16000,
+        "latency_ms": 292.3,
+        "real_time_factor": 0.292,
+        "evaluation": "Optimal"
+      },
+      {
+        "window_sec": 2.0,
+        "samples": 32000,
+        "latency_ms": 295.1,
+        "real_time_factor": 0.148,
+        "evaluation": "Optimal"
+      },
+      {
+        "window_sec": 3.0,
+        "samples": 48000,
+        "latency_ms": 524.8,
+        "real_time_factor": 0.175,
+        "evaluation": "Optimal"
+      },
+      {
+        "window_sec": 5.0,
+        "samples": 80000,
+        "latency_ms": 293.4,
+        "real_time_factor": 0.059,
+        "evaluation": "Optimal"
+      },
+      {
+        "window_sec": 10.0,
+        "samples": 160000,
+        "latency_ms": 285.4,
+        "real_time_factor": 0.029,
+        "evaluation": "Optimal"
+      }
+    ]
+  },
+  "translation_benchmarks": {
+    "cases": [
+      {
+        "id": 1,
+        "category": "Hindi Idiom",
+        "source_lang": "hi",
+        "target_lang": "en",
+        "input_text": "दाल में कुछ काला है",
+        "expected_concept": "fishy / suspicious",
+        "grok": {
+          "output": "There's something fishy.",
+          "latency_ms": 527.0
+        },
+        "sarvam_mayura": {
+          "output": "There is something black in the lentils",
+          "latency_ms": 741.6
+        },
+        "unified_output": {
+          "output": "There's something fishy.",
+          "latency_ms": 1352.3
+        }
+      },
+      {
+        "id": 2,
+        "category": "Hindi Idiom",
+        "source_lang": "hi",
+        "target_lang": "en",
+        "input_text": "आसमान से गिरा, खजूर में अटका",
+        "expected_concept": "out of the frying pan into the fire",
+        "grok": {
+          "output": "Out of the frying pan into the fire",
+          "latency_ms": 463.4
+        },
+        "sarvam_mayura": {
+          "output": "Fell from the sky, got stuck in a date",
+          "latency_ms": 780.1
+        },
+        "unified_output": {
+          "output": "Out of the frying pan into the fire",
+          "latency_ms": 680.7
+        }
+      },
+      {
+        "id": 3,
+        "category": "Hindi Idiom",
+        "source_lang": "hi",
+        "target_lang": "en",
+        "input_text": "नाच न जाने आँगन टेढ़ा",
+        "expected_concept": "bad workman blames his tools",
+        "grok": {
+          "output": "I don't know how to dance, the courtyard is crooked.",
+          "latency_ms": 1096.7
+        },
+        "sarvam_mayura": {
+          "output": "The dance, I don't know, the courtyard is crooked",
+          "latency_ms": 792.8
+        },
+        "unified_output": {
+          "output": "A bad workman blames his tools.",
+          "latency_ms": 790.6
+        }
+      },
+      {
+        "id": 4,
+        "category": "Hindi Idiom",
+        "source_lang": "hi",
+        "target_lang": "en",
+        "input_text": "अंगूठा दिखाना",
+        "expected_concept": "refusal / mock",
+        "grok": {
+          "output": "To show the middle finger",
+          "latency_ms": 648.5
+        },
+        "sarvam_mayura": {
+          "output": "Showing thumb",
+          "latency_ms": 651.4
+        },
+        "unified_output": {
+          "output": "to show one's thumb",
+          "latency_ms": 853.8
+        }
+      },
+      {
+        "id": 5,
+        "category": "Hindi Idiom",
+        "source_lang": "hi",
+        "target_lang": "en",
+        "input_text": "कान भरना",
+        "expected_concept": "poison ears / backbite / gossip",
+        "grok": {
+          "output": "to nag",
+          "latency_ms": 792.9
+        },
+        "sarvam_mayura": {
+          "output": "Ear filling",
+          "latency_ms": 600.8
+        },
+        "unified_output": {
+          "output": "to pay attention",
+          "latency_ms": 1012.8
+        }
+      },
+      {
+        "id": 6,
+        "category": "Hindi Idiom",
+        "source_lang": "hi",
+        "target_lang": "en",
+        "input_text": "पेट में चूहे कूद रहे हैं",
+        "expected_concept": "starving / very hungry",
+        "grok": {
+          "output": "I have butterflies in my stomach.",
+          "latency_ms": 781.6
+        },
+        "sarvam_mayura": {
+          "output": "Rats are jumping in my stomach",
+          "latency_ms": 680.9
+        },
+        "unified_output": {
+          "output": "I have butterflies in my stomach",
+          "latency_ms": 381.1
+        }
+      },
+      {
+        "id": 7,
+        "category": "Hindi Idiom",
+        "source_lang": "hi",
+        "target_lang": "en",
+        "input_text": "नौ दो ग्यारह होना",
+        "expected_concept": "flee / run away",
+        "grok": {
+          "output": "to be on the verge of a fight",
+          "latency_ms": 976.2
+        },
+        "sarvam_mayura": {
+          "output": "Nine two eleven",
+          "latency_ms": 775.9
+        },
+        "unified_output": {
+          "output": "to be all over the place",
+          "latency_ms": 670.1
+        }
+      },
+      {
+        "id": 8,
+        "category": "Marathi Idiom",
+        "source_lang": "mr",
+        "target_lang": "en",
+        "input_text": "घरोघरी मातीच्या चुली",
+        "expected_concept": "every house has same flaws / human nature",
+        "grok": {
+          "output": "Clay stoves in every home",
+          "latency_ms": 916.3
+        },
+        "sarvam_mayura": {
+          "output": "Every house has a clay stove",
+          "latency_ms": 789.5
+        },
+        "unified_output": {
+          "output": "Clay stoves in every home",
+          "latency_ms": 1023.0
+        }
+      },
+      {
+        "id": 9,
+        "category": "Marathi Idiom",
+        "source_lang": "mr",
+        "target_lang": "en",
+        "input_text": "काखेत कळसा गावाला वळसा",
+        "expected_concept": "looking everywhere for what is right next to you",
+        "grok": {
+          "output": "The village is a dead end.",
+          "latency_ms": 1128.6
+        },
+        "sarvam_mayura": {
+          "output": "Around the village of Kakhet Kalasa",
+          "latency_ms": 729.6
+        },
+        "unified_output": {
+          "output": "The village is a crooked lot",
+          "latency_ms": 847.5
+        }
+      },
+      {
+        "id": 10,
+        "category": "Marathi Colloquial",
+        "source_lang": "mr",
+        "target_lang": "en",
+        "input_text": "आज जेवणात काय बनवलं आहे?",
+        "expected_concept": "what is made for meal / lunch / dinner today",
+        "grok": {
+          "output": "What did you make for the meal today?",
+          "latency_ms": 592.9
+        },
+        "sarvam_mayura": {
+          "output": "What's for dinner today?",
+          "latency_ms": 666.2
+        },
+        "unified_output": {
+          "output": "What did you make for dinner?",
+          "latency_ms": 702.6
+        }
+      },
+      {
+        "id": 11,
+        "category": "Tamil Idiom",
+        "source_lang": "ta",
+        "target_lang": "en",
+        "input_text": "காக்கைக்கும் தன் குஞ்சு பொன் குஞ்சு",
+        "expected_concept": "to a crow its own chick is gold / parent's love",
+        "grok": {
+          "output": "Every mother thinks her child is the best.",
+          "latency_ms": 1084.7
+        },
+        "sarvam_mayura": {
+          "output": "The crow also has its own golden chick",
+          "latency_ms": 717.7
+        },
+        "unified_output": {
+          "output": "Every mother thinks her child is the best.",
+          "latency_ms": 671.9
+        }
+      },
+      {
+        "id": 12,
+        "category": "Tamil Conversational",
+        "source_lang": "ta",
+        "target_lang": "en",
+        "input_text": "நீங்கள் எங்கே போகிறீர்கள்?",
+        "expected_concept": "where are you going",
+        "grok": {
+          "output": "Where are you going?",
+          "latency_ms": 499.6
+        },
+        "sarvam_mayura": {
+          "output": "Where are you going?",
+          "latency_ms": 649.3
+        },
+        "unified_output": {
+          "output": "Where are you going?",
+          "latency_ms": 630.1
+        }
+      },
+      {
+        "id": 13,
+        "category": "Telugu Idiom",
+        "source_lang": "te",
+        "target_lang": "en",
+        "input_text": "కుక్క తోక పట్టుకుని గోదావరి ఈదినట్టు",
+        "expected_concept": "foolish / futile attempt / crossing river holding dog tail",
+        "grok": {
+          "output": "Like a dog trying to swim across the Godavari by holding onto its own tail.",
+          "latency_ms": 1016.0
+        },
+        "sarvam_mayura": {
+          "output": "Like a dog holding its tail and swimming in the Godavari river",
+          "latency_ms": 750.4
+        },
+        "unified_output": {
+          "output": "Like a dog trying to swim the Godavari by holding onto its own tail",
+          "latency_ms": 1147.1
+        }
+      },
+      {
+        "id": 14,
+        "category": "Telugu Conversational",
+        "source_lang": "te",
+        "target_lang": "en",
+        "input_text": "ఈ రోజు వాతావరణం చాలా బాగుంది",
+        "expected_concept": "weather is very good today",
+        "grok": {
+          "output": "The weather is great today.",
+          "latency_ms": 637.7
+        },
+        "sarvam_mayura": {
+          "output": "Today's weather is very good",
+          "latency_ms": 769.2
+        },
+        "unified_output": {
+          "output": "The weather is great today.",
+          "latency_ms": 480.3
+        }
+      },
+      {
+        "id": 15,
+        "category": "Hinglish / Colloquial",
+        "source_lang": "hi",
+        "target_lang": "en",
+        "input_text": "Bhai tu bohot bada topi baaz hai, sabko chuna laga raha hai",
+        "expected_concept": "trickster / conning / bluffing everyone",
+        "grok": {
+          "output": "Bro, you're such a smooth operator, always playing everyone for a fool.",
+          "latency_ms": 806.9
+        },
+        "sarvam_mayura": {
+          "output": "Brother, you are a very good hat seller, you are attracting everyone.",
+          "latency_ms": 772.8
+        },
+        "unified_output": {
+          "output": "Bro, you're such a smooth operator, you're playing everyone for a fool.",
+          "latency_ms": 819.8
+        }
+      },
+      {
+        "id": 16,
+        "category": "Hinglish / Slang",
+        "source_lang": "hi",
+        "target_lang": "en",
+        "input_text": "Zyada hawa mein mat ud, zameen pe aa ja",
+        "expected_concept": "don't act arrogant / be humble / get real",
+        "grok": {
+          "output": "Don't get carried away; come back down to earth.",
+          "latency_ms": 348.9
+        },
+        "sarvam_mayura": {
+          "output": "Don't fly too high, come down to the ground.",
+          "latency_ms": 771.5
+        },
+        "unified_output": {
+          "output": "Don't get carried away; come down to earth.",
+          "latency_ms": 294.8
+        }
+      },
+      {
+        "id": 17,
+        "category": "English to Hindi",
+        "source_lang": "en",
+        "target_lang": "hi",
+        "input_text": "Don't judge a book by its cover.",
+        "expected_concept": "शक्ल देखकर अक्ल मत आंक / ऊपरी दिखावे पर मत जाओ",
+        "grok": {
+          "output": "किताब की बाइंडिंग से उसकी किस्मत का अंदाज़ा मत लगाओ।",
+          "latency_ms": 886.4
+        },
+        "sarvam_mayura": {
+          "output": "किसी बुक को उसके कवर से जज मत करो।",
+          "latency_ms": 1217.8
+        },
+        "unified_output": {
+          "output": "किताब की बाइंडिंग से उसकी किस्मत नहीं तय होती।",
+          "latency_ms": 709.3
+        }
+      },
+      {
+        "id": 18,
+        "category": "English to Hindi",
+        "source_lang": "en",
+        "target_lang": "hi",
+        "input_text": "Hit the nail on the head.",
+        "expected_concept": "सटीक बात कहना / सही निशाने पर लगना",
+        "grok": {
+          "output": "बिल्कुल सही कहा",
+          "latency_ms": 292.3
+        },
+        "sarvam_mayura": {
+          "output": "बिल्कुल सही कहा।",
+          "latency_ms": 1238.4
+        },
+        "unified_output": {
+          "output": "बिल्कुल सही कहा।",
+          "latency_ms": 1029.1
+        }
+      },
+      {
+        "id": 19,
+        "category": "English to Marathi",
+        "source_lang": "en",
+        "target_lang": "mr",
+        "input_text": "Better late than never.",
+        "expected_concept": "कधीही न होण्यापेक्षा उशिरा झालेले बरे",
+        "grok": {
+          "output": "उशीर पण झालं, ते चांगलं.",
+          "latency_ms": 330.0
+        },
+        "sarvam_mayura": {
+          "output": "कधीही न होण्यापेक्षा उशीर झालाच बरं.",
+          "latency_ms": 1247.4
+        },
+        "unified_output": {
+          "output": "उशीर पण झालं.",
+          "latency_ms": 788.3
+        }
+      },
+      {
+        "id": 20,
+        "category": "English to Tamil",
+        "source_lang": "en",
+        "target_lang": "ta",
+        "input_text": "Actions speak louder than words.",
+        "expected_concept": "செயல்களே வார்த்தைகளை விட வலிமையானவை",
+        "grok": {
+          "output": "சொல்லை விட செயல் அதிகம் பேசும்.",
+          "latency_ms": 322.7
+        },
+        "sarvam_mayura": {
+          "output": "வார்த்தைகளை விட ஆக்ஷன்ஸ் தான் லௌட்-ஆ பேசுது.",
+          "latency_ms": 1296.0
+        },
+        "unified_output": {
+          "output": "செயல் வார்த்தைக்கு மேல்.",
+          "latency_ms": 886.3
+        }
+      }
+    ]
+  }
+}

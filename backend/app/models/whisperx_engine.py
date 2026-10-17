@@ -1,5 +1,6 @@
-from typing import List, Dict, Any, Optional
 import os
+os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
+from typing import List, Dict, Any, Optional
 import torch
 import numpy as np
 
