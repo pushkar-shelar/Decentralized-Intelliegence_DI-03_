@@ -34,6 +34,7 @@ export interface Session {
   unmount: () => void;
   availableTracks?: CaptionTrack[];
   anchorTimer?: number | null;
+  anchorAbort?: AbortController;
   audioCaptureActive?: boolean;
   trackerUnsub?: () => void;
   dispose: () => void;
@@ -353,7 +354,13 @@ function generateDemoCues(count = 10): Cue[] {
         sourceLang: settings.sourceLang,
         targetLang: settings.targetLang,
       };
-      browser.runtime.sendMessage({ type: 'VIDEO_ANCHOR', anchor }).catch(() => {});
+      try {
+        if (typeof chrome !== 'undefined' && chrome.runtime?.id) {
+          browser.runtime.sendMessage({ type: 'VIDEO_ANCHOR', anchor }).catch(() => {});
+        }
+      } catch {
+        // Suppress extension context invalidated during hot reloads
+      }
     };
 
     // Track ad start and ad exit transitions
@@ -371,39 +378,48 @@ function generateDemoCues(count = 10): Cue[] {
         // Fire seek anchor with isAd: false to reset backend utterance buffer and re-anchor
         emitAnchor(true);
         // Re-evaluate subtitle overlay immediately
-        session.translator?.onTime(video.currentTime);
+        try { session.translator?.onTime(video.currentTime); } catch {}
         // If no cues exist for resumed position, request lookahead pre-process
         if (session.cueStore instanceof CueStore && !session.cueStore.getActiveCue(video.currentTime)) {
-          this.requestLookAheadPreprocess(session, Math.floor(video.currentTime), 120.0);
+          this.requestLookAheadPreprocess(session, Math.max(0, Math.floor(video.currentTime) - 1), 120.0);
         }
       }
     });
 
     let seekDebounceTimer: number | null = null;
+    const anchorAbort = new AbortController();
+    session.anchorAbort = anchorAbort;
+    const listenerOpts = { signal: anchorAbort.signal };
 
     // Emit anchors on video state changes
-    video.addEventListener('seeking', () => emitAnchor(true));
+    video.addEventListener('seeking', () => {
+      try { emitAnchor(true); } catch {}
+    }, listenerOpts);
     video.addEventListener('seeked', () => {
-      emitAnchor(true);
+      try { emitAnchor(true); } catch {}
       // Re-evaluate subtitle display immediately upon seek
-      session.translator?.onTime(video.currentTime);
+      try { session.translator?.onTime(video.currentTime); } catch {}
 
       // Debounce lookahead pre-process to avoid hammering the backend on fast scrubbing
       if (seekDebounceTimer !== null) clearTimeout(seekDebounceTimer);
       seekDebounceTimer = Number(setTimeout(() => {
         if (
           this.session === session &&
-          session.mode !== 'captions' &&
+          session.mode !== 'demo' &&
           session.cueStore instanceof CueStore &&
           !session.cueStore.getActiveCue(video.currentTime)
         ) {
-          this.requestLookAheadPreprocess(session, Math.floor(video.currentTime), 120.0);
+          const seekPos = Math.max(0, Math.floor(video.currentTime) - 1);
+          console.info(LOG, `Requesting lookahead pre-process for seeked position ${seekPos}s`);
+          this.requestLookAheadPreprocess(session, seekPos, 120.0);
         }
-      }, 350));
-    });
-    video.addEventListener('pause', () => emitAnchor());
+      }, 300));
+    }, listenerOpts);
+    video.addEventListener('pause', () => {
+      try { emitAnchor(); } catch {}
+    }, listenerOpts);
     video.addEventListener('play', () => {
-      emitAnchor();
+      try { emitAnchor(); } catch {}
       if (
         this.session &&
         session.mode !== 'captions' &&
@@ -411,31 +427,39 @@ function generateDemoCues(count = 10): Cue[] {
       ) {
         this.initiateAudioCapture(this.session);
       }
-    });
-    video.addEventListener('ratechange', () => emitAnchor());
+    }, listenerOpts);
+    video.addEventListener('ratechange', () => {
+      try { emitAnchor(); } catch {}
+    }, listenerOpts);
 
     // Periodic anchor update every 250ms
-    session.anchorTimer = Number(setInterval(() => emitAnchor(), 250));
+    session.anchorTimer = Number(setInterval(() => {
+      try { emitAnchor(); } catch {}
+    }, 250));
   }
 
   private initiateAudioCapture(session: Session): void {
     if (!this.settings.get().enabled) return;
     session.audioCaptureActive = true;
     console.info(LOG, 'Activating tab audio capture for session', session.id);
-    browser.runtime
-      .sendMessage({ type: 'REQUEST_TAB_AUDIO_CAPTURE' })
-      .then((res: any) => {
-        if (res?.alreadyActive) {
-          console.info(LOG, 'Audio capture stream already active for this tab');
-        } else if (!res?.success) {
-          console.warn(LOG, 'Audio capture initiation notice:', res?.error);
-        } else {
-          console.info(LOG, 'Audio capture successfully initiated, streamId:', res.streamId);
-        }
-      })
-      .catch((err) => {
-        console.warn(LOG, 'Audio capture request notice:', err);
-      });
+    try {
+      if (typeof chrome !== 'undefined' && chrome.runtime?.id) {
+        browser.runtime
+          .sendMessage({ type: 'REQUEST_TAB_AUDIO_CAPTURE' })
+          .then((res: any) => {
+            if (res?.alreadyActive) {
+              console.info(LOG, 'Audio capture stream already active for this tab');
+            } else if (!res?.success) {
+              console.warn(LOG, 'Audio capture initiation notice:', res?.error);
+            } else {
+              console.info(LOG, 'Audio capture successfully initiated, streamId:', res.streamId);
+            }
+          })
+          .catch((err) => {
+            console.warn(LOG, 'Audio capture request notice:', err);
+          });
+      }
+    } catch {}
   }
 
   private requestLookAheadPreprocess(session: Session, startSec = 0.0, durationSec = 120.0): void {
@@ -507,9 +531,14 @@ function generateDemoCues(count = 10): Cue[] {
     if (anchorTimer !== null && anchorTimer !== undefined) {
       clearInterval(anchorTimer);
     }
+    this.session.anchorAbort?.abort();
 
     if (audioCaptureActive) {
-      browser.runtime.sendMessage({ type: 'STOP_TAB_AUDIO_CAPTURE' }).catch(() => {});
+      try {
+        if (typeof chrome !== 'undefined' && chrome.runtime?.id) {
+          browser.runtime.sendMessage({ type: 'STOP_TAB_AUDIO_CAPTURE' }).catch(() => {});
+        }
+      } catch {}
     }
 
     trackerUnsub?.();
