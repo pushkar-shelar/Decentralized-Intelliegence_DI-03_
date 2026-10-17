@@ -4,8 +4,11 @@ import {
   downloadJsonFile,
   downloadSrtFile,
   downloadVttFile,
-  cuesToSrt,
-  cuesToVtt,
+  serializeSrt,
+  serializeWebVtt,
+  normalizeCuesForExport,
+  generateSubtitleFilename,
+  type ExportTextMode,
 } from '../../src/export/session-export';
 import {
   DEFAULT_SETTINGS,
@@ -19,7 +22,15 @@ import {
 import { parseVideoId } from '../../src/youtube/video-id';
 
 type TabStatus = { kind: 'loading' } | { kind: 'video'; videoId: string } | { kind: 'other' };
-type ExportFormat = 'json' | 'srt' | 'vtt';
+type ExportFormat = 'srt' | 'vtt' | 'json';
+type ExportScope = 'all' | 'playback';
+
+function formatClock(t: number): string {
+  const total = Math.max(0, Math.floor(t));
+  const m = Math.floor(total / 60);
+  const s = total % 60;
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
 
 const DISPLAY_MODES: Array<{ value: DisplayMode; label: string }> = [
   { value: 'original', label: 'Original' },
@@ -41,7 +52,11 @@ export default function App() {
   const [tab, setTab] = useState<TabStatus>({ kind: 'loading' });
   const [activeTabId, setActiveTabId] = useState<number | null>(null);
   const [sessionCueCount, setSessionCueCount] = useState<number | null>(null);
-  const [exportFormat, setExportFormat] = useState<ExportFormat>('json');
+  const [videoTitle, setVideoTitle] = useState<string | null>(null);
+  const [currentTime, setCurrentTime] = useState<number>(0);
+  const [exportFormat, setExportFormat] = useState<ExportFormat>('srt');
+  const [exportMode, setExportMode] = useState<ExportTextMode>('both');
+  const [exportScope, setExportScope] = useState<ExportScope>('all');
   const [exporting, setExporting] = useState(false);
   const [copied, setCopied] = useState(false);
   const [exportMessage, setExportMessage] = useState<string | null>(null);
@@ -60,8 +75,16 @@ export default function App() {
         browser.tabs
           .sendMessage(tabId, { type: 'LIVESUB_GET_STATUS' })
           .then((res: any) => {
-            if (res && typeof res.cueCount === 'number') {
-              setSessionCueCount(res.cueCount);
+            if (res) {
+              if (typeof res.cueCount === 'number') {
+                setSessionCueCount(res.cueCount);
+              }
+              if (res.videoTitle) {
+                setVideoTitle(res.videoTitle);
+              }
+              if (typeof res.currentTime === 'number') {
+                setCurrentTime(res.currentTime);
+              }
             }
           })
           .catch(() => {
@@ -102,30 +125,79 @@ export default function App() {
   };
 
   const handleExportDownload = async () => {
-    if (!activeTabId) return;
+    if (!activeTabId || exporting) return;
     setExporting(true);
     setExportMessage(null);
     try {
       const res: any = await browser.tabs.sendMessage(activeTabId, { type: 'LIVESUB_EXPORT_SESSION' });
       if (res?.ok && res.data) {
         const vid = res.data.video_id || 'youtube';
-        const timestamp = Date.now();
-        const cues = res.data.cues || [];
+        const title = res.data.video_title || videoTitle || vid;
+        const rawCues = res.data.cues || [];
+
+        const timeRange =
+          exportScope === 'playback' && currentTime > 0
+            ? { end: currentTime }
+            : undefined;
 
         if (exportFormat === 'json') {
-          const filename = `livesub-session-${vid}-${timestamp}.json`;
-          downloadJsonFile(filename, res.data);
-          setExportMessage(`Exported ${res.data.total_cues} cues as JSON (${filename})`);
-        } else if (exportFormat === 'srt') {
-          const filename = `livesub-${vid}-${timestamp}.srt`;
-          const srt = cuesToSrt(cues, settings.displayMode);
-          downloadSrtFile(filename, srt);
-          setExportMessage(`Exported ${cues.length} cues as SRT (${settings.displayMode} mode)`);
+          const filename = generateSubtitleFilename({
+            title,
+            videoId: vid,
+            format: 'json',
+            mode: exportMode,
+            targetLang: settings.targetLang,
+          });
+          const success = downloadJsonFile(filename, res.data);
+          if (success) {
+            setExportMessage(`Exported ${res.data.total_cues} cues to ${filename}`);
+          } else {
+            setExportMessage('Browser download failed.');
+          }
+          return;
+        }
+
+        const report = normalizeCuesForExport(rawCues, {
+          mode: exportMode,
+          targetLang: settings.targetLang,
+          timeRange,
+        });
+
+        if (report.validCuesCount === 0) {
+          setExportMessage('No valid subtitle cues found for the chosen mode and range.');
+          return;
+        }
+
+        const filename = generateSubtitleFilename({
+          title,
+          videoId: vid,
+          format: exportFormat,
+          mode: exportMode,
+          targetLang: settings.targetLang,
+        });
+
+        let success = false;
+        if (exportFormat === 'srt') {
+          const srt = serializeSrt(rawCues, {
+            mode: exportMode,
+            targetLang: settings.targetLang,
+            timeRange,
+          });
+          success = downloadSrtFile(filename, srt);
         } else {
-          const filename = `livesub-${vid}-${timestamp}.vtt`;
-          const vtt = cuesToVtt(cues, settings.displayMode, `LiveSub ${vid}`);
-          downloadVttFile(filename, vtt);
-          setExportMessage(`Exported ${cues.length} cues as WebVTT (${settings.displayMode} mode)`);
+          const vtt = serializeWebVtt(rawCues, {
+            mode: exportMode,
+            title,
+            targetLang: settings.targetLang,
+            timeRange,
+          });
+          success = downloadVttFile(filename, vtt);
+        }
+
+        if (success) {
+          setExportMessage(`Exported ${report.validCuesCount} cues to ${filename}`);
+        } else {
+          setExportMessage('Browser download failed to initiate.');
         }
       } else {
         setExportMessage('No active session or cues to export.');
@@ -138,25 +210,57 @@ export default function App() {
   };
 
   const handleCopySubtitles = async () => {
-    if (!activeTabId) return;
+    if (!activeTabId || exporting) return;
     setExporting(true);
     setExportMessage(null);
     try {
       const res: any = await browser.tabs.sendMessage(activeTabId, { type: 'LIVESUB_EXPORT_SESSION' });
       if (res?.ok && res.data) {
-        const cues = res.data.cues || [];
+        const vid = res.data.video_id || 'youtube';
+        const title = res.data.video_title || videoTitle || vid;
+        const rawCues = res.data.cues || [];
+
+        const timeRange =
+          exportScope === 'playback' && currentTime > 0
+            ? { end: currentTime }
+            : undefined;
+
         let textToCopy = '';
+        let count = 0;
+
         if (exportFormat === 'json') {
           textToCopy = JSON.stringify(res.data, null, 2);
-        } else if (exportFormat === 'srt') {
-          textToCopy = cuesToSrt(cues, settings.displayMode);
+          count = res.data.total_cues;
         } else {
-          textToCopy = cuesToVtt(cues, settings.displayMode, `LiveSub ${res.data.video_id}`);
+          const report = normalizeCuesForExport(rawCues, {
+            mode: exportMode,
+            targetLang: settings.targetLang,
+            timeRange,
+          });
+          if (report.validCuesCount === 0) {
+            setExportMessage('No cues available to copy for chosen options.');
+            return;
+          }
+          count = report.validCuesCount;
+          if (exportFormat === 'srt') {
+            textToCopy = serializeSrt(rawCues, {
+              mode: exportMode,
+              targetLang: settings.targetLang,
+              timeRange,
+            });
+          } else {
+            textToCopy = serializeWebVtt(rawCues, {
+              mode: exportMode,
+              title,
+              targetLang: settings.targetLang,
+              timeRange,
+            });
+          }
         }
 
         await navigator.clipboard.writeText(textToCopy);
         setCopied(true);
-        setExportMessage(`Copied ${exportFormat.toUpperCase()} (${cues.length} cues) to clipboard!`);
+        setExportMessage(`Copied ${count} cues as ${exportFormat.toUpperCase()} to clipboard!`);
         setTimeout(() => setCopied(false), 2500);
       } else {
         setExportMessage('No cues available to copy.');
@@ -327,56 +431,93 @@ export default function App() {
         </div>
       </Section>
 
-      <Section title="Judge / Evaluation">
+      <Section title="Subtitle Export">
         <div className="eval-card">
           <div className="eval-card__info">
             <div className="label-strong">Session Subtitle Export</div>
             <div className="hint">
               {tab.kind === 'video'
                 ? sessionCueCount != null && sessionCueCount > 0
-                  ? `${sessionCueCount} cue${sessionCueCount === 1 ? '' : 's'} recorded · ${settings.displayMode} mode`
+                  ? `${sessionCueCount} cue${sessionCueCount === 1 ? '' : 's'} recorded · Target: ${settings.targetLang.toUpperCase()}`
                   : settings.demoMode
-                    ? `Demo cues ready for export (${settings.displayMode} mode)`
-                    : 'Cues will record automatically as playback progresses'
+                    ? `10 demo cues ready · Target: ${settings.targetLang.toUpperCase()}`
+                    : 'Cues will accumulate automatically as video plays'
                 : 'Open a YouTube video to record session cues'}
             </div>
           </div>
 
-          <div className="eval-format">
-            <label htmlFor="select-export-format" className="field__label">
-              Format
+          <div className="row row--split" style={{ gap: '8px' }}>
+            <div className="eval-format" style={{ flex: 1 }}>
+              <label htmlFor="select-export-format" className="field__label">
+                Format
+              </label>
+              <select
+                id="select-export-format"
+                className="select"
+                value={exportFormat}
+                onChange={(e) => setExportFormat(e.target.value as ExportFormat)}
+              >
+                <option value="srt">SubRip (.srt)</option>
+                <option value="vtt">WebVTT (.vtt)</option>
+                <option value="json">JSON (Full Session Log)</option>
+              </select>
+            </div>
+
+            {exportFormat !== 'json' && (
+              <div className="eval-format" style={{ flex: 1 }}>
+                <label htmlFor="select-export-mode" className="field__label">
+                  Text Mode
+                </label>
+                <select
+                  id="select-export-mode"
+                  className="select"
+                  value={exportMode}
+                  onChange={(e) => setExportMode(e.target.value as ExportTextMode)}
+                >
+                  <option value="both">Dual (Both Languages)</option>
+                  <option value="original">Original Only</option>
+                  <option value="translated">Translated Only ({settings.targetLang.toUpperCase()})</option>
+                </select>
+              </div>
+            )}
+          </div>
+
+          <div className="eval-format" style={{ marginTop: '4px' }}>
+            <label htmlFor="select-export-scope" className="field__label">
+              Export Range
             </label>
             <select
-              id="select-export-format"
+              id="select-export-scope"
               className="select"
-              value={exportFormat}
-              onChange={(e) => setExportFormat(e.target.value as ExportFormat)}
+              value={exportScope}
+              onChange={(e) => setExportScope(e.target.value as ExportScope)}
             >
-              <option value="json">JSON (Full Cue Log & Revisions)</option>
-              <option value="srt">SubRip (.srt) — {settings.displayMode} text</option>
-              <option value="vtt">WebVTT (.vtt) — {settings.displayMode} text</option>
+              <option value="all">Complete Session (All recorded cues)</option>
+              <option value="playback">
+                Up to Current Playback ({formatClock(currentTime)})
+              </option>
             </select>
           </div>
 
-          <div className="row row--actions">
+          <div className="row row--actions" style={{ marginTop: '6px' }}>
             <button
               id="btn-export-sub"
               type="button"
               className="btn btn--primary"
-              disabled={exporting || tab.kind !== 'video'}
+              disabled={exporting || tab.kind !== 'video' || (sessionCueCount === 0 && !settings.demoMode)}
               onClick={handleExportDownload}
             >
               <svg className="btn__icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
                 <path d="M8.5 1.5a.5.5 0 0 0-1 0v7.793L5.354 7.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 9.293V1.5z" />
                 <path d="M2 13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V11a.5.5 0 0 0-1 0v2.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V11a.5.5 0 0 0-1 0v2.5z" />
               </svg>
-              {exporting ? 'Exporting…' : `Export ${exportFormat.toUpperCase()}`}
+              {exporting ? 'Exporting…' : `Export .${exportFormat}`}
             </button>
             <button
               id="btn-copy-sub"
               type="button"
               className="btn btn--secondary"
-              disabled={exporting || tab.kind !== 'video'}
+              disabled={exporting || tab.kind !== 'video' || (sessionCueCount === 0 && !settings.demoMode)}
               onClick={handleCopySubtitles}
             >
               <svg className="btn__icon" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">

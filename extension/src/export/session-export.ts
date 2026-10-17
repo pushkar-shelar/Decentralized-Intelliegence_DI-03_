@@ -1,5 +1,57 @@
 import type { Cue, CueSource } from '../shared/cue';
 import type { DisplayMode } from '../settings/settings-core';
+import {
+  normalizeCuesForExport,
+  resolveCueLines,
+  cleanSubtitleLines,
+  type ExportTextMode,
+  type NormalizeCuesOptions,
+  type NormalizedExportCue,
+  type CueNormalizationReport,
+  type ExportCueInput,
+} from './cue-normalizer';
+import {
+  formatSrtTimestamp,
+  serializeSrt,
+  cuesToSrtLegacy,
+  type SrtSerializeOptions,
+} from './srt-serializer';
+import {
+  formatVttTimestamp,
+  serializeWebVtt,
+  cuesToVttLegacy,
+  escapeVttMarkup,
+  type VttSerializeOptions,
+} from './vtt-serializer';
+import {
+  generateSubtitleFilename,
+  sanitizeFilenameComponent,
+  type FilenameOptions,
+} from './filename';
+
+// Re-export sub-module tools for clean caller imports
+export {
+  normalizeCuesForExport,
+  resolveCueLines,
+  cleanSubtitleLines,
+  formatSrtTimestamp,
+  serializeSrt,
+  formatVttTimestamp,
+  serializeWebVtt,
+  escapeVttMarkup,
+  generateSubtitleFilename,
+  sanitizeFilenameComponent,
+};
+export type {
+  ExportTextMode,
+  NormalizeCuesOptions,
+  NormalizedExportCue,
+  CueNormalizationReport,
+  ExportCueInput,
+  SrtSerializeOptions,
+  VttSerializeOptions,
+  FilenameOptions,
+};
 
 /**
  * Normalized cue entry matching judge evaluation specification:
@@ -25,6 +77,7 @@ export interface LiveSubSessionExport {
   session_id: string;
   video_id: string;
   video_url: string;
+  video_title?: string;
   exported_at: string;
   generator: string;
   playback_time?: number;
@@ -35,7 +88,7 @@ export interface LiveSubSessionExport {
 /**
  * Formats an internal Cue into the canonical judge export structure.
  */
-export function formatCueForExport(cue: Cue): ExportedCueEntry {
+export function formatCueForExport(cue: Cue | ExportCueInput): ExportedCueEntry {
   const start = Number(cue.start.toFixed(3));
   const end = Number(cue.end.toFixed(3));
 
@@ -53,18 +106,23 @@ export function formatCueForExport(cue: Cue): ExportedCueEntry {
       text: r.text,
     }));
   } else {
-    revisions = [{ at: start, text: cue.text }];
+    revisions = [{ at: start, text: cue.text ?? '' }];
   }
 
+  const source: CueSource =
+    cue.source === 'stt' || cue.source === 'captions' || cue.source === 'demo'
+      ? cue.source
+      : 'captions';
+
   return {
-    id: cue.id,
+    id: cue.id ?? `cue-${start.toFixed(2)}`,
     start,
     end,
-    lang: cue.lang,
-    text: cue.text,
+    lang: cue.lang ?? 'auto',
+    text: cue.text ?? '',
     translation: cue.translation ?? null,
     translation_lang: cue.translation_lang ?? null,
-    source: cue.source,
+    source,
     first_shown_at: firstShown,
     revisions,
   };
@@ -76,7 +134,8 @@ export function formatCueForExport(cue: Cue): ExportedCueEntry {
 export function buildSessionExport(params: {
   sessionId: string;
   videoId: string;
-  cues: readonly Cue[];
+  videoTitle?: string;
+  cues: readonly (Cue | ExportCueInput)[];
   currentTime?: number;
   version?: string;
 }): LiveSubSessionExport {
@@ -86,13 +145,14 @@ export function buildSessionExport(params: {
     session_id: params.sessionId,
     video_id: params.videoId,
     video_url: `https://www.youtube.com/watch?v=${params.videoId}`,
+    ...(params.videoTitle ? { video_title: params.videoTitle } : {}),
     exported_at: new Date().toISOString(),
     generator: `LiveSub Extension v${params.version ?? '0.1.0'}`,
     ...(params.currentTime !== undefined && Number.isFinite(params.currentTime)
       ? { playback_time: Number(params.currentTime.toFixed(3)) }
       : {}),
     total_cues: sorted.length,
-    cues: sorted.map(formatCueForExport),
+    cues: sorted.map((c) => formatCueForExport(c as Cue)),
   };
 }
 
@@ -100,20 +160,15 @@ export function buildSessionExport(params: {
  * Converts seconds into subtitle timestamp format:
  * - SRT: HH:MM:SS,mmm
  * - VTT: HH:MM:SS.mmm
+ *
+ * Implements deterministic millisecond rounding with proper arithmetic carry:
+ * ms -> secs -> mins -> hours.
  */
 export function formatTimestamp(seconds: number, separator: ',' | '.'): string {
-  const total = Math.max(0, Number.isFinite(seconds) ? seconds : 0);
-  const hours = Math.floor(total / 3600);
-  const minutes = Math.floor((total % 3600) / 60);
-  const secs = Math.floor(total % 60);
-  const ms = Math.floor(((total % 1) + 1e-9) * 1000);
-
-  const hh = String(hours).padStart(2, '0');
-  const mm = String(minutes).padStart(2, '0');
-  const ss = String(secs).padStart(2, '0');
-  const mmm = String(Math.min(999, ms)).padStart(3, '0');
-
-  return `${hh}:${mm}:${ss}${separator}${mmm}`;
+  if (separator === ',') {
+    return formatSrtTimestamp(seconds);
+  }
+  return formatVttTimestamp(seconds);
 }
 
 /**
@@ -121,22 +176,9 @@ export function formatTimestamp(seconds: number, separator: ',' | '.'): string {
  */
 export function getCueDisplayLines(
   cue: { text: string; translation?: string | null },
-  mode: DisplayMode = 'dual',
+  mode: DisplayMode | ExportTextMode = 'dual',
 ): string[] {
-  const original = (cue.text ?? '').trim();
-  const translation = cue.translation?.trim() || null;
-
-  if (mode === 'original' || !translation) {
-    return original ? [original] : [];
-  }
-  if (mode === 'translated') {
-    return [translation];
-  }
-  // mode === 'dual'
-  if (translation === original) {
-    return [original];
-  }
-  return [original, translation];
+  return resolveCueLines(cue, mode);
 }
 
 /**
@@ -144,22 +186,9 @@ export function getCueDisplayLines(
  */
 export function cuesToSrt(
   cues: ReadonlyArray<Cue | ExportedCueEntry>,
-  mode: DisplayMode = 'dual',
+  mode: DisplayMode | ExportTextMode = 'dual',
 ): string {
-  const sorted = [...cues].sort((a, b) => a.start - b.start || a.end - b.end);
-  const blocks: string[] = [];
-
-  let index = 1;
-  for (const cue of sorted) {
-    const lines = getCueDisplayLines(cue, mode);
-    if (lines.length === 0) continue;
-
-    const start = formatTimestamp(cue.start, ',');
-    const end = formatTimestamp(cue.end, ',');
-    blocks.push(`${index++}\n${start} --> ${end}\n${lines.join('\n')}`);
-  }
-
-  return blocks.length > 0 ? `${blocks.join('\n\n')}\n` : '';
+  return cuesToSrtLegacy(cues, mode);
 }
 
 /**
@@ -167,49 +196,53 @@ export function cuesToSrt(
  */
 export function cuesToVtt(
   cues: ReadonlyArray<Cue | ExportedCueEntry>,
-  mode: DisplayMode = 'dual',
-  title = 'LiveSub Export',
+  mode: DisplayMode | ExportTextMode = 'dual',
+  titleOrOptions: string | VttSerializeOptions = 'LiveSub Export',
 ): string {
-  const sorted = [...cues].sort((a, b) => a.start - b.start || a.end - b.end);
-  const blocks: string[] = [`WEBVTT - ${title}\n`];
-
-  let index = 1;
-  for (const cue of sorted) {
-    const lines = getCueDisplayLines(cue, mode);
-    if (lines.length === 0) continue;
-
-    const start = formatTimestamp(cue.start, '.');
-    const end = formatTimestamp(cue.end, '.');
-    blocks.push(`${index++}\n${start} --> ${end}\n${lines.join('\n')}`);
-  }
-
-  return `${blocks.join('\n')}\n`;
+  return cuesToVttLegacy(cues, mode, titleOrOptions);
 }
 
 /**
- * Generic browser file download helper.
+ * Generic browser file download helper using Blob and temporary object URL.
+ * Safely revokes object URL after download is triggered.
  */
-export function downloadTextFile(filename: string, content: string, mimeType: string): void {
-  const blob = new Blob([content], { type: `${mimeType};charset=utf-8` });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
+export function downloadTextFile(filename: string, content: string, mimeType: string): boolean {
+  if (typeof document === 'undefined') {
+    return false;
+  }
+  try {
+    const blob = new Blob([content], { type: `${mimeType};charset=utf-8` });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => {
+      try {
+        URL.revokeObjectURL(url);
+      } catch {
+        // ignore
+      }
+    }, 4000);
+    return true;
+  } catch (err) {
+    console.error('[LiveSub Export] downloadTextFile failed:', err);
+    return false;
+  }
 }
 
-export function downloadJsonFile(filename: string, data: unknown): void {
+export function downloadJsonFile(filename: string, data: unknown): boolean {
   const json = JSON.stringify(data, null, 2);
-  downloadTextFile(filename, json, 'application/json');
+  return downloadTextFile(filename, json, 'application/json');
 }
 
-export function downloadSrtFile(filename: string, content: string): void {
-  downloadTextFile(filename, content, 'text/plain');
+export function downloadSrtFile(filename: string, content: string): boolean {
+  return downloadTextFile(filename, content, 'text/plain');
 }
 
-export function downloadVttFile(filename: string, content: string): void {
-  downloadTextFile(filename, content, 'text/vtt');
+export function downloadVttFile(filename: string, content: string): boolean {
+  return downloadTextFile(filename, content, 'text/vtt');
 }

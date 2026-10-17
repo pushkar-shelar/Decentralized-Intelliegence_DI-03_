@@ -61,11 +61,19 @@ export default defineContentScript({
         const session = controller.current;
         const count = session ? ('length' in session.cueStore ? session.cueStore.length : 10) : 0;
         const isDemo = settings.get().demoMode;
+        const videoTitle =
+          document.querySelector('h1.ytd-watch-metadata, #title h1, h1.title')?.textContent?.trim() ||
+          document.title.replace(/\s*-\s*YouTube$/i, '').trim() ||
+          session?.videoId ||
+          null;
         sendResponse({
           ok: true,
           hasSession: !!session,
           videoId: session?.videoId ?? null,
+          videoTitle,
           cueCount: count > 0 ? count : (isDemo && session ? 10 : 0),
+          currentTime: session?.video?.currentTime ?? 0,
+          duration: session?.video?.duration ?? 0,
         });
         return true;
       }
