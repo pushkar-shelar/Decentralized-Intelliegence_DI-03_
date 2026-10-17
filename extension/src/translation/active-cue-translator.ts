@@ -62,13 +62,20 @@ export class ActiveCueTranslator {
     if (!s.enabled || s.displayMode === 'original') return;
 
     const targetLang = s.targetLang;
-    const cue = this.cueStore.getActiveCue(videoTime);
+    const allCues = this.cueStore.getActiveCues ? this.cueStore.getActiveCues(videoTime) : [];
+    const cues = allCues.length > 0 ? allCues : [this.cueStore.getActiveCue(videoTime)].filter((c): c is Cue => c !== null);
 
-    if (!cue) {
+    if (cues.length === 0) {
       this.lastEvaluatedKey = null;
       return;
     }
 
+    for (const cue of cues) {
+      this.translateSingleCue(cue, targetLang, s);
+    }
+  }
+
+  private translateSingleCue(cue: Cue, targetLang: string, s: LiveSubSettings): void {
     const evalKey = `${cue.id}::${targetLang}`;
     if (evalKey === this.lastEvaluatedKey) {
       return; // Already evaluated for this exact active cue and target language
@@ -126,14 +133,6 @@ export class ActiveCueTranslator {
 
         // Verify target language has not changed in settings while waiting
         if (this.settings.get().targetLang !== targetLang) return;
-
-        // Verify that this cue is STILL currently active at current video time
-        const activeNow = this.cueStore.getActiveCue(this.currentVideoTime);
-        if (!activeNow || activeNow.id !== cue.id) {
-          // Late response: cue already passed or user seeked away.
-          // Do not overwrite whatever is currently on screen!
-          return;
-        }
 
         // Apply translation to active cue
         cue.translation = translated;

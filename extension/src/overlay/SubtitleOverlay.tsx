@@ -15,30 +15,43 @@ export interface SubtitleOverlayProps {
 /** Reference player height the base font size is designed for. */
 const REFERENCE_HEIGHT = 720;
 
-function cueKey(cue: Cue | null): string | null {
-  return cue ? `${cue.id}\u0000${cue.text}\u0000${cue.translation ?? ''}` : null;
+function cuesKey(cues: readonly Cue[]): string {
+  if (cues.length === 0) return '';
+  return cues.map((c) => `${c.id}\u0000${c.text}\u0000${c.translation ?? ''}\u0000${c.speaker ?? ''}`).join('\u0001');
 }
 
 /**
- * Hook: the cue active at the video's CURRENT time. Video time is the single source of truth —
- * a rAF loop samples video.currentTime and only triggers a React render when the cue changes.
+ * Hook: all cues active at the video's CURRENT time. Supports multi-speaker dialogue
+ * where multiple speakers talk simultaneously or in rapid succession.
  */
-function useActiveCue(video: HTMLVideoElement, provider: CueProvider): Cue | null {
-  const [cue, setCue] = useState<Cue | null>(() => provider.getActiveCue(video.currentTime));
+function useActiveCues(video: HTMLVideoElement, provider: CueProvider): Cue[] {
+  const getCues = (): Cue[] => {
+    const currentTime = video.currentTime;
+    if (provider.getActiveCues) {
+      const all = provider.getActiveCues(currentTime);
+      if (all.length > 0) return all;
+    }
+    const single = provider.getActiveCue(currentTime);
+    return single ? [single] : [];
+  };
+
+  const [cues, setCues] = useState<Cue[]>(getCues);
 
   useEffect(() => {
     let raf = 0;
-    let lastKey: string | null = cueKey(cue);
+    let lastKey: string = cuesKey(cues);
 
     const evaluate = () => {
       const currentTime = video.currentTime;
-      const next = provider.getActiveCue(currentTime);
-      const key = cueKey(next);
+      const next = getCues();
+      const key = cuesKey(next);
       if (key !== lastKey) {
         lastKey = key;
-        setCue(next);
-        if (next && next.first_shown_at == null && (next.is_final ?? true)) {
-          provider.recordFirstShown?.(next.id, currentTime);
+        setCues(next);
+        for (const c of next) {
+          if (c && c.first_shown_at == null && (c.is_final ?? true)) {
+            provider.recordFirstShown?.(c.id, currentTime);
+          }
         }
       }
     };
@@ -61,10 +74,10 @@ function useActiveCue(video: HTMLVideoElement, provider: CueProvider): Cue | nul
       video.removeEventListener('timeupdate', onDiscrete);
       unsubProvider?.();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- cue is only the initial seed
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- cues is only the initial seed
   }, [video, provider]);
 
-  return cue;
+  return cues;
 }
 
 export function SubtitleOverlay({ video, tracker, provider, settings: settingsStore }: SubtitleOverlayProps) {
@@ -73,21 +86,9 @@ export function SubtitleOverlay({ video, tracker, provider, settings: settingsSt
     (cb) => tracker.subscribe(() => cb()),
     () => tracker.snapshot,
   );
-  const cue = useActiveCue(video, provider);
+  const cues = useActiveCues(video, provider);
 
-  if (!settings.enabled || ui.isAd || !cue) return null;
-
-  const original = cue.text;
-  const translation = cue.translation ?? null;
-  const lines: Array<{ kind: 'original' | 'translation'; text: string }> = [];
-  if (settings.displayMode === 'original') {
-    lines.push({ kind: 'original', text: original });
-  } else if (settings.displayMode === 'translated') {
-    lines.push(translation ? { kind: 'translation', text: translation } : { kind: 'original', text: original });
-  } else {
-    lines.push({ kind: 'original', text: original });
-    if (translation) lines.push({ kind: 'translation', text: translation });
-  }
+  if (!settings.enabled || ui.isAd || cues.length === 0) return null;
 
   const scale = Math.min(2.2, Math.max(0.6, ui.playerHeight / REFERENCE_HEIGHT));
   const controlsLift = ui.controlsVisible ? (ui.viewMode === 'fullscreen' ? 84 : 56) : 0;
@@ -100,22 +101,38 @@ export function SubtitleOverlay({ video, tracker, provider, settings: settingsSt
 
   return (
     <div className="ls-stage" style={style} data-view-mode={ui.viewMode}>
-      <div className="ls-cue" key={cue.id} lang={cue.lang} data-source={cue.source}>
-        {cue.speaker && (
-          <span className="ls-speaker-badge" data-speaker={cue.speaker}>
-            {cue.speaker.replace('_', ' ')}
-          </span>
-        )}
-        {lines.map((line) => (
-          <span
-            key={line.kind}
-            className={`ls-line ls-${line.kind}`}
-            lang={line.kind === 'translation' ? cue.translation_lang ?? undefined : cue.lang}
-          >
-            {line.text}
-          </span>
-        ))}
-      </div>
+      {cues.map((cue) => {
+        const original = cue.text;
+        const translation = cue.translation ?? null;
+        const lines: Array<{ kind: 'original' | 'translation'; text: string }> = [];
+        if (settings.displayMode === 'original') {
+          lines.push({ kind: 'original', text: original });
+        } else if (settings.displayMode === 'translated') {
+          lines.push(translation ? { kind: 'translation', text: translation } : { kind: 'original', text: original });
+        } else {
+          lines.push({ kind: 'original', text: original });
+          if (translation) lines.push({ kind: 'translation', text: translation });
+        }
+
+        return (
+          <div className="ls-cue" key={cue.id} lang={cue.lang} data-source={cue.source}>
+            {cue.speaker && (
+              <span className="ls-speaker-badge" data-speaker={cue.speaker}>
+                {cue.speaker.replace('_', ' ')}
+              </span>
+            )}
+            {lines.map((line) => (
+              <span
+                key={line.kind}
+                className={`ls-line ls-${line.kind}`}
+                lang={line.kind === 'translation' ? cue.translation_lang ?? undefined : cue.lang}
+              >
+                {line.text}
+              </span>
+            ))}
+          </div>
+        );
+      })}
     </div>
   );
 }
