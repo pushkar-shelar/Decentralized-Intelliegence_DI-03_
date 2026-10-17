@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Cue } from '../src/shared/cue';
 import { CueStore } from '../src/timeline/cue-store';
-import { DemoCueProvider } from '../src/overlay/demo-cue-provider';
 import {
   buildSessionExport,
   formatCueForExport,
@@ -155,15 +154,26 @@ describe('Session Cue Log Export for Judges', () => {
     expect(store.getActiveCue(20.5)?.first_shown_at).toBe(21.2);
   });
 
-  it('supports demo cues export with first_shown_at and translations', () => {
-    const demo = new DemoCueProvider();
-    demo.recordFirstShown('demo-0', 0.2);
+  it('supports cue store export with first_shown_at and translations', () => {
+    const store = new CueStore();
+    store.upsertCue({
+      id: 'cue-0',
+      start: 0.0,
+      end: 3.5,
+      lang: 'hi',
+      text: 'हेलो दोस्तों',
+      translation: 'Hello friends',
+      translation_lang: 'en',
+      source: 'stt',
+      first_shown_at: 0.2,
+      revisions: [{ at: 0.2, text: 'हेलो दोस्तों' }],
+    });
 
-    const cues = demo.generateSessionCues(15);
+    const cues = store.getCues();
     expect(cues.length).toBeGreaterThan(0);
-    expect(cues[0]?.id).toBe('demo-0');
+    expect(cues[0]?.id).toBe('cue-0');
     expect(cues[0]?.first_shown_at).toBe(0.2);
-    expect(cues[0]?.translation).toBeDefined();
+    expect(cues[0]?.translation).toBe('Hello friends');
     expect(cues[0]?.revisions).toHaveLength(1);
   });
 

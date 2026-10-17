@@ -7,7 +7,6 @@ import type { VideoAnchor } from '../audio/anchor-log';
 import { CaptionManager } from '../captions/caption-manager';
 import { parseCaptionData } from '../captions/caption-parser';
 import { parseCaptionTracks, type CaptionTrack } from '../captions/track-detector';
-import { DemoCueProvider } from '../overlay/demo-cue-provider';
 import { mountOverlay } from '../overlay/mount';
 import { SubtitleOverlay } from '../overlay/SubtitleOverlay';
 import { CueStore } from '../timeline/cue-store';
@@ -29,7 +28,7 @@ export interface Session {
   els?: PlayerElements;
   video: HTMLVideoElement;
   tracker: PlayerStateTracker;
-  cueStore: CueStore | DemoCueProvider;
+  cueStore: CueStore;
   translator?: ActiveCueTranslator;
   mode: SubtitleSourceMode;
   unmount: () => void;
@@ -125,13 +124,13 @@ export class SessionController {
 
     // Developer demo mode branch
     if (currentSettings.demoMode) {
-      const demoProvider = new DemoCueProvider();
+      const demoStore = new CueStore();
       const unmount = mountOverlay(
         els.player,
         createElement(SubtitleOverlay, {
           video: els.video,
           tracker,
-          provider: demoProvider,
+          provider: demoStore,
           settings: this.settings,
         }),
       );
@@ -142,7 +141,7 @@ export class SessionController {
         els,
         video: els.video,
         tracker,
-        cueStore: demoProvider,
+        cueStore: demoStore,
         mode: 'demo',
         unmount,
         dispose: () => {},
@@ -385,8 +384,6 @@ export class SessionController {
 
     if (this.session.cueStore instanceof CueStore) {
       cues = this.session.cueStore.getCues();
-    } else if (this.session.cueStore instanceof DemoCueProvider) {
-      cues = this.session.cueStore.generateSessionCues(currentTime);
     }
 
     return buildSessionExport({
