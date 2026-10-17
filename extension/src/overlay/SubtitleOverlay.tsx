@@ -40,8 +40,27 @@ function useActiveCues(video: HTMLVideoElement, provider: CueProvider): Cue[] {
     const currentTime = video.currentTime;
     if (provider.getActiveCues) {
       const all = provider.getActiveCues(currentTime);
-      if (all.length > 0) return all;
+      if (all.length > 1) {
+        // Multi-speaker check:
+        // Only show multiple concurrent subtitle boxes if there are actually DISTINCT speakers tagged!
+        const withSpeaker = all.filter((c) => Boolean(c.speaker));
+        const distinctSpeakers = new Set(withSpeaker.map((c) => c.speaker));
+
+        if (distinctSpeakers.size > 1) {
+          // Multiple distinct speakers speaking simultaneously:
+          // Keep at most ONE latest cue per distinct speaker to prevent rolling caption stacking.
+          const perSpeaker = new Map<string, Cue>();
+          for (const c of all) {
+            if (c.speaker) {
+              perSpeaker.set(c.speaker, c);
+            }
+          }
+          return Array.from(perSpeaker.values());
+        }
+      }
     }
+    // Standard single-speaker or sequential dialogue:
+    // Only return the single most recent active cue (prevents rolling caption stacking)!
     const single = provider.getActiveCue(currentTime);
     return single ? [single] : [];
   };
@@ -122,7 +141,14 @@ export function SubtitleOverlay({ video, tracker, provider, settings: settingsSt
           lines.push(translation ? { kind: 'translation', text: translation } : { kind: 'original', text: original });
         } else {
           lines.push({ kind: 'original', text: original });
-          if (translation) lines.push({ kind: 'translation', text: translation });
+          // Only show translation line in Dual mode if it is non-empty AND not identical to original
+          if (
+            translation &&
+            translation.trim().length > 0 &&
+            translation.trim().toLowerCase() !== original.trim().toLowerCase()
+          ) {
+            lines.push({ kind: 'translation', text: translation });
+          }
         }
 
         return (
