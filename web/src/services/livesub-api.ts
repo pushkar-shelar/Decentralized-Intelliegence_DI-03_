@@ -65,6 +65,7 @@ export async function checkBackendHealth(): Promise<{ online: boolean; details?:
  * then awaits Whisper transcription completion without premature WebSocket closing.
  */
 export async function processAudioStreamViaWebSocket(params: {
+  pcm16k?: Int16Array;
   chunks: SmartAudioChunk[] | Int16Array[];
   durationSec: number;
   sourceLang?: string;
@@ -73,7 +74,7 @@ export async function processAudioStreamViaWebSocket(params: {
   onCue?: CueCallback;
   signal?: AbortSignal;
 }): Promise<SubtitleCue[]> {
-  const { chunks, durationSec, sourceLang = 'auto', targetLang = 'en', onProgress, onCue, signal } = params;
+  const { pcm16k, chunks, durationSec, sourceLang = 'auto', targetLang = 'en', onProgress, onCue, signal } = params;
 
   return new Promise((resolve, reject) => {
     if (signal?.aborted) {
@@ -84,9 +85,25 @@ export async function processAudioStreamViaWebSocket(params: {
     const ws = new WebSocket(wsUrl);
     const cuesMap = new Map<string, SubtitleCue>();
     let isFinished = false;
-    let chunksSent = 0;
-    const totalChunks = chunks.length;
-    let lastCueTimestamp = Date.now();
+
+    // Obtain continuous 16kHz PCM buffer
+    let fullPcm: Int16Array;
+    if (pcm16k && pcm16k.length > 0) {
+      fullPcm = pcm16k;
+    } else {
+      let totalLen = 0;
+      for (const ch of chunks) {
+        const p = 'pcm' in ch ? ch.pcm : ch;
+        totalLen += p.length;
+      }
+      fullPcm = new Int16Array(totalLen);
+      let offset = 0;
+      for (const ch of chunks) {
+        const p = 'pcm' in ch ? ch.pcm : ch;
+        fullPcm.set(p, offset);
+        offset += p.length;
+      }
+    }
 
     const cleanup = () => {
       isFinished = true;
@@ -104,180 +121,72 @@ export async function processAudioStreamViaWebSocket(params: {
       reject(new Error('Processing was cancelled.'));
     });
 
-    ws.onopen = () => {
+    ws.onopen = async () => {
       onProgress?.({
         stage: 'connecting',
         percent: 5,
         chunksProcessed: 0,
-        totalChunks,
+        totalChunks: 1,
         currentTimeSec: 0,
         durationSec,
       });
 
-      // 1. Send initial configuration
+      // 1. Notify backend of batch audio upload
       ws.send(
         JSON.stringify({
-          type: 'config',
-          language: sourceLang,
-          target_lang: targetLang,
+          type: 'start_batch_audio',
+          sourceLang,
+          targetLang,
+          durationSec,
         }),
       );
 
-      // 2. Stream audio chunks to VAD
-      streamAudioChunks();
-    };
+      // 2. Stream the 16kHz audio buffer in 64KB binary chunks
+      const CHUNK_BYTES = 65536; // 64KB = 32768 samples
+      const rawBuffer = fullPcm.buffer;
+      const totalBytes = rawBuffer.byteLength;
 
-    const streamAudioChunks = async () => {
-      const SUB_CHUNK_SAMPLES = 8000; // 0.5s @ 16kHz for smooth VAD feeding
-      const silenceBuffer = new Int16Array(6400); // 400ms silence to signal boundary
-
-      for (let i = 0; i < totalChunks; i++) {
+      for (let offset = 0; offset < totalBytes; offset += CHUNK_BYTES) {
         if (isFinished || signal?.aborted) return;
         if (ws.readyState !== WebSocket.OPEN) {
           cleanup();
-          return reject(new Error('WebSocket connection closed while streaming. Ensure the LiveSub backend server is running on port 8765.'));
+          return reject(new Error('WebSocket connection closed while uploading audio.'));
         }
 
-        const rawChunk = chunks[i]!;
-        const isSmart = 'pcm' in rawChunk;
-        const pcmData: Int16Array = isSmart ? rawChunk.pcm : rawChunk;
-        const chunkStartSec = isSmart ? rawChunk.startSec : (i * (durationSec / totalChunks));
-        const chunkDurationSec = isSmart ? rawChunk.durationSec : (pcmData.length / 16000);
+        const end = Math.min(offset + CHUNK_BYTES, totalBytes);
+        const slice = rawBuffer.slice(offset, end);
+        ws.send(slice);
 
-        // Feed this ~20s chunk to backend in ~0.5s sub-slices so SileroVAD tracks utterance boundaries
-        for (let offset = 0; offset < pcmData.length; offset += SUB_CHUNK_SAMPLES) {
-          if (isFinished || signal?.aborted) return;
-          if (ws.readyState !== WebSocket.OPEN) break;
-
-          const end = Math.min(offset + SUB_CHUNK_SAMPLES, pcmData.length);
-          const subPcm = pcmData.slice(offset, end);
-          const currentVideoSec = chunkStartSec + (offset / 16000);
-
-          const meta = {
-            type: 'chunk_meta',
-            perfNow: performance.now(),
-            durationMs: (subPcm.length / 16000) * 1000,
-            anchor: {
-              videoTime: Number(currentVideoSec.toFixed(2)),
-              rate: 1.0,
-              paused: false,
-            },
-            sourceLang,
-            targetLang,
-          };
-
-          ws.send(JSON.stringify(meta));
-          ws.send(subPcm.buffer);
-
-          // Pacing delay (~25ms) so we don't flood TCP queue
-          await new Promise((r) => setTimeout(r, 25));
-        }
-
-        // At end of each 20s block, send silence padding to finalize any speech utterance in VAD buffer
-        if (ws.readyState === WebSocket.OPEN) {
-          ws.send(silenceBuffer.buffer);
-        }
-
-        chunksSent++;
-        const pct = Math.min(88, Math.round(((i + 1) / totalChunks) * 85));
-
+        const uploadPct = Math.round((end / totalBytes) * 20); // 0-20% upload
         onProgress?.({
-          stage: 'transcribing',
-          percent: pct,
-          chunksProcessed: chunksSent,
-          totalChunks,
-          currentTimeSec: Math.min(durationSec, chunkStartSec + chunkDurationSec),
+          stage: 'streaming',
+          percent: 5 + uploadPct,
+          chunksProcessed: 0,
+          totalChunks: 1,
+          currentTimeSec: (end / totalBytes) * durationSec,
           durationSec,
         });
 
-        // Allow Whisper time to transcribe finalized utterances
-        await new Promise((r) => setTimeout(r, 1000));
+        // Yield slightly so browser network buffer doesn't block
+        await new Promise((r) => setTimeout(r, 10));
       }
 
-      // Trailing grace period: wait for Whisper to complete all pending audio decodes
+      // 3. Trigger batch audio transcription on the backend
       onProgress?.({
         stage: 'transcribing',
-        percent: 90,
-        chunksProcessed: totalChunks,
-        totalChunks,
-        currentTimeSec: durationSec,
+        percent: 25,
+        chunksProcessed: 0,
+        totalChunks: 1,
+        currentTimeSec: 0,
         durationSec,
       });
 
-      // Send extra silence to flush final speech tail
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send(silenceBuffer.buffer);
-      }
-
-      // Wait up to 10 seconds or until cues settle (no new cue for 3 seconds)
-      const maxWaitMs = 12000;
-      const startTime = Date.now();
-      while (Date.now() - startTime < maxWaitMs) {
-        if (signal?.aborted) return;
-        await new Promise((r) => setTimeout(r, 800));
-        // If we received cues and no new cue arrived for 3 seconds, we're done
-        if (cuesMap.size > 0 && Date.now() - lastCueTimestamp > 3200) {
-          break;
-        }
-      }
-
-      isFinished = true;
-      try {
-        ws.close();
-      } catch {
-        // ignore
-      }
-
-      const finalCues = Array.from(cuesMap.values()).sort((a, b) => a.start - b.start || a.end - b.end);
-
-      // Post-process: If backend did not provide translation, apply translation fallback
-      for (const cue of finalCues) {
-        if (!cue.translation || cue.translation.trim().toLowerCase() === cue.text.trim().toLowerCase()) {
-          if (targetLang && targetLang !== cue.lang) {
-            try {
-              const trans = await translateFallback(cue.text, cue.lang || 'auto', targetLang);
-              if (trans && trans.toLowerCase() !== cue.text.toLowerCase()) {
-                cue.translation = trans;
-                cue.translation_lang = targetLang;
-              }
-            } catch {
-              // keep original
-            }
-          }
-        }
-      }
-
-      onProgress?.({
-        stage: 'completed',
-        percent: 100,
-        chunksProcessed: totalChunks,
-        totalChunks,
-        currentTimeSec: durationSec,
-        durationSec,
-      });
-
-      resolve(finalCues);
+      ws.send(
+        JSON.stringify({
+          type: 'process_batch_audio',
+        }),
+      );
     };
-
-    async function translateFallback(text: string, srcLang: string, tgtLang: string): Promise<string> {
-      try {
-        const sl = encodeURIComponent(srcLang || 'auto');
-        const tl = encodeURIComponent(tgtLang);
-        const q = encodeURIComponent(text.trim());
-        const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=${tl}&dt=t&q=${q}`, {
-          signal: AbortSignal.timeout(3500),
-        });
-        if (!res.ok) return text;
-        const data = await res.json();
-        if (Array.isArray(data) && Array.isArray(data[0])) {
-          const translated = data[0].map((chunk: any) => chunk?.[0] || '').join('');
-          return translated.trim() || text;
-        }
-      } catch {
-        // ignore
-      }
-      return text;
-    }
 
     ws.onmessage = (event) => {
       try {
@@ -297,19 +206,35 @@ export async function processAudioStreamViaWebSocket(params: {
             is_final: Boolean(msg.cue.is_final),
           };
 
-          lastCueTimestamp = Date.now();
           cuesMap.set(cue.id, cue);
           onCue?.(cue);
 
+          const timeProgress = durationSec > 0 ? Math.min(1.0, cue.end / durationSec) : 0.5;
+          const currentPct = Math.min(95, Math.round(25 + timeProgress * 70));
+
           onProgress?.({
             stage: cue.translation ? 'translating' : 'transcribing',
-            percent: Math.min(95, Math.round(((chunksSent) / totalChunks) * 90)),
-            chunksProcessed: chunksSent,
-            totalChunks,
+            percent: currentPct,
+            chunksProcessed: cuesMap.size,
+            totalChunks: cuesMap.size,
             currentTimeSec: cue.end,
             durationSec,
             lastCue: cue,
           });
+        } else if (msg.type === 'batch_complete') {
+          isFinished = true;
+          onProgress?.({
+            stage: 'completed',
+            percent: 100,
+            chunksProcessed: cuesMap.size,
+            totalChunks: cuesMap.size,
+            currentTimeSec: durationSec,
+            durationSec,
+          });
+
+          cleanup();
+          const finalCues = Array.from(cuesMap.values()).sort((a, b) => a.start - b.start || a.end - b.end);
+          resolve(finalCues);
         }
       } catch {
         // ignore non-json frames
@@ -325,6 +250,7 @@ export async function processAudioStreamViaWebSocket(params: {
 
     ws.onclose = () => {
       if (!isFinished) {
+        isFinished = true;
         const finalCues = Array.from(cuesMap.values()).sort((a, b) => a.start - b.start || a.end - b.end);
         resolve(finalCues);
       }

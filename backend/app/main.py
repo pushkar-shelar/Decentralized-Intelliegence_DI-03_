@@ -266,11 +266,23 @@ async def audio_websocket_endpoint(websocket: WebSocket):
     preferred_lang = "auto"
     target_lang = "en"
 
+    # Batch audio mode for uploaded videos (website)
+    batch_mode = False
+    batch_pcm_chunks = []
+    batch_source_lang = "auto"
+    batch_target_lang = "en"
+    batch_duration_sec = 120.0
+
     try:
         while True:
             message = await websocket.receive()
             if "bytes" in message and message["bytes"]:
                 chunk_bytes = message["bytes"]
+                if batch_mode:
+                    batch_pcm_chunks.append(chunk_bytes)
+                    chunk_count += 1
+                    continue
+
                 chunk_count += 1
 
                 samples = np.frombuffer(chunk_bytes, dtype=np.int16)
@@ -375,6 +387,99 @@ async def audio_websocket_endpoint(websocket: WebSocket):
                             preferred_lang = data.get("sourceLang")
                         if data.get("targetLang"):
                             target_lang = data.get("targetLang")
+                    elif data.get("type") == "start_batch_audio":
+                        batch_mode = True
+                        batch_pcm_chunks = []
+                        batch_source_lang = data.get("sourceLang", "auto")
+                        batch_target_lang = data.get("targetLang", "en")
+                        batch_duration_sec = float(data.get("durationSec", 120.0))
+                        print(f"[LiveSub WS] Batch audio upload started: source={batch_source_lang}, target={batch_target_lang}", flush=True)
+
+                    elif data.get("type") == "process_batch_audio":
+                        if not batch_pcm_chunks:
+                            await websocket.send_text(json.dumps({"type": "batch_complete", "total_cues": 0}))
+                            continue
+
+                        full_bytes = b"".join(batch_pcm_chunks)
+                        samples = np.frombuffer(full_bytes, dtype=np.int16)
+                        audio_16k_float = samples.astype(np.float32) / 32768.0
+
+                        print(f"[LiveSub WS] Processing full {len(audio_16k_float)/16000:.1f}s audio batch with Whisper...", flush=True)
+
+                        src_lang = batch_source_lang if batch_source_lang and batch_source_lang != "auto" else None
+                        if src_lang == "ur":
+                            src_lang = "hi"
+
+                        if whisper_engine and whisper_engine.is_ready():
+                            segments, info = whisper_engine.model.transcribe(
+                                audio_16k_float,
+                                language=src_lang,
+                                beam_size=5,
+                                word_timestamps=True,
+                                vad_filter=True,
+                                condition_on_previous_text=False,
+                                repetition_penalty=1.2,
+                            )
+
+                            detected_lang = info.language or "en"
+                            if detected_lang == "ur":
+                                detected_lang = "hi"
+
+                            print(f"[LiveSub WS] Audio language detected: {detected_lang} (confidence: {info.language_probability:.2f})", flush=True)
+
+                            cue_idx = 1
+                            for seg in segments:
+                                text = seg.text.strip()
+                                if not text:
+                                    continue
+
+                                seg_start = round(seg.start, 2)
+                                seg_end = round(seg.end, 2)
+                                if hasattr(seg, "words") and seg.words and len(seg.words) > 0:
+                                    seg_start = round(seg.words[0].start, 2)
+                                    seg_end = round(seg.words[-1].end, 2)
+
+                                translation = None
+                                if unified_translator and batch_target_lang and detected_lang.lower() != batch_target_lang.lower():
+                                    try:
+                                        norm_res = await unified_translator.normalize_and_translate(
+                                            text=text,
+                                            source_lang=detected_lang,
+                                            target_lang=batch_target_lang,
+                                        )
+                                        if norm_res.get("corrected_text"):
+                                            text = norm_res["corrected_text"]
+                                        translation = norm_res.get("translation")
+                                    except Exception as e:
+                                        print(f"[LiveSub WS] Translation error: {e}", flush=True)
+
+                                cue = {
+                                    "id": f"cue-{cue_idx:04d}",
+                                    "start": seg_start,
+                                    "end": seg_end,
+                                    "text": text,
+                                    "translation": translation,
+                                    "lang": detected_lang,
+                                    "translation_lang": batch_target_lang,
+                                    "source": "batch-audio",
+                                    "is_final": True,
+                                }
+
+                                # Stream message one by one to frontend in real time
+                                await websocket.send_text(json.dumps({
+                                    "type": "cue_update",
+                                    "cue": cue,
+                                }))
+                                print(f"[LiveSub WS] [{cue['start']}s -> {cue['end']}s] [{cue['lang']}]: {cue['text']} --> [{cue['translation_lang']}]: {cue['translation']}", flush=True)
+
+                                cue_idx += 1
+
+                            await websocket.send_text(json.dumps({
+                                "type": "batch_complete",
+                                "total_cues": cue_idx - 1,
+                                "detected_language": detected_lang,
+                            }))
+                            print(f"[LiveSub WS] Batch processing complete: {cue_idx - 1} subtitle messages sent.", flush=True)
                     elif data.get("type") == "config":
                         if data.get("language"):
                             preferred_lang = data.get("language")

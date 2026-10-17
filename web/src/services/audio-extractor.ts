@@ -17,6 +17,7 @@ export interface ExtractedAudioResult {
   sampleRate: number;
   totalSamples: number;
   chunks: SmartAudioChunk[];
+  pcm16k?: Int16Array;
 }
 
 export type ExtractionProgressCallback = (progress: number, stage: string) => void;
@@ -226,5 +227,6 @@ export async function extractAudioFromVideo(
     sampleRate: 16000,
     totalSamples: pcm16k.length,
     chunks: smartChunks,
+    pcm16k,
   };
 }

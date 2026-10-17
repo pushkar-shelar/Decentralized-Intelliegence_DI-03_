@@ -87,6 +87,7 @@ export const App: React.FC = () => {
 
       // Step 2: Stream extracted chunks through the existing LiveSub WebSocket pipeline
       const results = await processAudioStreamViaWebSocket({
+        pcm16k: audioData.pcm16k,
         chunks: audioData.chunks,
         durationSec: audioData.durationSec,
         sourceLang: selectedSourceLang,
