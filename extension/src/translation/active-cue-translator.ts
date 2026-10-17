@@ -64,7 +64,23 @@ export class ActiveCueTranslator {
 
     const targetLang = s.targetLang;
     const allCues = this.cueStore.getActiveCues ? this.cueStore.getActiveCues(videoTime) : [];
-    const cues = allCues.length > 0 ? allCues : [this.cueStore.getActiveCue(videoTime)].filter((c): c is Cue => c !== null);
+    
+    let cues: Cue[] = [];
+    if (allCues.length > 1) {
+      const withSpeaker = allCues.filter((c) => Boolean(c.speaker));
+      const distinctSpeakers = new Set(withSpeaker.map((c) => c.speaker));
+      if (distinctSpeakers.size > 1) {
+        const perSpeaker = new Map<string, Cue>();
+        for (const c of allCues) {
+          if (c.speaker) perSpeaker.set(c.speaker, c);
+        }
+        cues = Array.from(perSpeaker.values());
+      }
+    }
+    if (cues.length === 0) {
+      const single = this.cueStore.getActiveCue(videoTime);
+      cues = single ? [single] : [];
+    }
 
     if (cues.length === 0) {
       this.lastEvaluatedKey = null;
