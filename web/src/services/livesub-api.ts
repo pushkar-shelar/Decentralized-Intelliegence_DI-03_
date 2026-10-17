@@ -155,6 +155,23 @@ export async function processAudioStreamViaWebSocket(params: {
 
       const finalCues = Array.from(cuesMap.values()).sort((a, b) => a.start - b.start || a.end - b.end);
 
+      // Post-process: If backend did not provide translation, apply translation fallback
+      for (const cue of finalCues) {
+        if (!cue.translation || cue.translation.trim().toLowerCase() === cue.text.trim().toLowerCase()) {
+          if (targetLang && targetLang !== cue.lang) {
+            try {
+              const trans = await translateFallback(cue.text, cue.lang || 'auto', targetLang);
+              if (trans && trans.toLowerCase() !== cue.text.toLowerCase()) {
+                cue.translation = trans;
+                cue.translation_lang = targetLang;
+              }
+            } catch {
+              // keep original
+            }
+          }
+        }
+      }
+
       onProgress?.({
         stage: 'completed',
         percent: 100,
@@ -166,6 +183,26 @@ export async function processAudioStreamViaWebSocket(params: {
 
       resolve(finalCues);
     };
+
+    async function translateFallback(text: string, sourceLang: string, tgtLang: string): Promise<string> {
+      try {
+        const sl = encodeURIComponent(sourceLang || 'auto');
+        const tl = encodeURIComponent(tgtLang);
+        const q = encodeURIComponent(text.trim());
+        const res = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=${tl}&dt=t&q=${q}`, {
+          signal: AbortSignal.timeout(4000),
+        });
+        if (!res.ok) return text;
+        const data = await res.json();
+        if (Array.isArray(data) && Array.isArray(data[0])) {
+          const translated = data[0].map((chunk: any) => chunk?.[0] || '').join('');
+          return translated.trim() || text;
+        }
+      } catch {
+        // ignore
+      }
+      return text;
+    }
 
     ws.onmessage = (event) => {
       try {
