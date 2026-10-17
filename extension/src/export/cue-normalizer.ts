@@ -28,7 +28,22 @@ export interface NormalizedExportCue {
   sourceLanguage: string;
   targetLanguage: string | null;
   source: CueSource;
+  speaker?: string | null;
   lines: string[];
+}
+
+/**
+ * Format raw speaker labels into readable labels (e.g. SPEAKER_00 -> Speaker 1).
+ */
+export function formatSpeakerTag(speaker?: string | null): string | null {
+  if (!speaker) return null;
+  const trimmed = speaker.trim();
+  if (!trimmed) return null;
+  const match = trimmed.match(/^SPEAKER_(\d+)$/i);
+  if (match && match[1]) {
+    return `Speaker ${parseInt(match[1], 10) + 1}`;
+  }
+  return trimmed.replace(/_/g, ' ');
 }
 
 export interface NormalizeCuesOptions {
@@ -204,6 +219,7 @@ export function normalizeCuesForExport(
       sourceLanguage: sourceLang,
       targetLanguage: targetLang,
       source,
+      speaker: cue.speaker ?? null,
       lines,
     });
   }

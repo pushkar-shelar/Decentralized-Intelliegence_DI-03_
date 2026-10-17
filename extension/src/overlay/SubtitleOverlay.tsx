@@ -15,6 +15,17 @@ export interface SubtitleOverlayProps {
 /** Reference player height the base font size is designed for. */
 const REFERENCE_HEIGHT = 720;
 
+export function formatSpeakerDisplay(rawSpeaker: string): string {
+  const trimmed = rawSpeaker.trim();
+  if (!trimmed) return '';
+  const match = trimmed.match(/^SPEAKER_(\d+)$/i);
+  if (match && match[1]) {
+    const num = parseInt(match[1], 10) + 1;
+    return `Speaker ${num}`;
+  }
+  return trimmed.replace(/_/g, ' ');
+}
+
 function cuesKey(cues: readonly Cue[]): string {
   if (cues.length === 0) return '';
   return cues.map((c) => `${c.id}\u0000${c.text}\u0000${c.translation ?? ''}\u0000${c.speaker ?? ''}`).join('\u0001');
@@ -118,7 +129,7 @@ export function SubtitleOverlay({ video, tracker, provider, settings: settingsSt
           <div className="ls-cue" key={cue.id} lang={cue.lang} data-source={cue.source}>
             {cue.speaker && (
               <span className="ls-speaker-badge" data-speaker={cue.speaker}>
-                {cue.speaker.replace('_', ' ')}
+                {formatSpeakerDisplay(cue.speaker)}
               </span>
             )}
             {lines.map((line) => (

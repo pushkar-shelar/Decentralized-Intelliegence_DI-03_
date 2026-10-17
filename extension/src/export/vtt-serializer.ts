@@ -2,6 +2,7 @@ import type { Cue } from '../shared/cue';
 import type { ExportedCueEntry } from './session-export';
 import {
   normalizeCuesForExport,
+  formatSpeakerTag,
   type ExportCueInput,
   type ExportTextMode,
   type NormalizeCuesOptions,
@@ -89,8 +90,9 @@ export function serializeWebVtt(
     const startTs = formatVttTimestamp(cue.start);
     const endTs = formatVttTimestamp(cue.end);
 
-    const rawLines = cue.lines;
-    const bodyLines = options.escapeMarkup ? rawLines.map(escapeVttMarkup) : rawLines;
+    const rawLines = options.escapeMarkup ? cue.lines.map(escapeVttMarkup) : cue.lines;
+    const spk = formatSpeakerTag(cue.speaker);
+    const bodyLines = spk ? rawLines.map((l) => `<v ${spk}>${l}`) : rawLines;
     const body = bodyLines.join('\n');
 
     if (options.includeCueNumbers) {

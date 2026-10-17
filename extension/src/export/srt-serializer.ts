@@ -2,6 +2,7 @@ import type { Cue } from '../shared/cue';
 import type { ExportedCueEntry } from './session-export';
 import {
   normalizeCuesForExport,
+  formatSpeakerTag,
   type ExportCueInput,
   type ExportTextMode,
   type NormalizeCuesOptions,
@@ -60,7 +61,10 @@ export function serializeSrt(
     const cueNumber = i + 1;
     const startTs = formatSrtTimestamp(cue.start);
     const endTs = formatSrtTimestamp(cue.end);
-    const body = cue.lines.join('\n');
+    const spk = formatSpeakerTag(cue.speaker);
+    const speakerPrefix = spk ? `[${spk}] ` : '';
+    const formattedLines = cue.lines.map((line, idx) => (idx === 0 && speakerPrefix ? `${speakerPrefix}${line}` : line));
+    const body = formattedLines.join('\n');
 
     blocks.push(`${cueNumber}\n${startTs} --> ${endTs}\n${body}`);
   }

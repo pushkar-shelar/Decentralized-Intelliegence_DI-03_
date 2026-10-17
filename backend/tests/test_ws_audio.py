@@ -11,8 +11,9 @@ def test_health_endpoint():
     data = response.json()
     assert data["status"] == "ok"
     assert data["backend"] == "LiveSub"
-    assert data["shrutam_model_available"] is True
-    assert "models\\shrutam-2" in data["shrutam_model_dir"] or "models/shrutam-2" in data["shrutam_model_dir"]
+    assert "diarization_available" in data
+    assert "hf_token_configured" in data
+    assert data["hf_token_configured"] is True
 
 def test_audio_websocket_streaming():
     with client.websocket_connect("/api/ws/audio") as websocket:

@@ -1,7 +1,11 @@
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Any
 import numpy as np
 import torch
-from faster_whisper import WhisperModel
+try:
+    from faster_whisper import WhisperModel
+except ImportError:
+    WhisperModel = None
+
 from backend.app.models.asr_interface import BaseASREngine, ASRResult, TranscriptionSegment
 
 class WhisperEngine(BaseASREngine):
@@ -14,10 +18,15 @@ class WhisperEngine(BaseASREngine):
         self.model_size = model_size
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
         self.compute_type = "float16" if self.device == "cuda" else "int8"
-        self.model: Optional[WhisperModel] = None
+        self.model: Optional[Any] = None
         self._load()
 
     def _load(self):
+        if WhisperModel is None:
+            print("[WhisperEngine] Notice: faster-whisper package not installed. WhisperEngine ASR unavailable.")
+            self.model = None
+            return
+
         print(f"[WhisperEngine] Loading Whisper '{self.model_size}' onto {self.device} ({self.compute_type})...")
         try:
             self.model = WhisperModel(
