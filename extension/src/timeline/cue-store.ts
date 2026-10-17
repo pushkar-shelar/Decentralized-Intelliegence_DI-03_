@@ -160,7 +160,9 @@ export class CueStore implements CueProvider {
       existing.end = cue.end;
       if (cue.translation !== undefined) existing.translation = cue.translation;
       if (cue.translation_lang !== undefined) existing.translation_lang = cue.translation_lang;
-      if (cue.speaker !== undefined) existing.speaker = cue.speaker;
+      if (cue.speaker !== undefined && (cue.speaker !== null || existing.speaker === undefined)) {
+        existing.speaker = cue.speaker;
+      }
       if (cue.is_final !== undefined) existing.is_final = cue.is_final;
       if (cue.first_shown_at !== undefined && cue.first_shown_at !== null) {
         existing.first_shown_at = cue.first_shown_at;

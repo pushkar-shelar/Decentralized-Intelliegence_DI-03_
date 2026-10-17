@@ -2,9 +2,20 @@ import os
 import shutil
 import tempfile
 import numpy as np
-import soundfile as sf
-import yt_dlp
-import imageio_ffmpeg
+try:
+    import soundfile as sf
+except ImportError:
+    sf = None
+
+try:
+    import yt_dlp
+except ImportError:
+    yt_dlp = None
+
+try:
+    import imageio_ffmpeg
+except ImportError:
+    imageio_ffmpeg = None
 
 class StreamResolver:
     """
@@ -18,7 +29,7 @@ class StreamResolver:
         else:
             self.cache_dir = cache_dir
         os.makedirs(self.cache_dir, exist_ok=True)
-        self.ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()
+        self.ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe() if imageio_ffmpeg else "ffmpeg"
 
     def get_cached_audio_path(self, video_id: str) -> str:
         return os.path.join(self.cache_dir, f"{video_id}_16k.wav")
@@ -91,11 +102,24 @@ class StreamResolver:
         start_frame = int(start_sec * sample_rate)
         frames_to_read = int(duration_sec * sample_rate)
 
-        with sf.SoundFile(wav_path, "r") as f:
-            if start_frame >= len(f):
-                return np.zeros(0, dtype=np.float32)
-            f.seek(start_frame)
-            data = f.read(frames_to_read, dtype="float32")
-            if data.ndim > 1:
-                data = data.mean(axis=1)
-            return data
+        if sf is not None:
+            with sf.SoundFile(wav_path, "r") as f:
+                if start_frame >= len(f):
+                    return np.zeros(0, dtype=np.float32)
+                f.seek(start_frame)
+                data = f.read(frames_to_read, dtype="float32")
+                if data.ndim > 1:
+                    data = data.mean(axis=1)
+                return data
+        else:
+            import wave
+            with wave.open(wav_path, "rb") as wf:
+                total_frames = wf.getnframes()
+                if start_frame >= total_frames:
+                    return np.zeros(0, dtype=np.float32)
+                wf.setpos(start_frame)
+                raw_bytes = wf.readframes(frames_to_read)
+                int16_data = np.frombuffer(raw_bytes, dtype=np.int16)
+                if wf.getnchannels() > 1:
+                    int16_data = int16_data.reshape(-1, wf.getnchannels()).mean(axis=1)
+                return (int16_data.astype(np.float32) / 32768.0)

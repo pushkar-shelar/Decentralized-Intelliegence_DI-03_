@@ -102,6 +102,7 @@ def ws_audio_info():
 @app.get("/api/health")
 def health_check():
     has_shrutam = os.path.isdir(MODEL_DIR) and os.path.exists(os.path.join(MODEL_DIR, "config.json"))
+    has_hf_token = bool(os.getenv("HF_TOKEN") or os.getenv("HUGGING_FACE_HUB_TOKEN") or (whisperx_engine and whisperx_engine.hf_token))
     return {
         "status": "ok",
         "backend": "LiveSub",
@@ -110,6 +111,9 @@ def health_check():
         "shrutam_model_dir": MODEL_DIR if has_shrutam else None,
         "shrutam_loaded": shrutam_engine.is_ready() if shrutam_engine else False,
         "whisper_loaded": whisper_engine.is_ready() if whisper_engine else False,
+        "whisperx_loaded": whisperx_engine.is_ready() if whisperx_engine else False,
+        "diarization_available": whisperx_engine.is_diarization_ready() if whisperx_engine else False,
+        "hf_token_configured": has_hf_token,
         "grok_configured": bool(unified_translator and unified_translator.grok_api_key),
         "sarvam_configured": bool(unified_translator and unified_translator.sarvam_api_key),
     }
@@ -127,8 +131,8 @@ class PreProcessRequest(BaseModel):
 async def preprocess_video(req: PreProcessRequest):
     """
     Downloads the video's audio track in background via yt-dlp,
-    rapidly transcribes with word-level timestamps via Whisper,
-    and translates idioms via Sarvam Mayura.
+    rapidly transcribes with word-level timestamps via Whisper/WhisperX,
+    performs speaker diarization when configured, and translates idioms.
     Returns array of pre-buffered cues for 0ms subtitle playback.
     """
     if not stream_resolver:
@@ -149,12 +153,13 @@ async def preprocess_video(req: PreProcessRequest):
         )
 
         if len(audio_chunk) == 0:
-            return {"ok": True, "cues": []}
+            return {"ok": True, "cues": [], "diarization_applied": False}
 
         # 3. Fast transcription with word-level boundaries and optional diarization
         cues = []
         segments = []
         detected_lang = req.source_lang or "en"
+        diarization_applied = False
 
         if whisperx_engine and whisperx_engine.is_ready():
             try:
@@ -166,6 +171,8 @@ async def preprocess_video(req: PreProcessRequest):
                 if wx_segs and len(wx_segs) > 0:
                     segments = wx_segs
                     detected_lang = wx_segs[0].get("language", detected_lang)
+                    diarization_applied = any(s.get("speaker") is not None for s in wx_segs)
+                    print(f"[PreProcess] WhisperX processed {len(wx_segs)} segments. Diarization applied: {diarization_applied}")
             except Exception as e:
                 print(f"[PreProcess] WhisperX failed, falling back to WhisperEngine: {e}")
 
@@ -221,7 +228,12 @@ async def preprocess_video(req: PreProcessRequest):
                 "revisions": [{"at": abs_start, "text": text}],
             })
 
-        return {"ok": True, "video_id": req.video_id, "cues": cues}
+        return {
+            "ok": True,
+            "video_id": req.video_id,
+            "cues": cues,
+            "diarization_applied": diarization_applied,
+        }
     except Exception as e:
         print(f"[PreProcess] Error: {e}")
         return {"ok": False, "error": str(e)}
@@ -239,6 +251,7 @@ async def audio_websocket_endpoint(websocket: WebSocket):
         shrutam=shrutam_engine,
         whisper=whisper_engine,
         vad=silero_vad,
+        whisperx=whisperx_engine,
     )
 
     chunk_count = 0
@@ -264,7 +277,7 @@ async def audio_websocket_endpoint(websocket: WebSocket):
                 anchor = latest_meta.get("anchor", {})
                 perf_now = latest_meta.get("perfNow", time.time() * 1000)
 
-                # Process chunk through VAD and speech models
+                # Process chunk through VAD, speech models, and speaker detection
                 cue = processor.process_chunk(
                     chunk_pcm_int16=samples,
                     perf_now=perf_now,
@@ -292,7 +305,8 @@ async def audio_websocket_endpoint(websocket: WebSocket):
                             except Exception as e:
                                 print(f"[LiveSub WS] Translation error: {e}")
 
-                    log_msg = f"[LiveSub WS] {status_str} Cue [{cue.get('lang', 'hi')}]: {cue['text']}"
+                    spk_label = f" [{cue.get('speaker')}]" if cue.get("speaker") else ""
+                    log_msg = f"[LiveSub WS] {status_str} Cue [{cue.get('lang', 'hi')}]{spk_label}: {cue['text']}"
                     if cue.get("translation"):
                         log_msg += f" --> [{cue.get('translation_lang', 'en')}]: {cue['translation']}"
                     print(log_msg, flush=True)
@@ -303,6 +317,7 @@ async def audio_websocket_endpoint(websocket: WebSocket):
                         start=cue.get("start"),
                         end=cue.get("end"),
                         language=cue.get("lang"),
+                        speaker=cue.get("speaker"),
                         source="Whisper Live STT",
                         status=status_str,
                     )

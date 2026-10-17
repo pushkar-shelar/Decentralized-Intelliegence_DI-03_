@@ -17,6 +17,7 @@ export interface ExportedCueEntry {
   translation: string | null;
   translation_lang: string | null;
   source: CueSource;
+  speaker?: string | null;
   first_shown_at: number | null;
   revisions: Array<{ at: number; text: string }>;
 }
@@ -30,6 +31,20 @@ export interface LiveSubSessionExport {
   playback_time?: number;
   total_cues: number;
   cues: ExportedCueEntry[];
+}
+
+/**
+ * Format raw speaker labels into readable labels (e.g. SPEAKER_00 -> Speaker 1).
+ */
+export function formatSpeakerTag(speaker?: string | null): string | null {
+  if (!speaker) return null;
+  const trimmed = speaker.trim();
+  if (!trimmed) return null;
+  const match = trimmed.match(/^SPEAKER_(\d+)$/i);
+  if (match && match[1]) {
+    return `Speaker ${parseInt(match[1], 10) + 1}`;
+  }
+  return trimmed.replace(/_/g, ' ');
 }
 
 /**
@@ -65,6 +80,7 @@ export function formatCueForExport(cue: Cue): ExportedCueEntry {
     translation: cue.translation ?? null,
     translation_lang: cue.translation_lang ?? null,
     source: cue.source,
+    speaker: cue.speaker ?? null,
     first_shown_at: firstShown,
     revisions,
   };
@@ -154,9 +170,13 @@ export function cuesToSrt(
     const lines = getCueDisplayLines(cue, mode);
     if (lines.length === 0) continue;
 
+    const spk = formatSpeakerTag(cue.speaker);
+    const speakerPrefix = spk ? `[${spk}] ` : '';
+    const formattedLines = lines.map((line, i) => (i === 0 && speakerPrefix ? `${speakerPrefix}${line}` : line));
+
     const start = formatTimestamp(cue.start, ',');
     const end = formatTimestamp(cue.end, ',');
-    blocks.push(`${index++}\n${start} --> ${end}\n${lines.join('\n')}`);
+    blocks.push(`${index++}\n${start} --> ${end}\n${formattedLines.join('\n')}`);
   }
 
   return blocks.length > 0 ? `${blocks.join('\n\n')}\n` : '';
@@ -178,9 +198,14 @@ export function cuesToVtt(
     const lines = getCueDisplayLines(cue, mode);
     if (lines.length === 0) continue;
 
+    const spk = formatSpeakerTag(cue.speaker);
+    const formattedLines = spk
+      ? lines.map((line) => `<v ${spk}>${line}`)
+      : lines;
+
     const start = formatTimestamp(cue.start, '.');
     const end = formatTimestamp(cue.end, '.');
-    blocks.push(`${index++}\n${start} --> ${end}\n${lines.join('\n')}`);
+    blocks.push(`${index++}\n${start} --> ${end}\n${formattedLines.join('\n')}`);
   }
 
   return `${blocks.join('\n')}\n`;
