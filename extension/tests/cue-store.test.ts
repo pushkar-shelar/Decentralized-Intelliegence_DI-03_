@@ -36,12 +36,19 @@ describe('CueStore', () => {
     expect(store.getActiveCue(1.0)?.id).toBe('c1');
     expect(store.getActiveCue(2.0)?.id).toBe('c1');
     expect(store.getActiveCue(3.49)?.id).toBe('c1');
-    expect(store.getActiveCue(3.5)).toBeNull(); // Boundary check (start inclusive, end exclusive)
-    expect(store.getActiveCue(3.9)).toBeNull();
+    // Strict boundary when allowLinger is false
+    expect(store.getActiveCue(3.5, false)).toBeNull();
+    // Default lingering hold: c1 stays visible between 3.5s and 4.0s until c2 arrives
+    expect(store.getActiveCue(3.5)?.id).toBe('c1');
+    expect(store.getActiveCue(3.9)?.id).toBe('c1');
+    // Once next subtitle time arrives at 4.0s, switches immediately to c2
     expect(store.getActiveCue(4.0)?.id).toBe('c2');
     expect(store.getActiveCue(6.9)?.id).toBe('c2');
-    expect(store.getActiveCue(7.0)).toBeNull();
+    // Lingers after c2 until next cue or max linger
+    expect(store.getActiveCue(7.5)?.id).toBe('c2');
+    expect(store.getActiveCue(10.0)?.id).toBe('c3');
     expect(store.getActiveCue(12.5)?.id).toBe('c3');
+    // Long after c3 ended, expires after max linger
     expect(store.getActiveCue(20.0)).toBeNull();
   });
 

@@ -22,7 +22,7 @@ export class CueStore implements CueProvider {
    * If multiple cues overlap, returns the one that started most recently.
    * O(log N) complexity.
    */
-  getActiveCue(videoTime: number): Cue | null {
+  getActiveCue(videoTime: number, allowLinger = true): Cue | null {
     const list = this.cues;
     const n = list.length;
     if (n === 0 || !Number.isFinite(videoTime) || videoTime < 0) return null;
@@ -51,14 +51,27 @@ export class CueStore implements CueProvider {
 
     if (candidateIndex === -1) return null;
 
-    // Check candidate and scan back for overlapping cues that extend into videoTime
+    // 1. Direct hit: scan back for any cue strictly active at videoTime [start, end)
     for (let i = candidateIndex; i >= 0; i--) {
       const c = list[i];
       if (!c) continue;
-      // If this cue's start is already too far back and max typical cue length is exceeded, break early
       if (videoTime - c.start > 60) break;
       if (videoTime >= c.start && videoTime < c.end) {
         return c;
+      }
+    }
+
+    // 2. Lingering hold: Keep the most recent subtitle visible a little longer
+    // until the next subtitle time comes (with a max hold cap of 4.0s).
+    if (allowLinger) {
+      const candidate = list[candidateIndex];
+      if (candidate && videoTime >= candidate.end) {
+        const nextCue = list[candidateIndex + 1];
+        const nextStart = nextCue ? nextCue.start : Infinity;
+        const MAX_LINGER_SEC = 4.0;
+        if (videoTime < nextStart && (videoTime - candidate.end) <= MAX_LINGER_SEC) {
+          return candidate;
+        }
       }
     }
 

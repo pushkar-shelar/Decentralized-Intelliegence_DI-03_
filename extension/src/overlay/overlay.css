@@ -22,20 +22,25 @@
   display: inline-flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.18em;
-  max-width: 100%;
-  animation: ls-in 160ms ease-out;
+  gap: 0.22em;
+  max-width: 95%;
+  padding: 0.38em 0.85em 0.45em;
+  background: rgba(0, 0, 0, var(--ls-bg-alpha, 0.75));
+  border-radius: 0.38em;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  animation: ls-in 140ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .ls-speaker-badge {
   display: inline-block;
   padding: 0.1em 0.55em;
   border-radius: 9999px;
-  font-size: calc(var(--ls-font-size, 24px) * 0.62);
+  font-size: calc(var(--ls-font-size, 21px) * 0.62);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  background: rgba(14, 165, 233, 0.85);
+  background: rgba(14, 165, 233, 0.88);
   color: #ffffff;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
   margin-bottom: 2px;
@@ -54,27 +59,29 @@
 }
 
 .ls-line {
-  display: inline-block;
+  display: block;
   max-width: 100%;
-  padding: 0.12em 0.5em 0.16em;
-  border-radius: 0.32em;
-  background: rgba(8, 10, 18, var(--ls-bg-alpha, 0.6));
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
-  color: #fff;
-  font-size: var(--ls-font-size, 24px);
-  line-height: 1.32;
+  color: #ffffff;
+  font-family: 'Inter', 'Roboto', 'Noto Sans', 'Noto Sans Devanagari', 'Segoe UI', system-ui, sans-serif;
+  font-size: var(--ls-font-size, 21px);
+  line-height: 1.35;
   font-weight: 600;
-  letter-spacing: 0.005em;
+  letter-spacing: 0.01em;
   text-align: center;
   text-wrap: balance;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85), 0 0 8px rgba(0, 0, 0, 0.35);
+  /* 1-2px solid black outline / stroke for clear contrast against white paper/bright videos */
+  text-shadow:
+    -1.5px -1.5px 0 #000,
+     1.5px -1.5px 0 #000,
+    -1.5px  1.5px 0 #000,
+     1.5px  1.5px 0 #000,
+     0 2px 5px rgba(0, 0, 0, 0.95);
 }
 
 .ls-translation {
-  font-size: calc(var(--ls-font-size, 24px) * 0.86);
+  font-size: calc(var(--ls-font-size, 21px) * 0.92);
   font-weight: 500;
-  color: #ffe9a8;
+  color: #ffde7a; /* Vivid high-contrast warm yellow for translated line */
 }
 
 @keyframes ls-in {

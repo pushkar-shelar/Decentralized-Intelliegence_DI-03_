@@ -46,8 +46,8 @@ export const DEFAULT_SETTINGS: Readonly<LiveSubSettings> = Object.freeze({
   sourceLang: 'auto',
   targetLang: 'en',
   displayMode: 'dual',
-  fontSize: 24,
-  bgOpacity: 0.6,
+  fontSize: 21,
+  bgOpacity: 0.75,
   position: 8,
   demoMode: false,
 });

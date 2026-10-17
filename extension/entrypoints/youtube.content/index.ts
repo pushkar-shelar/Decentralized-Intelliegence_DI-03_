@@ -14,6 +14,22 @@ export default defineContentScript({
     const settings = createStore(await loadSettings());
     const controller = new SessionController(settings);
 
+    // Suppress YouTube's duplicate native gray caption box when LiveSub is active
+    if (!document.getElementById('livesub-anti-collision')) {
+      const antiCollisionStyle = document.createElement('style');
+      antiCollisionStyle.id = 'livesub-anti-collision';
+      antiCollisionStyle.textContent = `
+        html[data-livesub-session] .ytp-caption-window-bottom,
+        html[data-livesub-session] .caption-window,
+        html[data-livesub-session] .ytp-caption-segment {
+          display: none !important;
+          opacity: 0 !important;
+          pointer-events: none !important;
+        }
+      `;
+      document.head?.appendChild(antiCollisionStyle);
+    }
+
     // Listen to messages from the main-world timedtext hook & page window
     const onWindowMessage = (event: MessageEvent) => {
       if (event.source !== window || !event.data || typeof event.data !== 'object') return;

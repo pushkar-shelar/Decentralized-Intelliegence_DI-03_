@@ -72,7 +72,9 @@ class WhisperEngine(BaseASREngine):
                 compression_ratio_threshold=2.4,
                 log_prob_threshold=-1.0,
                 condition_on_previous_text=False, # Prevents hallucinations across short phrases/silence
-                vad_filter=False, # We already do VAD with Silero
+                vad_filter=True, # Drops acoustic hallucinations and non-speech tails
+                repetition_penalty=1.2, # Disallows autoregressive loops (...enaaadenaa)
+                temperature=[0.0, 0.2, 0.4], # Staged fallback temperature
             )
 
             seg_list = []
