@@ -4,6 +4,8 @@ import type { CueProvider } from '../shared/cue-provider';
 import type { Store } from '../shared/store';
 import type { LiveSubSettings } from '../settings/settings-core';
 import type { PlayerStateTracker } from '../youtube/player-state';
+import { tokenizeSubtitleText } from '../learning/word-tokenizer';
+import { LearningPopup } from '../learning/LearningPopup';
 
 export interface SubtitleOverlayProps {
   video: HTMLVideoElement;
@@ -118,6 +120,15 @@ export function SubtitleOverlay({ video, tracker, provider, settings: settingsSt
   );
   const cues = useActiveCues(video, provider);
 
+  const [selectedWord, setSelectedWord] = useState<{
+    word: string;
+    sentence: string;
+    sourceLang: string;
+    targetLang: string;
+    timestampSeconds: number;
+    anchorRect: DOMRect;
+  } | null>(null);
+
   if (!settings.enabled || ui.isAd || cues.length === 0) return null;
 
   const scale = Math.min(2.2, Math.max(0.6, ui.playerHeight / REFERENCE_HEIGHT));
@@ -129,58 +140,119 @@ export function SubtitleOverlay({ video, tracker, provider, settings: settingsSt
     bottom: `calc(${settings.position}% + ${controlsLift}px)`,
   } as CSSProperties;
 
-  return (
-    <div className="ls-stage" style={style} data-view-mode={ui.viewMode}>
-      {cues.map((cue) => {
-        const original = cue.text;
-        const translation = cue.translation ?? null;
-        const lines: Array<{ kind: 'original' | 'translation'; text: string }> = [];
-        if (settings.displayMode === 'original') {
-          lines.push({ kind: 'original', text: original });
-        } else if (settings.displayMode === 'translated') {
-          lines.push(translation ? { kind: 'translation', text: translation } : { kind: 'original', text: original });
-        } else {
-          lines.push({ kind: 'original', text: original });
-          // Only show translation line in Dual mode if it is non-empty AND not identical to original
-          if (
-            translation &&
-            translation.trim().length > 0 &&
-            translation.trim().toLowerCase() !== original.trim().toLowerCase()
-          ) {
-            lines.push({ kind: 'translation', text: translation });
-          }
-        }
+  const containerRect = video.parentElement?.getBoundingClientRect() || document.body.getBoundingClientRect();
 
-        return (
-          <div
-            className="ls-cue"
-            key={cue.id}
-            lang={cue.lang}
-            data-source={cue.source}
-            style={{
-              backgroundColor: `rgba(0, 0, 0, ${settings.bgOpacity})`,
-            }}
-          >
-            {cue.speaker && (
-              <span className="ls-speaker-badge" data-speaker={cue.speaker}>
-                {formatSpeakerDisplay(cue.speaker)}
-              </span>
-            )}
-            {lines.map((line) => (
-              <span
-                key={line.kind}
-                className={`ls-line ls-${line.kind}`}
-                lang={line.kind === 'translation' ? cue.translation_lang ?? undefined : cue.lang}
-                style={{
-                  fontSize: `${(settings.fontSize * scale * (line.kind === 'translation' ? 0.92 : 1)).toFixed(1)}px`,
-                }}
-              >
-                {line.text}
-              </span>
-            ))}
-          </div>
-        );
-      })}
-    </div>
+  return (
+    <>
+      <div className="ls-stage" style={style} data-view-mode={ui.viewMode}>
+        {cues.map((cue) => {
+          const original = cue.text;
+          const translation = cue.translation ?? null;
+          const lines: Array<{ kind: 'original' | 'translation'; text: string }> = [];
+          if (settings.displayMode === 'original') {
+            lines.push({ kind: 'original', text: original });
+          } else if (settings.displayMode === 'translated') {
+            lines.push(translation ? { kind: 'translation', text: translation } : { kind: 'original', text: original });
+          } else {
+            lines.push({ kind: 'original', text: original });
+            // Only show translation line in Dual mode if it is non-empty AND not identical to original
+            if (
+              translation &&
+              translation.trim().length > 0 &&
+              translation.trim().toLowerCase() !== original.trim().toLowerCase()
+            ) {
+              lines.push({ kind: 'translation', text: translation });
+            }
+          }
+
+          return (
+            <div className="ls-cue" key={cue.id} lang={cue.lang} data-source={cue.source}>
+              {cue.speaker && (
+                <span className="ls-speaker-badge" data-speaker={cue.speaker}>
+                  {formatSpeakerDisplay(cue.speaker)}
+                </span>
+              )}
+              {lines.map((line) => {
+                const lineLang = line.kind === 'translation' ? cue.translation_lang ?? 'en' : cue.lang ?? 'auto';
+                const tokens = tokenizeSubtitleText(line.text);
+
+                return (
+                  <span
+                    key={line.kind}
+                    className={`ls-line ls-${line.kind}`}
+                    lang={lineLang}
+                  >
+                    {tokens.map((token, idx) => {
+                      if (!token.isWord) {
+                        return <span key={idx}>{token.raw}</span>;
+                      }
+
+                      const isSelected = selectedWord?.word === token.word;
+
+                      return (
+                        <span key={idx}>
+                          {token.leadingPunct}
+                          <span
+                            role="button"
+                            tabIndex={0}
+                            className={`ls-word ${isSelected ? 'ls-word--selected' : ''}`}
+                            aria-label={`Learn word: ${token.word}`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const rect = e.currentTarget.getBoundingClientRect();
+                              setSelectedWord({
+                                word: token.word,
+                                sentence: line.text,
+                                sourceLang: lineLang,
+                                targetLang: settings.targetLang,
+                                timestampSeconds: cue.start,
+                                anchorRect: rect,
+                              });
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault();
+                                const rect = e.currentTarget.getBoundingClientRect();
+                                setSelectedWord({
+                                  word: token.word,
+                                  sentence: line.text,
+                                  sourceLang: lineLang,
+                                  targetLang: settings.targetLang,
+                                  timestampSeconds: cue.start,
+                                  anchorRect: rect,
+                                });
+                              }
+                            }}
+                          >
+                            {token.word}
+                          </span>
+                          {token.trailingPunct}
+                          {token.trailingSpace}
+                        </span>
+                      );
+                    })}
+                  </span>
+                );
+              })}
+            </div>
+          );
+        })}
+      </div>
+
+      {selectedWord && (
+        <LearningPopup
+          word={selectedWord.word}
+          sentence={selectedWord.sentence}
+          sourceLang={selectedWord.sourceLang}
+          targetLang={selectedWord.targetLang}
+          videoTitle={typeof document !== 'undefined' ? document.title.replace(/\s*-\s*YouTube$/i, '').trim() : undefined}
+          videoUrl={typeof window !== 'undefined' ? window.location.href : undefined}
+          timestampSeconds={selectedWord.timestampSeconds}
+          anchorRect={selectedWord.anchorRect}
+          containerRect={containerRect}
+          onClose={() => setSelectedWord(null)}
+        />
+      )}
+    </>
   );
 }

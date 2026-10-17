@@ -21,13 +21,14 @@ import {
   type SourceLang,
 } from '../../src/settings/settings';
 import { parseVideoId } from '../../src/youtube/video-id';
+import { VocabularyView } from '../../src/learning/VocabularyView';
 import './popup.css';
 
 type TabStatus = { kind: 'loading' } | { kind: 'video'; videoId: string } | { kind: 'other' };
-type ExportFormat = 'srt' | 'vtt' | 'json';
-type ExportScope = 'all' | 'playback';
-type ActiveNavTab = 'subtitles' | 'transcript';
-type ActiveDrawer = null | 'appearance' | 'export' | 'settings';
+export type ExportFormat = 'srt' | 'vtt' | 'json';
+export type ExportScope = 'all' | 'playback';
+type ActiveNavTab = 'subtitles' | 'transcript' | 'vocabulary' | 'tools';
+type ActiveDrawer = null | 'appearance' | 'vocabulary' | 'export' | 'settings' | 'more' | 'detected-lang';
 
 interface RawCue {
   id: string;
@@ -384,6 +385,24 @@ export default function App() {
         >
           Transcript
         </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={navTab === 'vocabulary'}
+          className={`nav-tab-btn ${navTab === 'vocabulary' ? 'nav-tab-btn--active' : ''}`}
+          onClick={() => setNavTab('vocabulary')}
+        >
+          Vocabulary
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={navTab === 'tools'}
+          className={`nav-tab-btn ${navTab === 'tools' ? 'nav-tab-btn--active' : ''}`}
+          onClick={() => setNavTab('tools')}
+        >
+          Tools
+        </button>
       </nav>
 
       {/* ---------- Main View: Subtitles Tab ---------- */}
@@ -556,6 +575,15 @@ export default function App() {
 
             <button
               type="button"
+              className={`action-btn-card ${navTab === 'vocabulary' ? 'action-btn-card--active' : ''}`}
+              onClick={() => setNavTab('vocabulary')}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+              </svg>
+              <span>Vocabulary</span>
+            </button>
               className={`action-btn-card ${activeDrawer === 'export' ? 'action-btn-card--active' : ''}`}
               onClick={() => setActiveDrawer('export')}
             >
@@ -621,6 +649,43 @@ export default function App() {
         </div>
       )}
 
+      {/* ---------- View: Vocabulary Tab ---------- */}
+      {navTab === 'vocabulary' && <VocabularyView />}
+
+      {/* ---------- View: Tools Tab ---------- */}
+      {navTab === 'tools' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <h2 className="section-label">Audio & Diagnostics Tools</h2>
+          <div className="info-card">
+            <div className="info-card-texts">
+              <span className="info-card-label">Active Tab</span>
+              <span className="info-card-value">
+                {tab.kind === 'video' ? `YouTube Video ID: ${tab.videoId}` : 'Non-video tab'}
+              </span>
+            </div>
+          </div>
+
+          {tab.kind === 'video' && (
+            <button
+              id="btn-start-audio"
+              type="button"
+              onClick={startAudioCaptureFromPopup}
+              className="btn-primary-cta"
+            >
+              {capturing ? '🟢 Live Audio Capture Active' : '🎙️ Start Tab Audio Stream'}
+            </button>
+          )}
+
+          <div className="info-card">
+            <div className="info-card-texts">
+              <span className="info-card-label">Recorded Session Cues</span>
+              <span className="info-card-value">
+                {sessionCueCount !== null ? `${sessionCueCount} cues accumulated` : '0 cues'}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
       {/* ---------- Modals / Drawers ---------- */}
 
       {/* 1. Appearance Drawer */}
@@ -844,8 +909,26 @@ export default function App() {
         </div>
       )}
 
+<<<<<<< HEAD
       {/* 3. Settings & Diagnostics Drawer */}
       {activeDrawer === 'settings' && (
+=======
+      {/* 3. Vocabulary Drawer */}
+      {activeDrawer === 'vocabulary' && (
+        <div className="drawer-backdrop" onClick={() => setActiveDrawer(null)}>
+          <div className="drawer-content" style={{ maxHeight: '90vh' }} onClick={(e) => e.stopPropagation()}>
+            <div className="drawer-header">
+              <h3 className="drawer-title">Personal Vocabulary</h3>
+              <button className="btn-drawer-close" onClick={() => setActiveDrawer(null)}>✕</button>
+            </div>
+            <VocabularyView />
+          </div>
+        </div>
+      )}
+
+      {/* 4. More & Developer Drawer */}
+      {activeDrawer === 'more' && (
+>>>>>>> feat/video-subtitle-website
         <div className="drawer-backdrop" onClick={() => setActiveDrawer(null)}>
           <div className="drawer-content" onClick={(e) => e.stopPropagation()}>
             <div className="drawer-header">
