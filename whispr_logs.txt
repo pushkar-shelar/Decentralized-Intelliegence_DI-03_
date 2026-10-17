@@ -653,3 +653,15 @@
 --------------------------------------------------------------------------------
 === Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 09:51:04 ===
 --------------------------------------------------------------------------------
+[09:53:31] [FINAL] [WhisperX STT] [en] [0.00s -> 1.50s]: Resilient output
+[09:53:32] [FINAL] [WhisperX STT] [hi] [SPEAKER_00] [0.00s -> 1.80s]: अरे ओ, बंसी!
+[09:53:32] [FINAL] [WhisperX STT] [hi] [SPEAKER_01] [2.00s -> 3.80s]: हाँ, तो मैं क्या करूँ?
+[09:53:32] [FINAL] [WhisperX STT] [en] [SPEAKER_00] [0.00s -> 1.20s]: First sentence.
+[09:53:32] [FINAL] [WhisperX STT] [en] [SPEAKER_00] [1.30s -> 2.80s]: Second sentence.
+[09:53:32] [FINAL] [WhisperX STT] [hi] [0.00s -> 1.00s]: परीक्षण
+[09:53:32] [FINAL] [WhisperX STT] [mr] [SPEAKER_00] [0.20s -> 1.80s]: नमस्कार मित्रांनो
+[09:53:32] [FINAL] [WhisperX STT] [hi] [1.25s -> 3.75s]: परीक्षण वाक्य
+
+--------------------------------------------------------------------------------
+=== Live Tab Audio Streaming WebSocket | Started at: 2026-10-17 09:53:32 ===
+--------------------------------------------------------------------------------
