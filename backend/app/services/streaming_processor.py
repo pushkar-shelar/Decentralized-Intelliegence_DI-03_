@@ -49,10 +49,11 @@ class StreamingSpeechProcessor:
             return None
 
         # Language handling: detect language if not already detected
+        target_lang = preferred_lang
         if target_lang == "auto" or not target_lang:
-            if self.whisper and self.detected_lang == "en" and len(speech_audio) >= 16000:
+            if self.whisper and len(speech_audio) >= 16000:
                 lid_lang, prob = self.whisper.detect_language(speech_audio[:32000])
-                if prob > 0.4:
+                if prob > 0.35:
                     self.detected_lang = lid_lang
             target_lang = self.detected_lang
 

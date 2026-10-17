@@ -291,12 +291,15 @@ export class SessionController {
 
     const emitAnchor = (isSeek = false) => {
       if (this.session !== session) return;
+      const settings = this.settings.get();
       const anchor: VideoAnchor = {
         perfNow: performance.now(),
         videoTime: video.currentTime,
         rate: video.playbackRate,
         paused: video.paused,
         isSeek,
+        sourceLang: settings.sourceLang,
+        targetLang: settings.targetLang,
       };
       browser.runtime.sendMessage({ type: 'VIDEO_ANCHOR', anchor }).catch(() => {});
     };

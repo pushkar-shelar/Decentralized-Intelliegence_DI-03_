@@ -46,11 +46,8 @@ async def lifespan(app: FastAPI):
     # Load UnifiedTranslator (Grok primary -> Sarvam fallback)
     unified_translator = UnifiedTranslator()
 
-    # Load Shrutam-2 from local project folder
-    try:
-        shrutam_engine = ShrutamEngine()
-    except Exception as e:
-        print(f"[LiveSub Backend] Warning: ShrutamEngine init deferred ({e})")
+    # Shrutam-2 deprecated in favor of Whisper large-v3-turbo with language='hi'
+    shrutam_engine = None
 
     # Load Whisper Turbo
     try:
@@ -240,6 +237,7 @@ async def audio_websocket_endpoint(websocket: WebSocket):
     total_samples = 0
     latest_meta = {}
     preferred_lang = "auto"
+    target_lang = "en"
 
     try:
         while True:
@@ -268,7 +266,27 @@ async def audio_websocket_endpoint(websocket: WebSocket):
 
                 if cue:
                     status_str = "FINAL" if cue.get("is_final") else "PARTIAL"
-                    print(f"[LiveSub WS] {status_str} Cue [{cue['lang']}]: {cue['text']}", flush=True)
+                    
+                    # If cue text is ready and unified_translator is available, translate via Grok -> Sarvam
+                    cue_lang = cue.get("lang") or preferred_lang or "hi"
+                    if unified_translator and target_lang and cue.get("text") and cue.get("is_final"):
+                        if cue_lang.lower() != target_lang.lower():
+                            try:
+                                translation = await unified_translator.translate(
+                                    text=cue["text"],
+                                    source_lang=cue_lang,
+                                    target_lang=target_lang,
+                                )
+                                cue["translation"] = translation
+                                cue["translation_lang"] = target_lang
+                            except Exception as e:
+                                print(f"[LiveSub WS] Translation error: {e}")
+
+                    log_msg = f"[LiveSub WS] {status_str} Cue [{cue.get('lang', 'hi')}]: {cue['text']}"
+                    if cue.get("translation"):
+                        log_msg += f" --> [{cue.get('translation_lang', 'en')}]: {cue['translation']}"
+                    print(log_msg, flush=True)
+
                     await websocket.send_text(
                         json.dumps({
                             "type": "cue_update",
@@ -292,8 +310,15 @@ async def audio_websocket_endpoint(websocket: WebSocket):
                     data = json.loads(message["text"])
                     if data.get("type") == "chunk_meta":
                         latest_meta = data
+                        if data.get("sourceLang"):
+                            preferred_lang = data.get("sourceLang")
+                        if data.get("targetLang"):
+                            target_lang = data.get("targetLang")
                     elif data.get("type") == "config":
-                        preferred_lang = data.get("language", "auto")
+                        if data.get("language"):
+                            preferred_lang = data.get("language")
+                        if data.get("target_lang"):
+                            target_lang = data.get("target_lang")
                 except Exception:
                     pass
 

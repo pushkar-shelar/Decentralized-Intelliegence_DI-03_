@@ -138,6 +138,8 @@ function flushBuffer(session: CaptureSession): void {
           rate: 1.0,
           paused: false,
         },
+        sourceLang: latestAnchor?.sourceLang,
+        targetLang: latestAnchor?.targetLang,
       }),
     );
     // Send binary audio payload

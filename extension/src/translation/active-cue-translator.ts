@@ -78,17 +78,17 @@ export class ActiveCueTranslator {
     // Determine source language
     const sourceLang = s.sourceLang === 'auto' ? cue.lang : s.sourceLang;
 
+    // If already translated for this exact target language, nothing to do
+    if (cue.translation && cue.translation_lang === targetLang) {
+      return;
+    }
+
     // If source and target language are identical, clear translation line and return
     if (sourceLang && sourceLang.toLowerCase() === targetLang.toLowerCase()) {
       if (cue.translation) {
         cue.translation = null;
         this.cueStore.upsertCue(cue);
       }
-      return;
-    }
-
-    // If already translated for this exact target language, nothing to do
-    if (cue.translation && cue.translation_lang === targetLang) {
       return;
     }
 
